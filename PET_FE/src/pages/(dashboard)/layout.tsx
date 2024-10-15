@@ -5,7 +5,7 @@ import {
   ShoppingCartOutlined,
   BellOutlined,
 } from "@ant-design/icons";
-import logo from "../../images/logo.png"; 
+import logo from "../../images/logo.png";
 const { Header, Sider, Content } = Layout;
 
 const AdminLayout = () => {
@@ -46,7 +46,9 @@ const AdminLayout = () => {
         </h1>
         <div style={{ display: "flex", alignItems: "center" }}>
           <Badge count={5} style={{ marginRight: "15px" }}>
-            <BellOutlined style={{ fontSize: "20px", color: "white" }} />
+            <BellOutlined
+              style={{ fontSize: "20px", color: "white", marginRight: "20px" }}
+            />
           </Badge>
           <Avatar icon={<UserOutlined />} />
         </div>
