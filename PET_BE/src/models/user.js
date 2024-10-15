@@ -16,6 +16,7 @@ const UserSchema = new mongoose.Schema(
             type: String,
             minlength: 3,
             maxlength: 30,
+            required: true,
         },
         avatar: {
             type: String,
@@ -37,7 +38,12 @@ const UserSchema = new mongoose.Schema(
                     type: String,
                 },
             }
-        ]
+        ],
+        role: {
+            type: String,
+            enum: ["user", "admin"],
+            default: "user",
+        },
     },
     { timestamps: true, versionKey: false }
 )

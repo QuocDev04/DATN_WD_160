@@ -1,9 +1,7 @@
 import React from "react";
 import {
     DesktopOutlined,
-    FileOutlined,
     PieChartOutlined,
-    TeamOutlined,
     UserOutlined,
 } from "@ant-design/icons";
 
@@ -33,33 +31,38 @@ const items: MenuItem[] = [
         <PieChartOutlined />,
     ),
     getItem("Sản phẩm", "2", <DesktopOutlined />, [
-        getItem(<NavLink to={"/admin"}>Danh sách</NavLink>, "2-1"),
-        getItem(<NavLink to={"/admin"}>Thêm Sản Phẩm</NavLink>, "2-2"),
+        getItem(<NavLink to={"/admin/product"}>Danh sách</NavLink>, "2-1"),
+        getItem(<NavLink to={"/admin/add"}>Thêm Sản Phẩm</NavLink>, "2-2"),
     ]),
     getItem("Danh mục", "3", <DesktopOutlined />, [
-        getItem(<NavLink to={"/admin"}>Danh sách</NavLink>, "3-1"),
+        getItem(<NavLink to={"/admin/category"}>Danh sách</NavLink>, "3-1"),
         getItem(
-            <NavLink to={"/admin"}>Thêm danh mục</NavLink>,
+            <NavLink to={"/admin/addCategory"}>Thêm danh mục</NavLink>,
             "3-2",
         ),
     ]),
     getItem("Người dùng", "4", <UserOutlined />, [
         getItem(
-            <NavLink to={"/admin"}>Danh Sách</NavLink>,
+            <NavLink to={"/admin/user"}>Danh Sách</NavLink>,
             "4-1",
         ),
     ]),
-    getItem("Team", "sub2", <TeamOutlined />, [
-        getItem("Team 1", "6"),
-        getItem("Team 2", "8"),
-    ]),
-    getItem("Files", "9", <FileOutlined />),
 ];
 
 const LayoutAdmin: React.FC = () => {
+    // const navigate = useNavigate()
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
+    // const token = localStorage.getItem("token")
+    // const role = localStorage.getItem("role");
+    // useEffect(()=>{
+    //     if(!token){
+    //         navigate('/login')
+    //     }else if(role !== "admin"){
+    //         navigate("/unauthorized");
+    //     }
+    // },[token,role,navigate])
     return (
         <Layout hasSider>
             <Sider
@@ -94,7 +97,6 @@ const LayoutAdmin: React.FC = () => {
                         <Outlet />
                     </div>
                 </Content>
-
             </Layout>
         </Layout>
     );
