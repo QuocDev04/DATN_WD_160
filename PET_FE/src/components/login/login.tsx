@@ -25,13 +25,10 @@ const LoginPages = () => {
                     });
                 }
 
-                const { accessToken, role, name, email, userId } = response.data; // Lấy accessToken và role từ response.data
+                const { accessToken, role } = response.data; // Lấy accessToken và role từ response.data
                 if (accessToken && role) {
                     localStorage.setItem("token", accessToken);
                     localStorage.setItem("role", role);
-                    localStorage.setItem("name", name);
-                    localStorage.setItem("email", email);
-                    localStorage.setItem("userId", userId);
                     messageApi.open({
                         type: "success",
                         content: "Bạn đăng nhập thành công",
