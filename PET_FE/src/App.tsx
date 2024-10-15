@@ -1,6 +1,13 @@
+import Router from './routes'
 
+function App() {
+    return (
+        <>
+            <div className="max-w-full overflow-hidden">
+                <Router />
+            </div>
+        </>
+    );
+}
 
-// B1: npm i antd @ant-design/cssinjs
-// B2: truy cập : https://ant.design/docs/react/compatible-style#tailwindcss-arrange-layer
-// copy css vào global.css
-// B3: Sử dụng component
+export default App
