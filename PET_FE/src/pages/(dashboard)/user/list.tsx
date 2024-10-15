@@ -14,8 +14,9 @@ const ListUser = () => {
         queryKey: ["user"],
         queryFn: () => instance.get(`/user`),
     });
-    console.log(user);
-    const dataSource = user?.data.map((item: IUser) => ({
+    const filteredUsers = user?.data.filter((item: IUser) => item.role !== "admin");
+
+    const dataSource = filteredUsers?.map((item: IUser) => ({
         key: item._id,
         ...item,
     }));
@@ -85,12 +86,6 @@ const ListUser = () => {
             sorter: (a: IUser, b: IUser) => a.name.localeCompare(b.email),
             sortDirections: ["ascend", "descend"],
         },
-        // {
-        //     title: "Mật Khẩu",
-        //     dataIndex: "password",
-        //     width: 280,
-        //     render: (password: string) => <span>{password}</span>,
-        // },
         {
             title: "Số Điện Thoại",
             dataIndex: "phone",
@@ -150,7 +145,7 @@ const ListUser = () => {
                 columns={columns}
                 dataSource={dataSource}
                 pagination={{ pageSize: 50 }}
-                scroll={{ y: 240, x: 1500 }}
+                scroll={{ y: 540, x: 1500 }}
             />
         </>
     );

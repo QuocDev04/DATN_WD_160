@@ -1,15 +1,47 @@
-import { Button, Form, Input } from "antd";
+import { Button, Form, FormProps, Input, message } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { AiTwotoneMail } from "react-icons/ai";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import instance from "@/configs/axios";
 type FieldType = {
-    name?: string;
-    password?: string;
+    name: string;
+    password: string;
     email: string;
     confirmPassword: string;
 };
 const RegisterPages = () => {
-
+    const [messageApi, contextHolder] = message.useMessage();
+    const navigate = useNavigate();
+    const { mutate } = useMutation({
+        mutationFn: async (data: FieldType) => {
+           
+            try {
+                const response = await instance.post(`/signup`, data);
+                if (response.status !== 201) {
+                    return messageApi.open({
+                        type: "error",
+                        content: "Bạn đăng ký thất bại",
+                    });
+                }
+                messageApi.open({
+                    type: "success",
+                    content: "Bạn đăng ký thành công",
+                });
+                setTimeout(() => navigate(`/signin`), 500); 
+            } catch (error) {
+                messageApi.open({
+                    type: "error",
+                    content: "Đã xảy ra lỗi. Vui lòng thử lại sau.",
+                });
+                throw new Error("error");
+            }
+        },
+    });
+    const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
+        console.log("Success:", values);
+        mutate(values);
+    };
     const validateMessages = {
         required: "${label} Không được bỏ trống!",
         types: {
@@ -25,6 +57,7 @@ const RegisterPages = () => {
     };
     return (
         <div>
+            {contextHolder}
             <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
                 <div className="mx-auto max-w-lg">
                     <h1 className="text-center text-2xl font-bold text-indigo-600 sm:text-3xl">
@@ -42,10 +75,12 @@ const RegisterPages = () => {
                             style={{ maxWidth: 600 }}
                             initialValues={{ remember: true }}
                             autoComplete="off"
+                            onFinish={onFinish}
                         >
                             <Form.Item<FieldType>
                                 label="Tên tài khoản"
                                 name="name"
+                                validateTrigger="onBlur"
                                 rules={[
                                     { required: true },
                                     { type: "string", min: 3, max: 30 },
@@ -62,6 +97,7 @@ const RegisterPages = () => {
                                 label="Email"
                                 name="email"
                                 rules={[{ required: true }, { type: "email" }]}
+                                validateTrigger="onBlur"
                             >
                                 <Input
                                     prefix={
@@ -75,7 +111,7 @@ const RegisterPages = () => {
                                 name="password"
                                 rules={[
                                     { required: true },
-                                    { type: "string", min: 3, max: 30 },
+                                    { type: "string", min: 6, max: 30 },
                                 ]}
                             >
                                 <Input.Password
@@ -90,9 +126,10 @@ const RegisterPages = () => {
                                 label="Nhập lại mật khẩu"
                                 name="confirmPassword"
                                 dependencies={["password"]}
+                                validateTrigger="onBlur"
                                 rules={[
                                     { required: true },
-                                    { type: "string", min: 3, max: 30 },
+                                    { type: "string", min: 6, max: 30 },
                                     ({ getFieldValue }) => ({
                                         validator(_, value) {
                                             if (
@@ -122,8 +159,8 @@ const RegisterPages = () => {
                                 <Button type="primary" htmlType="submit">
                                     Đăng Ký
                                 </Button>
-                                <Link to={"/login"} className="ml-3">
-                                    Đăng nhập
+                                <Link to={"/signin"} className="ml-3">
+                                    Trở Về
                                 </Link>
                             </Form.Item>
                         </Form>

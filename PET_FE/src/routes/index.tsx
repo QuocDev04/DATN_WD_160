@@ -1,4 +1,6 @@
 
+import LoginPages from "@/components/login/login";
+import RegisterPages from "@/components/register/register";
 import Dashboard from "@/pages/(dashboard)/dashboard/page";
 import LayoutAdmin from "@/pages/(dashboard)/layout";
 import ProductAddPage from "@/pages/(dashboard)/products/add";
@@ -11,6 +13,8 @@ const Router = () => {
     return (
         <>
             <Routes>
+                <Route path="/register" element={<RegisterPages />} />
+                <Route path="/signin" element={<LoginPages />} />
                 <Route path="admin" element={<LayoutAdmin />}>
                     <Route index element={<Dashboard />} />
                     {/* User */}
