@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { IUser } from "../../../common/IUser";
+import { IUser } from "../../../common/type/IUser";
 import instance from "@/configs/axios";
 import { QuestionCircleOutlined } from "@ant-design/icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button, notification, Popconfirm, Table, TableColumnsType } from "antd";
-import {  AiFillEdit, AiTwotoneDelete } from "react-icons/ai";
+import { AiFillEdit, AiTwotoneDelete } from "react-icons/ai";
 import { Link } from "react-router-dom";
 
 const ListUser = () => {
@@ -39,18 +39,18 @@ const ListUser = () => {
                 throw new Error("error");
             }
         },
-        onSuccess: () =>{
+        onSuccess: () => {
             openNotification(false)(
                 "success",
                 "Bạn Xóa Thành Công",
                 "Bạn Đã Xóa Thành Công",
-                
+
             )
             queryClient.invalidateQueries({
                 queryKey: ["user"],
             });
-},
-            
+        },
+
         onError: () =>
             openNotification(false)(
                 "error",

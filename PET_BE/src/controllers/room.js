@@ -5,7 +5,7 @@ import Room from "../models/room"
 
 export const getAllRoom =  async (req,res)=>{
     try {
-        const getAllRoom = await Room.find()
+        const getAllRoom = await Room.find().populate("category")
         res.json(getAllRoom)
     } catch (error) {
         res.status(StatusCodes.BAD_REQUEST).json({
@@ -16,7 +16,7 @@ export const getAllRoom =  async (req,res)=>{
 
 export  const getIdRoom = async (req,res)=>{
     try {
-        const getIdRoom = await Room.findById(req.params.id, req,body)
+        const getIdRoom = await Room.findById(req.params.id, req.body).populate("category")
         res.json(getIdRoom)
     } catch (error) {
         res.status(StatusCodes.BAD_REQUEST).json({

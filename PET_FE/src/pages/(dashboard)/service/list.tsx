@@ -1,4 +1,4 @@
-import { IService } from "@/common/IService";
+import { IService } from "@/common/type/IService";
 import instance from "@/configs/axios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button, notification, Popconfirm, Table, TableColumnsType } from "antd";
@@ -64,18 +64,53 @@ const ListService = () => {
             width: 250,
         },
         {
+            title: 'Ảnh Dịch Vụ',
+            dataIndex: 'galleryService',
+            key: 'galleryService',
+            width: 150,
+            render: (gallery: string[]) => {
+                const firstImage =
+                    gallery && gallery.length > 0 ? gallery[0] : "";
+                return firstImage ? (
+                    <img
+                        src={firstImage}
+                        style={{ width: "100px", height: "auto" }}
+                        alt="Ảnh phụ"
+                    />
+                ) : (
+                    "Không có ảnh nào"
+                );
+            },
+        },
+        {
             title: 'Mô Tả',
             dataIndex: 'descriptionService',
             key: 'descriptionService',
+            render: (_: any, product: IService) => {
+                const limitWords = (text: string, wordLimit: number) => {
+                    const words = text.split(' ');
+                    return words.length > wordLimit
+                        ? words.slice(0, wordLimit).join(' ') + '...'
+                        : text;
+                };
+
+                return (
+                    <div
+                        dangerouslySetInnerHTML={{
+                            __html: limitWords(product?.descriptionService || "", 20),
+                        }}
+                    />
+                );
+            }
         },
-        {      
+        {
             title: 'Hành Động',
             fixed: "right",
             width: 150,
             render: (_: any, service: IService) => {
                 return (
                     <div>
-                        <Link to={`/admin/${service._id}/serviceEdit`}>
+                        <Link to={`/admin/serviceEdit/${service._id}`}>
                             <Button type="primary" className="mr-2">
                                 <AiFillEdit className="text-xl" />
                             </Button>
@@ -113,7 +148,7 @@ const ListService = () => {
                     {" "}
                     <Button type="primary">
                         <AiOutlinePlusCircle />
-                        Thêm Dịch Vụ 
+                        Thêm Dịch Vụ
                     </Button>
                 </Link>
             </div>

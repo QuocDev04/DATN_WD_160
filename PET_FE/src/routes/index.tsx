@@ -1,9 +1,13 @@
 
+import CategoryAdd from "@/pages/(dashboard)/category/add";
+import CategoryList from "@/pages/(dashboard)/category/list";
 import Dashboard from "@/pages/(dashboard)/dashboard/page";
 import LayoutAdmin from "@/pages/(dashboard)/layout";
 import ProductAddPage from "@/pages/(dashboard)/products/add";
 import ProductEditPage from "@/pages/(dashboard)/products/edit";
 import ProductPage from "@/pages/(dashboard)/products/list";
+import RoomAdd from "@/pages/(dashboard)/room/add";
+import RoomEditPage from "@/pages/(dashboard)/room/edit";
 import ListRoom from "@/pages/(dashboard)/room/list";
 import ServiceAddPage from "@/pages/(dashboard)/service/add";
 import ServiceEditPage from "@/pages/(dashboard)/service/edit";
@@ -30,14 +34,19 @@ const Router = () => {
                     <Route path="user/:id" element={<EditUser />} />
                     {/** Product */}
                     <Route path="product" element={<ProductPage />} />
-                    <Route path="add" element={<ProductAddPage />} />
-                    <Route path=":id/edit" element={<ProductEditPage />} />
+                    <Route path="productadd" element={<ProductAddPage />} />
+                    <Route path="product/:id" element={<ProductEditPage />} />
                     {/** Service */}
                     <Route path="service" element={<ListService />} />
                     <Route path="serviceAdd" element={<ServiceAddPage />} />
-                    <Route path=":id/serviceEdit" element={<ServiceEditPage />} />
+                    <Route path="service/:id" element={<ServiceEditPage />} />
                     {/* {Room} */}
                     <Route path="room" element={<ListRoom />} />
+                    <Route path="room/:id" element={<RoomEditPage />} />
+                    <Route path="roomadd" element={<RoomAdd />} />
+                    {/* {Category} */}
+                    <Route path="category" element={<CategoryList />} />
+                    <Route path="categoryadd" element={<CategoryAdd />} />
                 </Route>
                 <Route path="/" element={<Layout />}>
                     <Route index element={<HomePages />} />

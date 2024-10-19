@@ -20,7 +20,7 @@ import instance from "@/configs/axios";
 import { useEffect, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { AddIService } from "@/common/IService";
+import { AddIService } from "@/common/type/IService";
 type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 const ServiceEditPage = () => {
     const { id } = useParams();
@@ -40,12 +40,12 @@ const ServiceEditPage = () => {
         queryFn: () => instance.get(`/service/${id}`),
     });
     useEffect(() => {
-        if (product?.data.gallery) {
+        if (product?.data.galleryService) {
             setFileList(
-                product?.data?.gallery?.map((url: any, index: number) => {
+                product?.data?.galleryService?.map((url: any, index: number) => {
                     return {
                         uid: index.toString(),
-                        name: `gallery${index}`,
+                        name: `galleryService${index}`,
                         status: "done",
                         url: url,
                     };
@@ -68,7 +68,7 @@ const ServiceEditPage = () => {
                 content: "Bạn sửa dịch vụ thành công",
             });
             queryClient.invalidateQueries({
-                queryKey: ["product"],
+                queryKey: ["service"],
             });
         },
         onError: () => {
@@ -105,7 +105,7 @@ const ServiceEditPage = () => {
 
         const newValues = {
             ...values,
-            gallery: imageUrls,
+            galleryService: imageUrls,
         };
         mutate(newValues);
     };
@@ -139,7 +139,7 @@ const ServiceEditPage = () => {
     const modules = {
         toolbar: toolbarOptions,
     };
-    if(isLoading) return <div>Loading</div>
+    if (isLoading) return <div>Loading</div>
     if (isError) return <div>{error.message}</div>;
     console.log(product?.data);
     return (
@@ -178,7 +178,7 @@ const ServiceEditPage = () => {
                             </Form.Item>
                             <Form.Item
                                 label="Giá dịch vụ"
-                                name="price"
+                                name="priceService"
                                 rules={[
                                     {
                                         required: true,
@@ -212,7 +212,7 @@ const ServiceEditPage = () => {
                             </Form.Item>
 
                         </div>
-                        <Form.Item label="Mô tả dịch vụ" name="description" className="mb-16">
+                        <Form.Item label="Mô tả dịch vụ" name="descriptionService" className="mb-16">
                             <ReactQuill
                                 className="h-[300px]"
                                 theme="snow"
@@ -225,7 +225,7 @@ const ServiceEditPage = () => {
 
                     </div>
                     <div className="ml-5">
-                        <Form.Item name="gallery">
+                        <Form.Item name="galleryService">
                             <h1 className="text-lg text-center py-2">
                                 Ảnh dịch vụ
                             </h1>
