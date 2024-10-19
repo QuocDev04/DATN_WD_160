@@ -14,15 +14,15 @@ import {
 } from "antd";
 import { Link } from "react-router-dom";
 import { AiFillBackward } from "react-icons/ai";
-import { AddIProduct } from "@/common/types/IProduct";
 import { useMutation } from "@tanstack/react-query";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import instance from "@/configs/axios";
 import { useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { AddIService } from "@/common/types/IService";
 type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
-const ProductAddPage = () => {
+const ServiceAddPage = () => {
     const [value, setValue] = useState("");
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewImage, setPreviewImage] = useState("");
@@ -30,9 +30,9 @@ const ProductAddPage = () => {
     const [messageApi, contextHolder] = message.useMessage();
     const [form] = Form.useForm();
     const { mutate, isPending } = useMutation({
-        mutationFn: async (data: AddIProduct) => {
+        mutationFn: async (data: AddIService) => {
             try {
-                return await instance.post("/product", data);
+                return await instance.post("/service", data);
             } catch (error) {
                 throw new Error((error as any).message);
             }
@@ -40,14 +40,14 @@ const ProductAddPage = () => {
         onSuccess: () => {
             messageApi.open({
                 type: "success",
-                content: "Bạn thêm sản phẩm thành công",
+                content: "Bạn thêm dịch vụ thành công",
             });
             form.resetFields();
         },
         onError: () => {
             messageApi.open({
                 type: "error",
-                content: "Bạn thêm sản phẩm thất bại. Vui lòng thử lại sau!",
+                content: "Bạn thêm dịch vụ thất bại. Vui lòng thử lại sau!",
             });
         },
     });
@@ -71,7 +71,7 @@ const ProductAddPage = () => {
         setFileList(newFileList);
     };
 
-    const onFinish: FormProps<AddIProduct>["onFinish"] = (values) => {
+    const onFinish: FormProps<AddIService>["onFinish"] = (values) => {
         const imageUrls = fileList
             .filter((file) => file.status === "done") // Lọc chỉ các ảnh đã tải lên thành công
             .map((file) => file.response?.secure_url); // Lấy URL từ phản hồi
@@ -115,8 +115,8 @@ const ProductAddPage = () => {
     return (
         <>
             <div className="flex items-center justify-between">
-                <h1 className="text-2xl">Thêm sản phẩm</h1>
-                <Link to={"/admin/product"}>
+                <h1 className="text-2xl">Thêm dịch vụ</h1>
+                <Link to={"/admin/service"}>
                     <Button type="primary">
                         <AiFillBackward />
                         Quay lại
@@ -134,24 +134,24 @@ const ProductAddPage = () => {
                     <div className="py-5">
                         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <Form.Item
-                                label="Tên sản phẩm"
-                                name="productName"
+                                label="Tên dịch vụ"
+                                name="servicesName"
                                 rules={[
                                     {
                                         required: true,
-                                        message: "Tên sản phẩm bắt buộc nhập",
+                                        message: "Tên dịch vụ bắt buộc nhập",
                                     },
                                 ]}
                             >
                                 <Input disabled={isPending} />
                             </Form.Item>
                             <Form.Item
-                                label="Giá sản phẩm"
+                                label="Giá dịch vụ"
                                 name="price"
                                 rules={[
                                     {
                                         required: true,
-                                        message: "Giá sản phẩm bắt buộc nhập",
+                                        message: "Giá dịch vụ bắt buộc nhập",
                                     },
                                     {
                                         type: "number",
@@ -181,7 +181,7 @@ const ProductAddPage = () => {
                             </Form.Item>
 
                         </div>
-                        <Form.Item label="Mô tả sản phẩm" name="description" className="mb-16">
+                        <Form.Item label="Mô tả dịch vụ" name="description" className="mb-16">
                             <ReactQuill
                                 className="h-[300px]"
                                 theme="snow"
@@ -198,12 +198,12 @@ const ProductAddPage = () => {
                             rules={[
                                 {
                                     required: false,
-                                    message: "Ảnh sản phẩm bắt buộc phải có",
+                                    message: "Ảnh dịch vụ bắt buộc phải có",
                                 },
                             ]}
                         >
                             <h1 className="text-lg text-center py-2">
-                                Ảnh sản phẩm
+                                Ảnh dịch vụ
                             </h1>
                             <Upload
                                 listType="picture-card"
@@ -252,4 +252,4 @@ const ProductAddPage = () => {
     );
 };
 
-export default ProductAddPage;
+export default ServiceAddPage;

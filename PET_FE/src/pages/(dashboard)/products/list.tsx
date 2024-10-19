@@ -122,6 +122,10 @@ const ProductPage = () => {
             },
         },
         {
+            title:"Mô tả",
+            dataIndex:"description",
+        },
+        {
             title: "Hành động",
             key: "operation",
             fixed: "right",
@@ -182,11 +186,6 @@ const ProductPage = () => {
                 columns={columns}
                 dataSource={dataSource}
                 pagination={{ pageSize: 50 }}
-                expandable={{
-                    expandedRowRender: (record) => (
-                        <p style={{ margin: 0 }}>Mô tả: {record.description}</p>
-                    ),
-                }}
             />
         </div>
     );

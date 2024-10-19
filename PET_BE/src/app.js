@@ -5,8 +5,8 @@ import morgan from "morgan";
 import mongoose from "mongoose";
 import routerUser from "./routers/user";
 import routerProduct from "./routers/product";
+import routerService from "./routers/service";
 const app = express();
-
 app.use(express.json());
 app.use(cors());
 app.use(morgan("tiny"));
@@ -23,4 +23,5 @@ connectDB(`mongodb://localhost:27017/DATN_WD_160`);
 //router
 app.use("/api/", routerUser);
 app.use("/api/", routerProduct);
+app.use("/api/",routerService);
 export const viteNodeApp = app;

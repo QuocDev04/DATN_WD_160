@@ -1,19 +1,33 @@
-import React, { useState } from "react";
-import { Link, Outlet } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, Outlet, useLocation } from "react-router-dom";
 
 const LayoutAdmin: React.FC = () => {
+    const location = useLocation();
     const [activeMenu, setActiveMenu] = useState<string>("Dashboard");
     const [isSidebarHidden, setSidebarHidden] = useState<boolean>(false);
 
-    // Handle the active menu click
+    // Update active menu based on the current location
+    useEffect(() => {
+        const path = location.pathname;
+        if (path.includes("/admin/product")) {
+            setActiveMenu("List");
+        } else if (path.includes("/admin/user")) {
+            setActiveMenu("User");
+        } else if (path.includes("/admin/service")) {
+            setActiveMenu("Service");
+        } else {
+            setActiveMenu("Dashboard");
+        }
+    }, [location]);
+
     const handleMenuClick = (menu: string) => {
         setActiveMenu(menu);
     };
 
-    // Toggle sidebar visibility
     const toggleSidebar = () => {
         setSidebarHidden(!isSidebarHidden);
     };
+
     return (
         <>
             <div>
@@ -35,21 +49,24 @@ const LayoutAdmin: React.FC = () => {
                                 <span className="text">Danh Sách Sản Phẩm</span>
                             </Link>
                         </li>
-                        <li className={activeMenu === "Analytics" ? "active" : ""}>
-                            <Link to={'/admin/user'} onClick={() => handleMenuClick("Analytics")}>
+                        <li className={activeMenu === "User" ? "active" : ""}>
+                            <Link to={'/admin/user'} onClick={() => handleMenuClick("User")}>
                                 <i className="bx bxs-doughnut-chart" />
                                 <span className="text">Danh Sách Người Dùng</span>
                             </Link>
                         </li>
+                        <li className={activeMenu === "Service" ? "active" : ""}>
+                            <Link to={'/admin/service'} onClick={() => handleMenuClick("Service")}>
+                                <i className="bx bxs-doughnut-chart" />
+                                <span className="text">Danh Sách Dịch Vụ</span>
+                            </Link>
+                        </li>
                     </ul>
                 </section>
-
                 <section id="content">
                     <nav>
                         <i className="bx bx-menu" onClick={toggleSidebar} />
-                        <a href="#" className="nav-link">
-                            Categories
-                        </a>
+                        <a href="#" className="nav-link">Categories</a>
                         <form action="#">
                             <div className="form-input">
                                 <input type="search" placeholder="Search..." />
@@ -69,7 +86,7 @@ const LayoutAdmin: React.FC = () => {
                         </a>
                     </nav>
                     <main>
-                       <Outlet/>
+                        <Outlet />
                     </main>
                 </section>
             </div>

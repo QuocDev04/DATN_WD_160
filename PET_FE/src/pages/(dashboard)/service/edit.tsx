@@ -12,27 +12,52 @@ import {
     UploadFile,
     UploadProps,
 } from "antd";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { AiFillBackward } from "react-icons/ai";
-import { AddIProduct } from "@/common/types/IProduct";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import instance from "@/configs/axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { AddIService } from "@/common/types/IService";
 type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
-const ProductAddPage = () => {
+const ServiceEditPage = () => {
+    const { id } = useParams();
     const [value, setValue] = useState("");
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewImage, setPreviewImage] = useState("");
     const [fileList, setFileList] = useState<UploadFile[]>([]);
     const [messageApi, contextHolder] = message.useMessage();
     const [form] = Form.useForm();
+    const {
+        data: product,
+        isLoading,
+        isError,
+        error,
+    } = useQuery({
+        queryKey: ["service", id],
+        queryFn: () => instance.get(`/service/${id}`),
+    });
+    useEffect(() => {
+        if (product?.data.gallery) {
+            setFileList(
+                product?.data?.gallery?.map((url: any, index: number) => {
+                    return {
+                        uid: index.toString(),
+                        name: `gallery${index}`,
+                        status: "done",
+                        url: url,
+                    };
+                }),
+            );
+        }
+    }, [product]);
+    const queryClient = useQueryClient();
     const { mutate, isPending } = useMutation({
-        mutationFn: async (data: AddIProduct) => {
+        mutationFn: async (data: AddIService) => {
             try {
-                return await instance.post("/product", data);
+                return await instance.put(`/service/${id}`, data);
             } catch (error) {
                 throw new Error((error as any).message);
             }
@@ -40,14 +65,16 @@ const ProductAddPage = () => {
         onSuccess: () => {
             messageApi.open({
                 type: "success",
-                content: "Bạn thêm sản phẩm thành công",
+                content: "Bạn sửa dịch vụ thành công",
             });
-            form.resetFields();
+            queryClient.invalidateQueries({
+                queryKey: ["product"],
+            });
         },
         onError: () => {
             messageApi.open({
                 type: "error",
-                content: "Bạn thêm sản phẩm thất bại. Vui lòng thử lại sau!",
+                content: "Bạn sửa dịch vụ thất bại. Vui lòng thử lại sau!",
             });
         },
     });
@@ -71,7 +98,7 @@ const ProductAddPage = () => {
         setFileList(newFileList);
     };
 
-    const onFinish: FormProps<AddIProduct>["onFinish"] = (values) => {
+    const onFinish: FormProps<AddIService>["onFinish"] = (values) => {
         const imageUrls = fileList
             .filter((file) => file.status === "done") // Lọc chỉ các ảnh đã tải lên thành công
             .map((file) => file.response?.secure_url); // Lấy URL từ phản hồi
@@ -112,11 +139,14 @@ const ProductAddPage = () => {
     const modules = {
         toolbar: toolbarOptions,
     };
+    if(isLoading) return <div>Loading</div>
+    if (isError) return <div>{error.message}</div>;
+    console.log(product?.data);
     return (
         <>
             <div className="flex items-center justify-between">
-                <h1 className="text-2xl">Thêm sản phẩm</h1>
-                <Link to={"/admin/product"}>
+                <h1 className="text-2xl">SỬa dịch vụ</h1>
+                <Link to={"/admin/service"}>
                     <Button type="primary">
                         <AiFillBackward />
                         Quay lại
@@ -129,29 +159,30 @@ const ProductAddPage = () => {
                 name="basic"
                 layout="vertical"
                 onFinish={onFinish}
+                initialValues={product?.data}
             >
                 <div className="grid grid-cols-[auto,300px]">
                     <div className="py-5">
                         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <Form.Item
-                                label="Tên sản phẩm"
-                                name="productName"
+                                label="Tên dịch vụ"
+                                name="servicesName"
                                 rules={[
                                     {
                                         required: true,
-                                        message: "Tên sản phẩm bắt buộc nhập",
+                                        message: "Tên dịch vụ bắt buộc nhập",
                                     },
                                 ]}
                             >
                                 <Input disabled={isPending} />
                             </Form.Item>
                             <Form.Item
-                                label="Giá sản phẩm"
+                                label="Giá dịch vụ"
                                 name="price"
                                 rules={[
                                     {
                                         required: true,
-                                        message: "Giá sản phẩm bắt buộc nhập",
+                                        message: "Giá dịch vụ bắt buộc nhập",
                                     },
                                     {
                                         type: "number",
@@ -181,7 +212,7 @@ const ProductAddPage = () => {
                             </Form.Item>
 
                         </div>
-                        <Form.Item label="Mô tả sản phẩm" name="description" className="mb-16">
+                        <Form.Item label="Mô tả dịch vụ" name="description" className="mb-16">
                             <ReactQuill
                                 className="h-[300px]"
                                 theme="snow"
@@ -194,41 +225,32 @@ const ProductAddPage = () => {
 
                     </div>
                     <div className="ml-5">
-                        <Form.Item name="gallery"
-                            rules={[
-                                {
-                                    required: false,
-                                    message: "Ảnh sản phẩm bắt buộc phải có",
-                                },
-                            ]}
-                        >
+                        <Form.Item name="gallery">
                             <h1 className="text-lg text-center py-2">
-                                Ảnh sản phẩm
+                                Ảnh dịch vụ
                             </h1>
                             <Upload
-                                listType="picture-card"
                                 action="https://api.cloudinary.com/v1_1/ecommercer2021/image/upload"
                                 data={{ upload_preset: "demo-upload" }}
+                                listType="picture-card"
+                                fileList={fileList}
                                 onPreview={handlePreview}
                                 onChange={handleChange}
                                 multiple
-                                disabled={isPending}
                             >
                                 {fileList.length >= 8 ? null : uploadButton}
                             </Upload>
-                            {previewImage && (
-                                <Image
-                                    wrapperStyle={{ display: "none" }}
-                                    preview={{
-                                        visible: previewOpen,
-                                        onVisibleChange: (visible) =>
-                                            setPreviewOpen(visible),
-                                        afterOpenChange: (visible) =>
-                                            !visible && setPreviewImage(""),
-                                    }}
-                                    src={previewImage}
-                                />
-                            )}
+                            <Image
+                                wrapperStyle={{ display: "none" }}
+                                preview={{
+                                    visible: previewOpen,
+                                    onVisibleChange: (visible) =>
+                                        setPreviewOpen(visible),
+                                    afterOpenChange: (visible) =>
+                                        !visible && setPreviewImage(""),
+                                }}
+                                src={previewImage}
+                            />
                         </Form.Item>
                     </div>
                     <Form.Item wrapperCol={{ span: 16 }}>
@@ -242,7 +264,7 @@ const ProductAddPage = () => {
                                     <LoadingOutlined className="animate-spin" />
                                 </>
                             ) : (
-                                "Thêm"
+                                "Sửa"
                             )}
                         </Button>
                     </Form.Item>
@@ -252,4 +274,4 @@ const ProductAddPage = () => {
     );
 };
 
-export default ProductAddPage;
+export default ServiceEditPage;

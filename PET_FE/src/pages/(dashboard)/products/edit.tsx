@@ -214,7 +214,7 @@ const ProductEditPage = () => {
                         </div>
                         <Form.Item label="Mô tả sản phẩm" name="description" className="mb-16">
                             <ReactQuill
-                                className="h-[400px]"
+                                className="h-[300px]"
                                 theme="snow"
                                 value={value}
                                 onChange={setValue}
