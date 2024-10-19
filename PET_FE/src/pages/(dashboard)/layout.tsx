@@ -1,104 +1,79 @@
-import React from "react";
-import {
-    DesktopOutlined,
-    PieChartOutlined,
-    UserOutlined,
-} from "@ant-design/icons";
-
-import { Layout, Menu, theme } from "antd";
-import { NavLink, Outlet } from "react-router-dom";
-import { MenuProps } from "rc-menu";
-
-const { Header, Content, Sider } = Layout;
-type MenuItem = Required<MenuProps>["items"][number];
-function getItem(
-    label: React.ReactNode,
-    key: React.Key,
-    icon?: React.ReactNode,
-    children?: MenuItem[],
-): MenuItem {
-    return {
-        key,
-        icon,
-        children,
-        label,
-    } as MenuItem;
-}
-const items: MenuItem[] = [
-    getItem(
-        <NavLink to={"/admin"}>Thống kê</NavLink>,
-        "1",
-        <PieChartOutlined />,
-    ),
-    getItem("Sản phẩm", "2", <DesktopOutlined />, [
-        getItem(<NavLink to={"/admin/product"}>Danh sách</NavLink>, "2-1"),
-        getItem(<NavLink to={"/admin/add"}>Thêm Sản Phẩm</NavLink>, "2-2"),
-    ]),
-    getItem("Danh mục", "3", <DesktopOutlined />, [
-        getItem(<NavLink to={"/admin/category"}>Danh sách</NavLink>, "3-1"),
-        getItem(
-            <NavLink to={"/admin/addCategory"}>Thêm danh mục</NavLink>,
-            "3-2",
-        ),
-    ]),
-    getItem("Người dùng", "4", <UserOutlined />, [
-        getItem(
-            <NavLink to={"/admin/user"}>Danh Sách</NavLink>,
-            "4-1",
-        ),
-    ]),
-];
+import React, { useState } from "react";
+import { Link, Outlet } from "react-router-dom";
 
 const LayoutAdmin: React.FC = () => {
-    // const navigate = useNavigate()
-    const {
-        token: { colorBgContainer, borderRadiusLG },
-    } = theme.useToken();
-    // const token = localStorage.getItem("token")
-    // const role = localStorage.getItem("role");
-    // useEffect(()=>{
-    //     if(!token){
-    //         navigate('/login')
-    //     }else if(role !== "admin"){
-    //         navigate("/unauthorized");
-    //     }
-    // },[token,role,navigate])
+    const [activeMenu, setActiveMenu] = useState<string>("Dashboard");
+    const [isSidebarHidden, setSidebarHidden] = useState<boolean>(false);
+
+    // Handle the active menu click
+    const handleMenuClick = (menu: string) => {
+        setActiveMenu(menu);
+    };
+
+    // Toggle sidebar visibility
+    const toggleSidebar = () => {
+        setSidebarHidden(!isSidebarHidden);
+    };
     return (
-        <Layout hasSider>
-            <Sider
-                style={{
-                    overflow: "auto",
-                    height: "100vh",
-                    position: "fixed",
-                    left: 0,
-                    top: 0,
-                    bottom: 0,
-                }}
-            >
-                <div className="demo-logo-vertical" />
-                <Menu
-                    theme="dark"
-                    mode="inline"
-                    defaultSelectedKeys={["4"]}
-                    items={items}
-                />
-            </Sider>
-            <Layout style={{ marginLeft: 200 }}>
-                <Header style={{ padding: 0, background: colorBgContainer }} />
-                <Content style={{ margin: "24px 16px 0", overflow: "initial" }}>
-                    <div
-                        style={{
-                            padding: 24,
-                            textAlign: "left",
-                            background: colorBgContainer,
-                            borderRadius: borderRadiusLG,
-                        }}
-                    >
-                        <Outlet />
-                    </div>
-                </Content>
-            </Layout>
-        </Layout>
+        <>
+            <div>
+                <section id="sidebar" className={isSidebarHidden ? "hide" : ""}>
+                    <Link to={'/admin'} className="brand">
+                        <i className="bx bxs-smile" />
+                        <span className="text">Admin</span>
+                    </Link>
+                    <ul className="side-menu top">
+                        <li className={activeMenu === "Dashboard" ? "active" : ""}>
+                            <Link to={'/admin'} onClick={() => handleMenuClick("Dashboard")}>
+                                <i className="bx bxs-dashboard" />
+                                <span className="text">Thống Kê</span>
+                            </Link>
+                        </li>
+                        <li className={activeMenu === "List" ? "active" : ""}>
+                            <Link to={"/admin/product"} onClick={() => handleMenuClick("List")}>
+                                <i className="bx bxs-shopping-bag-alt" />
+                                <span className="text">Danh Sách Sản Phẩm</span>
+                            </Link>
+                        </li>
+                        <li className={activeMenu === "Analytics" ? "active" : ""}>
+                            <Link to={'/admin/user'} onClick={() => handleMenuClick("Analytics")}>
+                                <i className="bx bxs-doughnut-chart" />
+                                <span className="text">Danh Sách Người Dùng</span>
+                            </Link>
+                        </li>
+                    </ul>
+                </section>
+
+                <section id="content">
+                    <nav>
+                        <i className="bx bx-menu" onClick={toggleSidebar} />
+                        <a href="#" className="nav-link">
+                            Categories
+                        </a>
+                        <form action="#">
+                            <div className="form-input">
+                                <input type="search" placeholder="Search..." />
+                                <button type="submit" className="search-btn">
+                                    <i className="bx bx-search" />
+                                </button>
+                            </div>
+                        </form>
+                        <input type="checkbox" id="switch-mode" hidden />
+                        <label htmlFor="switch-mode" className="switch-mode" />
+                        <a href="#" className="notification">
+                            <i className="bx bxs-bell" />
+                            <span className="num">8</span>
+                        </a>
+                        <a href="#" className="profile">
+                            <img src="img/people.png" alt="profile" />
+                        </a>
+                    </nav>
+                    <main>
+                       <Outlet/>
+                    </main>
+                </section>
+            </div>
+        </>
     );
 };
 

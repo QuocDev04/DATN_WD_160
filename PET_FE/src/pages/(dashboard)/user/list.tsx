@@ -2,14 +2,14 @@
 import { IUser } from "../../../common/types/IUser";
 import instance from "@/configs/axios";
 import { QuestionCircleOutlined } from "@ant-design/icons";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { notification, Popconfirm, Table, TableColumnsType } from "antd";
-import { AiFillDelete, AiTwotoneTool } from "react-icons/ai";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Button, notification, Popconfirm, Table, TableColumnsType } from "antd";
+import { AiFillDelete, AiFillEdit, AiTwotoneDelete, AiTwotoneTool } from "react-icons/ai";
 import { Link } from "react-router-dom";
 
 const ListUser = () => {
     const [api, contextHolder] = notification.useNotification();
-
+    const queryClient = useQueryClient();
     const { data: user } = useQuery({
         queryKey: ["user"],
         queryFn: () => instance.get(`/user`),
@@ -39,12 +39,18 @@ const ListUser = () => {
                 throw new Error("error");
             }
         },
-        onSuccess: () =>
+        onSuccess: () =>{
             openNotification(false)(
                 "success",
                 "Bạn Xóa Thành Công",
                 "Bạn Đã Xóa Thành Công",
-            ),
+                
+            )
+            queryClient.invalidateQueries({
+                queryKey: ["user"],
+            });
+},
+            
         onError: () =>
             openNotification(false)(
                 "error",
@@ -80,18 +86,14 @@ const ListUser = () => {
             dataIndex: "email",
             width: 280,
             filterSearch: true,
-            filters: user ? filterEmail(user?.data) : [],
+            // Filter out admin users based on a condition
+            filters: user ? filterEmail(user?.data.filter((item: IUser) => item.role !== "admin")) : [],
             onFilter: (value: any, item: IUser) =>
                 item.email.includes(value),
-            sorter: (a: IUser, b: IUser) => a.name.localeCompare(b.email),
+            sorter: (a: IUser, b: IUser) => a.email.localeCompare(b.email),
             sortDirections: ["ascend", "descend"],
         },
-        // {
-        //     title: "Mật Khẩu",
-        //     dataIndex: "password",
-        //     width: 280,
-        //     render: (password: string) => <span>{password}</span>,
-        // },
+
         {
             title: "Số Điện Thoại",
             dataIndex: "phone",
@@ -116,12 +118,14 @@ const ListUser = () => {
             title: "Action",
             key: "operation",
             fixed: "right",
-            width: 100,
+            width: 150,
             render: (_: any, item: IUser) => (
                 <>
-                    <div className="flex gap-4">
+                    <div className="flex gap-3">
                         <Link to={`/admin/user/${item._id}`}>
-                            <AiTwotoneTool className="size-6" />
+                            <Button type="primary" className="mr-2">
+                                <AiFillEdit className="text-xl" />
+                            </Button>
                         </Link>
                         <Popconfirm
                             onConfirm={() => del(item._id)}
@@ -133,7 +137,9 @@ const ListUser = () => {
                                 />
                             }
                         >
-                            <AiFillDelete className="size-6 text-red-600" />
+                            <Button danger>
+                                <AiTwotoneDelete className="text-lg" />
+                            </Button>
                         </Popconfirm>
                     </div>
                 </>
@@ -143,7 +149,7 @@ const ListUser = () => {
     return (
         <>
             {contextHolder}
-            <div className="flex justify-between m-5">
+            <div className="flex justify-between mb-7">
                 <h1 className="text-2xl font-medium">Danh Sách Người Dùng</h1>
             </div>
             <Table
@@ -151,7 +157,7 @@ const ListUser = () => {
                 columns={columns}
                 dataSource={dataSource}
                 pagination={{ pageSize: 50 }}
-                scroll={{ y: 540, x: 1500 }}
+                scroll={{ y: 440, x: 1500 }}
             />
         </>
     );

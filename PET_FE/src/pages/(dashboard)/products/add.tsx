@@ -135,7 +135,7 @@ const ProductAddPage = () => {
                         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <Form.Item
                                 label="Tên sản phẩm"
-                                name="name"
+                                name="productName"
                                 rules={[
                                     {
                                         required: true,
@@ -197,7 +197,7 @@ const ProductAddPage = () => {
                         <Form.Item name="gallery"
                             rules={[
                                 {
-                                    required: true,
+                                    required: false,
                                     message: "Ảnh sản phẩm bắt buộc phải có",
                                 },
                             ]}

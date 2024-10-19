@@ -39,15 +39,11 @@ export const Login = Joi.object({
 });
 export const ExamsSchame = Joi.object({
     productName: Joi.string().required().messages({
-        "any.required": "productName Phỉa Nhập",
+        "any.required": "productName Phải Nhập",
         "string.empty": "productName Không Được Bỏ Trống"
     }),
-    price: Joi.string().required().messages({
-        "any.required": "price Phỉa Nhập",
-        "string.empty": "price Không Được Bỏ Trống"
-    }),
-    gallery: Joi.string().required().messages({
-        "any.required": "gallery Phỉa Nhập",
-        "string.empty": "gallery Không Được Bỏ Trống"
-    }),
+    price: Joi.number().required().messages({
+        "any.required": "price Phải Nhập",
+        "number.empty": "price Không Được Bỏ Trống"
+    })
 })

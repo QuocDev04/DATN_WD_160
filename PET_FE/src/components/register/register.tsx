@@ -1,7 +1,7 @@
 import { Button, Form, FormProps, Input, message } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { AiTwotoneMail } from "react-icons/ai";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import instance from "@/configs/axios";
 type FieldType = {
@@ -12,6 +12,7 @@ type FieldType = {
 };
 const RegisterPages = () => {
     const [messageApi, contextHolder] = message.useMessage();
+    const navigate = useNavigate()
     const { mutate } = useMutation({
         mutationFn: async (data: FieldType) => {
             try {
@@ -26,6 +27,7 @@ const RegisterPages = () => {
                     type: "success",
                     content: "Bạn đăng ký thành công",
                 });
+                setTimeout(()=>navigate('/login'),500)
             } catch (error) {
                 messageApi.open({
                     type: "error",
@@ -158,7 +160,7 @@ const RegisterPages = () => {
                                     Đăng Ký
                                 </Button>
                                 <Link to={"/login"} className="ml-3">
-                                    Đăng nhập
+                                    Trở Về
                                 </Link>
                             </Form.Item>
                         </Form>

@@ -6,18 +6,28 @@ import {
 import { Link } from "react-router-dom";
 import { QuestionCircleOutlined } from "@ant-design/icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Button, Empty, message, Popconfirm, Table, TableColumnsType } from "antd";
+import { Button, Empty, notification, Popconfirm, Table, TableColumnsType } from "antd";
 
 import instance from "@/configs/axios";
 import { IProduct } from "@/common/types/IProduct";
 
 const ProductPage = () => {
-    const [messageApi, contextHolder] = message.useMessage();
+    const [api, contextHolder] = notification.useNotification();
     const { data, isLoading } = useQuery({
         queryKey: ["product"],
         queryFn: () => instance.get(`/product`),
     });
-    console.log(data?.data);
+    const openNotification =
+        (pauseOnHover: boolean) =>
+            (type: "success" | "error", message: string, description: string) => {
+                api.open({
+                    message,
+                    description,
+                    type,
+                    showProgress: true,
+                    pauseOnHover,
+                });
+            };
 
     const queryClient = useQueryClient();
     const { mutate } = useMutation({
@@ -29,22 +39,23 @@ const ProductPage = () => {
             }
         },
         onSuccess: () => {
-            messageApi.open({
-                type: "success",
-                content: "Xóa sản phẩm thành công",
-            });
+            openNotification(false)(
+                "success",
+                "Bạn Xóa Thành Công",
+                "Bạn Đã Xóa Thành Công",
+            )
             queryClient.invalidateQueries({
                 queryKey: ["product"],
             });
         },
-        onError: () => {
-            messageApi.open({
-                type: "success",
-                content: "Xóa sản phẩm thất bại",
-            });
-        },
-    });
 
+        onError: () =>
+            openNotification(false)(
+                "error",
+                "Bạn Xóa Thất Bại",
+                "Bạn Đã Xóa Thất Bại",
+            ),
+    });
     const dataSource = data?.data.map((product: IProduct) => ({
         key: product._id,
         ...product,
@@ -61,7 +72,7 @@ const ProductPage = () => {
 
     const createFilter = (products: IProduct[]) => {
         return products
-            .map((product: IProduct) => product.name)
+            .map((product: IProduct) => product.productName)
             .filter(
                 (value: string, index: number, self: string[]) =>
                     self.indexOf(value) === index,
@@ -73,14 +84,14 @@ const ProductPage = () => {
         {
             title: "Tên Sản Phẩm",
             width: 200,
-            dataIndex: "name",
+            dataIndex: "productName",
             key: "name",
             fixed: "left",
             filterSearch: true,
             filters: data ? createFilter(data?.data) : [],
             onFilter: (value: any, product: IProduct) =>
-                product.name.includes(value),
-            sorter: (a: IProduct, b: IProduct) => a.name.localeCompare(b.name),
+                product.productName.includes(value),
+            sorter: (a: IProduct, b: IProduct) => a.productName.localeCompare(b.productName),
             sortDirections: ["ascend", "descend"],
         },
         {
@@ -155,7 +166,7 @@ const ProductPage = () => {
     );
     return (
         <div>
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between mb-5">
                 <h1>Quản lý sản phẩm</h1>
                 <Link to={"/admin/add"}>
                     {" "}

@@ -1,14 +1,14 @@
 
 export interface IProduct {
     _id: string,
-    name: string,
+    productName: string,
     price: number,
     description: string,
     gallery: string[];
 }
 
 export interface AddIProduct {
-    name: string,
+    productName: string,
     price: number,
     description: string,
     gallery: string[];
