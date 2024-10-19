@@ -72,6 +72,7 @@ const RegisterPages = () => {
                             style={{ maxWidth: 600 }}
                             initialValues={{ remember: true }}
                             autoComplete="off"
+                            onFinish={onFinish}
                         >
                             <Form.Item<FieldType>
                                 label="Tên tài khoản"
