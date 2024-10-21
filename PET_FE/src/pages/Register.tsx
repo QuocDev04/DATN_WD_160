@@ -1,116 +1,96 @@
 import React from "react";
-import { Layout, Menu, Form, Input, Button, message } from "antd";
-import { HomeOutlined } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
+import { Form, Input, Button, Radio } from "antd";
 import "../styles/Signup.css";
-import Logo from "../images/logo.png";
+import cat from "../images/cat.png";
+import dog from "../images/dog.png";
 
-const { Header, Content, Footer } = Layout;
-
-const SignUp = () => {
-  const navigate = useNavigate();
-
+const Signup = () => {
   const onFinish = (values: any) => {
-    console.log(values);
-    // Hiển thị thông báo thành công
-    message.success("Đăng ký thành công!");
+    console.log("Success:", values);
+  };
 
-    setTimeout(() => {
-      navigate("/login");
-    }, 2000);
+  const onFinishFailed = (errorInfo: any) => {
+    console.log("Failed:", errorInfo);
   };
 
   return (
-    <Layout>
-      {/* Header */}
-      <Header style={{ backgroundColor: "#F6F0E2", padding: 0 }}>
-        <div className="header-content">
-          <img src={Logo} alt="logo" className="logo" />
-          <span className="hotline">HOTLINE: 0123456789</span>
-          <Input.Search placeholder="Tìm kiếm" className="search-bar" />
-          <HomeOutlined className="home-icon" />
+    <div className="signup-wrapper">
+      <h1 className="title">PET HOTEL</h1>
+      <div className="signup-container">
+        <div className="image-container left">
+          <img src={cat} alt="Cat" className="side-image" />
         </div>
-
-        {/* Menu */}
-        <Menu
-          mode="horizontal"
-          theme="light"
-          className="menu"
-          style={{
-            width: "100%",
-            backgroundColor: "#F6F0E2",
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
-          <Menu.Item key="1" className="menu-item">
-            HOME
-          </Menu.Item>
-          <Menu.Item key="2" className="menu-item">
-            GIỚI THIỆU SẢN PHẨM
-          </Menu.Item>
-          <Menu.Item key="3" className="menu-item">
-            TẠP CHÍ THÚ CƯNG
-          </Menu.Item>
-          <Menu.Item key="4" className="menu-item">
-            ĐẶT PHÒNG
-          </Menu.Item>
-          <Menu.Item key="5" className="menu-item">
-            LIÊN HỆ
-          </Menu.Item>
-          <Menu.Item key="6" className="menu-item">
-            GIỚI THIỆU VỀ SHOP
-          </Menu.Item>
-        </Menu>
-      </Header>
-
-      {/* Content */}
-      <Content style={{ padding: "20px" }}>
-        <div className="register-content">
-          <h2>Tạo tài khoản</h2>
-          <Form layout="vertical" className="register-form" onFinish={onFinish}>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <Form.Item
-                name="firstName"
-                rules={[{ required: true, message: "Vui lòng nhập tên!" }]}
-                style={{ width: "48%" }}
-              >
-                <Input placeholder="Tên..." />
-              </Form.Item>
-              <Form.Item
-                name="lastName"
-                rules={[{ required: true, message: "Vui lòng nhập họ!" }]}
-                style={{ width: "48%" }}
-              >
-                <Input placeholder="Họ..." />
-              </Form.Item>
-            </div>
+        <div className="form-container">
+          <Form
+            name="signup"
+            layout="vertical"
+            onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
+          >
+            <h2 className="form-title">Tạo tài khoản mới</h2>
+            <p>Nhanh chóng và dễ dàng</p>
 
             <Form.Item
-              name="username"
-              rules={[{ required: true, message: "Vui lòng nhập tài khoản!" }]}
+              label="Họ và Tên"
+              name="fullname"
+              rules={[{ required: true, message: "Vui lòng nhập họ và tên!" }]}
             >
-              <Input placeholder="Tài khoản" />
+              <Input />
             </Form.Item>
 
             <Form.Item
+              label="Địa chỉ"
+              name="address"
+              rules={[{ required: true, message: "Vui lòng nhập địa chỉ!" }]}
+            >
+              <Input />
+            </Form.Item>
+
+            <Form.Item
+              label="Email"
               name="email"
-              rules={[{ required: true, message: "Vui lòng nhập email!" }]}
+              rules={[
+                { required: true, message: "Vui lòng nhập email!" },
+                { type: "email", message: "Email không hợp lệ!" },
+              ]}
             >
-              <Input placeholder="Email" />
+              <Input />
             </Form.Item>
 
             <Form.Item
+              label="Số điện thoại"
+              name="phone"
+              rules={[
+                { required: true, message: "Vui lòng nhập số điện thoại!" },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+
+            <Form.Item
+              label="Giới tính"
+              name="gender"
+              rules={[{ required: true, message: "Vui lòng chọn giới tính!" }]}
+            >
+              <Radio.Group>
+                <Radio value="male">Nam</Radio>
+                <Radio value="female">Nữ</Radio>
+              </Radio.Group>
+            </Form.Item>
+
+            <Form.Item
+              label="Mật khẩu"
               name="password"
               rules={[{ required: true, message: "Vui lòng nhập mật khẩu!" }]}
             >
-              <Input.Password placeholder="Mật khẩu" />
+              <Input.Password />
             </Form.Item>
 
             <Form.Item
-              name="confirmPassword"
+              label="Xác nhận mật khẩu"
+              name="passwordConfirmation"
               rules={[
-                { required: true, message: "Vui lòng nhập lại mật khẩu!" },
+                { required: true, message: "Vui lòng xác nhận mật khẩu!" },
                 ({ getFieldValue }) => ({
                   validator(_, value) {
                     if (!value || getFieldValue("password") === value) {
@@ -121,35 +101,26 @@ const SignUp = () => {
                 }),
               ]}
             >
-              <Input.Password placeholder="Nhập lại mật khẩu" />
+              <Input.Password />
             </Form.Item>
 
-            <Button
-              type="primary"
-              htmlType="submit"
-              style={{ backgroundColor: "#FF0202", borderColor: "#FF0202" }}
-            >
-              Đăng ký ngay
-            </Button>
-
-            <div className="signin-link">
-              <span
-                style={{ cursor: "pointer", color: "#007bff" }}
-                onClick={() => (window.location.href = "/login")}
+            <Form.Item>
+              <Button
+                type="primary"
+                htmlType="submit"
+                className="submit-button"
               >
-                Bạn đã có tài khoản? Signin
-              </span>
-            </div>
+                Đăng ký
+              </Button>
+            </Form.Item>
           </Form>
         </div>
-      </Content>
-
-      {/* Footer */}
-      <Footer style={{ backgroundColor: "#8B4D02", color: "white" }}>
-        Pet Hotel ©2024 Created by Your Team
-      </Footer>
-    </Layout>
+        <div className="image-container right">
+          <img src={dog} alt="Dog" className="side-image" />
+        </div>
+      </div>
+    </div>
   );
 };
 
-export default SignUp;
+export default Signup;

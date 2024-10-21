@@ -1,140 +1,90 @@
 import React from "react";
-import { Layout, Menu, Form, Input, Button, Checkbox } from "antd";
-import { HomeOutlined } from "@ant-design/icons";
-import "../styles/Signin.css";
-import Logo from "../images/logo.png";
-import { GoogleOutlined, AppleOutlined } from "@ant-design/icons";
+import { Form, Input, Button, Typography } from "antd";
+import "../styles/Signin.css"; // Đảm bảo đường dẫn là chính xác
+import cat from "../images/cat.png";
+import dog from "../images/dog.png";
 
-const { Header, Content, Footer } = Layout;
+const { Title } = Typography;
 
 const SignIn = () => {
+  const onFinish = (values: any) => {
+    console.log("Success:", values);
+  };
+
+  const onFinishFailed = (errorInfo: any) => {
+    console.log("Failed:", errorInfo);
+  };
+
   return (
-    <Layout>
-      {/* Header */}
-      <Header style={{ backgroundColor: "#F6F0E2", padding: 0 }}>
-        <div className="header-content">
-          <img src={Logo} alt="logo" className="logo" />
-          <span className="hotline">HOTLINE: 0123456789</span>
-          <Input.Search placeholder="Tìm kiếm" className="search-bar" />
-          <HomeOutlined className="home-icon" />
+    <div className="signin-wrapper">
+      <h1 className="title">PET HOTEL</h1>
+      <div className="signin-container">
+        <div className="image-container">
+          <img src={cat} alt="Cat" className="side-image" />
         </div>
-
-        {/* Menu */}
-        <Menu
-          mode="horizontal"
-          theme="light"
-          className="menu"
-          style={{
-            width: "100%",
-            backgroundColor: "#F6F0E2",
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
-          <Menu.Item key="1" className="menu-item">
-            HOME
-          </Menu.Item>
-          <Menu.Item key="2" className="menu-item">
-            GIỚI THIỆU SẢN PHẨM
-          </Menu.Item>
-          <Menu.Item key="3" className="menu-item">
-            TẠP CHÍ THÚ CƯNG
-          </Menu.Item>
-          <Menu.Item key="4" className="menu-item">
-            ĐẶT PHÒNG
-          </Menu.Item>
-          <Menu.Item key="5" className="menu-item">
-            LIÊN HỆ
-          </Menu.Item>
-          <Menu.Item key="6" className="menu-item">
-            GIỚI THIỆU VỀ SHOP
-          </Menu.Item>
-        </Menu>
-      </Header>
-
-      {/* Content */}
-      <Content style={{ padding: "20px" }}>
-        <div className="login-content">
-          <h2>Đăng nhập ngay</h2>
+        <div className="form-container">
+          <Title level={4} className="form-title">
+            Đăng nhập Pet hotel
+          </Title>
           <Form
-            layout="vertical"
-            className="login-form"
-            onFinish={(values) => console.log(values)}
+            name="login"
+            initialValues={{ remember: true }}
+            onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
           >
             <Form.Item
               name="email"
-              rules={[{ required: true, message: "Vui lòng nhập email!" }]}
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng nhập email hoặc số điện thoại!",
+                },
+              ]}
             >
-              <Input placeholder="Email" />
+              <Input
+                placeholder="Email hoặc số điện thoại"
+                style={{ width: "100%" }} // Đảm bảo input rộng
+              />
             </Form.Item>
 
             <Form.Item
               name="password"
               rules={[{ required: true, message: "Vui lòng nhập mật khẩu!" }]}
             >
-              <Input.Password placeholder="Mật khẩu" />
+              <Input.Password
+                placeholder="Mật khẩu"
+                style={{ width: "100%" }} // Đảm bảo input rộng
+              />
             </Form.Item>
 
-            <div
-              className="remember-forgot"
-              style={{ display: "flex", justifyContent: "space-between" }}
-            >
-              <Form.Item valuePropName="checked" noStyle>
-                <Checkbox>Nhớ mật khẩu</Checkbox>
-              </Form.Item>
-              <span
-                className="forgot-password"
-                style={{
-                  cursor: "pointer",
-                  color: "#007bff",
-                }}
+            <Form.Item>
+              <Button
+                type="primary"
+                htmlType="submit"
+                className="submit-button"
               >
-                Quên mật khẩu?
-              </span>
-            </div>
-
-            <Button
-              type="primary"
-              htmlType="submit"
-              style={{ backgroundColor: "#FF0202", borderColor: "#FF0202" }}
-            >
-              Đăng nhập
-            </Button>
-
-            <div className="login-link">
-              <span
-                style={{ cursor: "pointer", color: "#007bff" }}
-                onClick={() => (window.location.href = "/signup")}
-              >
-                Bạn chưa có tài khoản? Đăng ký ngay
-              </span>
-            </div>
-
-            {/* Đăng nhập với Google và Apple nằm trong form */}
-            <div
-              className="social-login"
-              style={{
-                marginTop: "20px",
-                display: "flex",
-                justifyContent: "center",
-              }}
-            >
-              <Button icon={<GoogleOutlined />} style={{ margin: "10px" }}>
-                Google
+                Đăng nhập
               </Button>
-              <Button icon={<AppleOutlined />} style={{ margin: "10px" }}>
-                Apple
-              </Button>
-            </div>
+            </Form.Item>
+
+            <Form.Item>
+              <p style={{ textAlign: "center" }}>
+                Bạn quên tài khoản? <a href="#">Đăng ký Pet hotel</a>
+              </p>
+            </Form.Item>
           </Form>
         </div>
-      </Content>
-
-      {/* Footer */}
-      <Footer style={{ backgroundColor: "#8B4D02", color: "white" }}>
-        Pet Hotel ©2024 Created by Your Team
-      </Footer>
-    </Layout>
+        <div className="image-container">
+          <img
+            src={dog}
+            alt="Dog"
+            className="side-image"
+            style={{ marginRight: "-20px" }}
+          />{" "}
+          {/* Lùi hình chó về bên phải */}
+        </div>
+      </div>
+    </div>
   );
 };
 

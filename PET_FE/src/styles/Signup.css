@@ -1,93 +1,79 @@
-.header-content {
+.signup-wrapper {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 50px;
-  padding: 0;
-  margin: 0;
-}
-
-.logo {
-  width: 65px;
-  margin-left: 100px;
-}
-
-.hotline {
-  margin-left: -10px;
-}
-
-.menu {
-  display: flex;
-  justify-content: center;
-}
-
-.menu-item {
-  color: #8b4d02;
-  font-weight: bold;
-  padding: 0 20px;
-}
-
-.menu-item:hover {
-  background-color: #ff0202;
-  color: white;
-}
-
-.search-bar {
-  width: 600px;
-  margin-left: 200px;
-}
-
-.home-icon {
-  font-size: 24px;
-  margin-right: 300px;
-}
-
-.register-content {
-  display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 50px;
-  margin-left: 10px;
-  margin-top: 90px;
+  background-color: #fff;
 }
 
-.register-content h2 {
-  font-size: 36px;
-  font-weight: bold;
-  margin-top: 100px;
+.signup-container {
+  display: flex;
+  justify-content: space-between;   
+  align-items: center;
+  width: 80%;
 }
 
-.register-form {
-  width: 350px;
-  margin-left: 200px;
-  border: 2px solid #8b4d02;
-  border-radius: 10px;
-  padding: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.register-form .ant-input {
-  border-radius: 30px;
-  border-color: #8b4d02;
-}
-
-.register-form .ant-btn {
-  width: 100%;
-  border-radius: 30px;
-  height: 40px;
-  font-weight: bold;
-  margin-top: 20px;
-}
-
-.signin-link {
+.image-container {
+  flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 20px;
+  padding: 0px;
+  margin-top: 280px;
 }
 
-footer {
+.left {
+  justify-content: flex-start;
+}
+
+.right {
+  justify-content: flex-end;
+}
+
+.side-image {
+  width: 200px;
+  height: auto;
+}
+
+.form-container {
+  flex: 2;
+  max-width: 400px;
   padding: 20px;
-  color: white;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+  color: #8b4d02;
+  font-size: 36px;
+  font-weight: bold;
+  margin-bottom: 20px;
   text-align: center;
+}
+
+.form-title {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.form-container p {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.submit-button {
+  background-color: #8b4d02;
+  border-color: #8b4d02;
+  color: white;
+  width: 100%;
+}
+
+.submit-button:hover {
+  background-color: #6d3c02;
+  border-color: #6d3c02;
 }

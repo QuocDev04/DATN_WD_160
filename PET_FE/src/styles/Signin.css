@@ -1,105 +1,71 @@
-.header-content {
+.signin-wrapper {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 50px;
-  padding: 0;
-  margin: 0;
-}
-
-.logo {
-  width: 65px;
-  margin-left: 100px;
-}
-
-.hotline {
-  margin-left: -10px;
-}
-
-.menu {
-  display: flex;
-  justify-content: center;
-}
-
-.menu-item {
-  color: #8b4d02;
-  font-weight: bold;
-  padding: 0 20px;
-}
-
-.menu-item:hover {
-  background-color: #ff0202;
-  color: white;
-}
-
-.search-bar {
-  width: 600px;
-  margin-left: 200px;
-}
-
-.home-icon {
-  font-size: 24px;
-  margin-right: 300px;
-}
-
-.login-content {
-  display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 50px;
-  margin-left: 10px;
-  margin-top: 90px;
+  background-color: #fff;
 }
 
-.login-content h2 {
+.signin-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80%;
+}
+
+.image-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0px;
+}
+
+.side-image {
+  width: 120px;
+  height: auto;
+  margin-left: -20px; /* Lùi hình mèo về bên trái */
+}
+
+.form-container {
+  flex: 2;
+  max-width: 500px; /* Tăng kích thước của form */
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+  color: #8b4d02; /* Màu chữ */
   font-size: 36px;
   font-weight: bold;
-  margin-top: 100px;
-}
-
-.login-form {
-  width: 350px;
-  margin-left: 200px;
-  border: 2px solid #8b4d02;
-  border-radius: 10px;
-  padding: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.login-form .ant-input {
-  border-radius: 30px;
-  border-color: #8b4d02;
-}
-
-.login-form .ant-btn {
-  width: 100%;
-  border-radius: 30px;
-  height: 40px;
-  font-weight: bold;
-  margin-top: 20px;
-}
-
-.login-link {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 20px;
-}
-
-.social-login {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 20px;
-}
-
-.social-login span {
-  margin-right: 10px;
-}
-
-footer {
-  padding: 20px;
-  color: white;
+  margin-bottom: 20px;
   text-align: center;
 }
 
+.form-title {
+  font-size: 24px; /* Tăng kích thước chữ cho tiêu đề form */
+  font-weight: bold;
+  color: #8b4d02; /* Đổi màu chữ */
+  margin: 20px 0 10px; /* Lùi xuống bằng margin */
+  text-align: center;
+}
+
+.form-container p {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.submit-button {
+  background-color: #8b4d02;
+  border-color: #8b4d02;
+  color: white;
+  width: 100%;
+}
+
+.submit-button:hover {
+  background-color: #6d3c02;
+  border-color: #6d3c02;
+}
