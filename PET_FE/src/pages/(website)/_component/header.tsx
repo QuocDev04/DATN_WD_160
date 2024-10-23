@@ -16,47 +16,17 @@ const HeaderPages = () => {
                         <div className="flex-1 md:flex md:items-center md:gap-12">
                             <a className="block text-teal-600">
                                 <span className="sr-only">Home</span>
-                                <img src="../public/image.png" className="w-24" />
+                                <img src="../public/image.png" className="w-24  hidden md:relative md:block" />
                             </a>
-                            <Search placeholder="Tìm Kiếm" onSearch={onSearch} enterButton />
+                            <Search placeholder="Nhập Nội Dung Cần Tìm Kiếm" onSearch={onSearch} enterButton  />
                         </div>
-
                         <div className="md:flex md:items-center md:gap-12 ml-4">
-                            <nav aria-label="Global" className="hidden md:block">
-                                <ul className="flex items-center gap-6 text-sm">
-                                    <li>
-                                        <Link to={''} className="text-gray-500 transition hover:text-gray-500/75"> Trang Chủ </Link >
-                                    </li>
-
-                                    <li>
-                                        <Link to={''} className="text-gray-500 transition hover:text-gray-500/75"> Giới Thiệu Sản Phẩm </Link >
-                                    </li>
-
-                                    <li>
-                                        <Link to={''} className="text-gray-500 transition hover:text-gray-500/75"> Tạp Chí Thú Cưng </Link >
-                                    </li>
-
-                                    <li>
-                                        <Link to={''} className="text-gray-500 transition hover:text-gray-500/75"> Đặt Phòng </Link >
-                                    </li>
-
-                                    <li>
-                                        <Link to={''} className="text-gray-500 transition hover:text-gray-500/75"> Liên Hệ </Link >
-                                    </li>
-
-                                    <li>
-                                        <Link to={''} className="text-gray-500 transition hover:text-gray-500/75"> Giới Thiệu Về Shop </Link >
-                                    </li>
-                                </ul>
-                            </nav>
-
+                            <button className="hidden md:relative md:block">Cửa Hàng Gần Bạn</button>
                             <div className="hidden md:relative md:block">
                                 <button
                                     type="button"
                                     className="overflow-hidden rounded-full border border-gray-300 shadow-inner"
                                 >
-                                    <span className="sr-only">Toggle dashboard menu</span>
-
                                     <img
                                         src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                                         alt=""
@@ -137,25 +107,43 @@ const HeaderPages = () => {
                                     </svg>
                                 </button>
                             </div>
+
                         </div>
                     </div>
                 </div>
+                  
             </header>
-            <div
-                className="bg-[#F6F0E2] px-4 py-3 text-white sm:flex sm:items-center sm:justify-between sm:px-6 lg:px-8"
-            >
-                <p className="text-center font-medium sm:text-left">
+            <div className="flex items-center justify-center pb-2 bg-[#F6F0E2] ">
+                <div className=" hidden md:relative md:block">
+                       <ul className="flex items-center gap-6 text-md">
+                        <li>
+                            <Link to={''} className="text-gray-500 transition hover:text-gray-500/75"> Trang Chủ </Link >
+                        </li>
 
-                    {/* <br className="sm:hidden" /> */}
+                        <li>
+                            <Link to={''} className="text-gray-500 transition hover:text-gray-500/75"> Giới Thiệu Sản Phẩm </Link >
+                        </li>
 
-                </p>
-                <div
-                >
-                   
+                        <li>
+                            <Link to={''} className="text-gray-500 transition hover:text-gray-500/75"> Tạp Chí Thú Cưng </Link >
+                        </li>
+
+                        <li>
+                            <Link to={''} className="text-gray-500 transition hover:text-gray-500/75"> Đặt Phòng </Link >
+                        </li>
+
+                        <li>
+                            <Link to={''} className="text-gray-500 transition hover:text-gray-500/75"> Liên Hệ </Link >
+                        </li>
+
+                        <li>
+                            <Link to={''} className="text-gray-500 transition hover:text-gray-500/75"> Giới Thiệu Về Shop </Link >
+                        </li>
+            </ul> 
                 </div>
-
+             
             </div>
-
+           
         </>
     )
 }

@@ -12,7 +12,8 @@ import EditUser from "@/pages/(dashboard)/user/edit";
 import ListUser from "@/pages/(dashboard)/user/list";
 import LoginPages from "@/pages/(website)/auth/login/login";
 import RegisterPages from "@/pages/(website)/auth/register/register";
-import Layout from "@/pages/(website)/layout";
+import HomePages from "@/pages/(website)/home/pages";
+import Layout from "@/pages/layout";
 import { Route, Routes } from "react-router-dom";
 
 const Router = () => {
@@ -33,8 +34,8 @@ const Router = () => {
                     <Route path="serviceAdd" element={<ServiceAddPage />} />
                     <Route path=":id/serviceEdit" element={<ServiceEditPage />} />
                 </Route>
-                <Route path="/" element={<Layout/>}>
-                
+                <Route path="/" element={<Layout />}>
+                    <Route index element={<HomePages />} />
                 </Route>
                 <Route path="register" element={<RegisterPages />} />
                 <Route path="login" element={<LoginPages />} />
