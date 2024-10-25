@@ -4,7 +4,7 @@ const MainPages = () => {
             <section>
                 <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
                     <header>
-                        <h2 className="text-xl font-bold text-red-600 sm:text-3xl">HOT</h2>
+                        <h2 className="text-xl font-bold text-red-600 sm:text-3xl">Phòng Hot</h2>
                     </header>
                     <ul className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                         <li>
@@ -23,7 +23,7 @@ const MainPages = () => {
                                     <p className="mt-2">
                                         <span className="sr-only"> Regular Price </span>
 
-                                        <span className="tracking-wider text-gray-900"> £24.00 GBP </span>
+                                        <span className="tracking-wider text-gray-900"> 45456465 </span>
                                     </p>
                                 </div>
                             </a>
@@ -45,7 +45,7 @@ const MainPages = () => {
                                     <p className="mt-2">
                                         <span className="sr-only"> Regular Price </span>
 
-                                        <span className="tracking-wider text-gray-900"> £24.00 GBP </span>
+                                        <span className="tracking-wider text-gray-900"> 45456465 </span>
                                     </p>
                                 </div>
                             </a>
@@ -67,7 +67,7 @@ const MainPages = () => {
                                     <p className="mt-2">
                                         <span className="sr-only"> Regular Price </span>
 
-                                        <span className="tracking-wider text-gray-900"> £24.00 GBP </span>
+                                        <span className="tracking-wider text-gray-900">45456465</span>
                                     </p>
                                 </div>
                             </a>
@@ -89,7 +89,7 @@ const MainPages = () => {
                                     <p className="mt-2">
                                         <span className="sr-only"> Regular Price </span>
 
-                                        <span className="tracking-wider text-gray-900"> £24.00 GBP </span>
+                                        <span className="tracking-wider text-gray-900"> 45456465 </span>
                                     </p>
                                 </div>
                             </a>

@@ -64,12 +64,6 @@ const ListService = () => {
             width: 250,
         },
         {
-            title: 'Ảnh',
-            dataIndex: 'galleryService',
-            key: 'galleryService',
-            width: 250,
-        },
-        {
             title: 'Mô Tả',
             dataIndex: 'descriptionService',
             key: 'descriptionService',

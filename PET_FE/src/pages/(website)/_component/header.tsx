@@ -1,5 +1,6 @@
 import { GetProps, Popover } from "antd";
 import Input from "antd/es/input";
+import { AiOutlineUser } from "react-icons/ai";
 import { Link } from "react-router-dom";
 
 
@@ -15,6 +16,18 @@ const HeaderPages = () => {
             </Link>
         </div>
     );
+    const userId = localStorage.getItem("userId")
+    const user = (
+        <div>
+             <Link to={"/"}>
+                <div>Thông Tin</div>
+            </Link>
+            <Link to={"/"}>
+                <div>Đăng Xuất</div>
+            </Link>
+        </div>
+    )
+    const token = localStorage.getItem("token")
     const { Search } = Input;
     const onSearch: SearchProps['onSearch'] = (value, _e, info) => console.log(info?.source, value);
     return (
@@ -32,8 +45,14 @@ const HeaderPages = () => {
                         <div className="md:flex md:items-center md:gap-12 ml-4">
                             <button className="hidden md:relative md:block">Cửa Hàng Gần Bạn</button>
                             <div className="hidden md:relative md:block">
-                                <Popover
-                                    content={account}
+                                {token ? (
+                            <Popover
+                                content={user}
+                                trigger="click"
+                                className="cursor-pointer"
+                            >
+                                {token &&  <Popover
+                                    content={user}
                                     trigger="click"
                                     className="cursor-pointer"
                                 >
@@ -47,8 +66,17 @@ const HeaderPages = () => {
                                             className="size-10 object-cover"
                                         />
                                     </button>
-                                </Popover>
-                              
+                                </Popover>}
+                            </Popover>
+                        ) : (
+                            <Popover
+                                content={account}
+                                trigger="click"
+                                className="cursor-pointer"
+                            >
+                               <AiOutlineUser className="size-6" />
+                            </Popover>
+                        )}
                             </div>
 
                             <div className="block md:hidden">
