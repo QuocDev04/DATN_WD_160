@@ -1,13 +1,13 @@
 export interface IService {
     _id: string,
     servicesName: string,
-    price: number,
-    description: string,
-    gallery: string[];
+    priceService: number,
+    descriptionService: string,
+    galleryService: string[];
 }
 export interface AddIService {
     servicesName: string,
-    price: number,
-    description: string,
-    gallery: string[];
+    priceService: number,
+    descriptionService: string,
+    galleryService: string[];
 }   

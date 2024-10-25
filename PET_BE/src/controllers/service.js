@@ -3,10 +3,10 @@ import Services from "../models/services";
 
 export const getAllService = async (req,res) => {
     try {
-        const getAll = await Services.find()
-        res.jons(getAll)
+        const getAllServices = await Services.find()
+        res.json(getAllServices)
       } catch (error) {
-        res.status(StatusCodes.BAD_REQUEST),json({
+        res.status(StatusCodes.BAD_REQUEST).json({
             message:"fix"
         })    
     }
@@ -14,9 +14,9 @@ export const getAllService = async (req,res) => {
 export const getAIDService = async (req,res) => {
     try {
         const getId = await Services.findById(req.params.id, req.body)
-        res.jons(getId)
+        res.json(getId)
       } catch (error) {
-        res.status(StatusCodes.BAD_REQUEST),json({
+        res.status(StatusCodes.BAD_REQUEST).json({
             message:"fix"
         })    
     }
@@ -41,7 +41,7 @@ export const PutService = async (req,res) => {
 }
 export const delIdService = async (req, res) => {
     try {
-        const del = await Product.findByIdAndDelete(req.params.id);
+        const del = await Services.findByIdAndDelete(req.params.id);
         res.json(del);
     } catch (error) {
         res.status(400).json({

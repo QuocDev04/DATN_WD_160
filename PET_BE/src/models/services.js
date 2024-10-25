@@ -7,14 +7,14 @@ const ServicesSchema = mongoose.Schema(
             type:String,
             required: true,
         },
-        description:{
+        descriptionService:{
             type: String,
         },
-        price:{
+        priceService:{
             type:Number,
             required: true,
         },
-        gallery: {
+        galleryService: {
             type: [String],
         },
     }, {

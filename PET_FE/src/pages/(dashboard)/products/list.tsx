@@ -28,7 +28,6 @@ const ProductPage = () => {
                     pauseOnHover,
                 });
             };
-
     const queryClient = useQueryClient();
     const { mutate } = useMutation({
         mutationFn: async (id: string) => {
@@ -48,7 +47,6 @@ const ProductPage = () => {
                 queryKey: ["product"],
             });
         },
-
         onError: () =>
             openNotification(false)(
                 "error",
@@ -60,7 +58,6 @@ const ProductPage = () => {
         key: product._id,
         ...product,
     }));
-
     const exchangeRate = 1;
     const formatCurrency = (price: number) => {
         const priceInVND = price * exchangeRate;
@@ -69,7 +66,6 @@ const ProductPage = () => {
             currency: "VND",
         });
     };
-
     const createFilter = (products: IProduct[]) => {
         return products
             .map((product: IProduct) => product.productName)
@@ -79,11 +75,10 @@ const ProductPage = () => {
             )
             .map((name: string) => ({ text: name, value: name }));
     };
-
     const columns: TableColumnsType = [
         {
             title: "Tên Sản Phẩm",
-            width: 200,
+            width: 250,
             dataIndex: "productName",
             key: "name",
             fixed: "left",
@@ -91,8 +86,18 @@ const ProductPage = () => {
             filters: data ? createFilter(data?.data) : [],
             onFilter: (value: any, product: IProduct) =>
                 product.productName.includes(value),
-            sorter: (a: IProduct, b: IProduct) => a.productName.localeCompare(b.productName),
+            sorter: (a: IProduct, b: IProduct) =>
+                a.productName.localeCompare(b.productName),
             sortDirections: ["ascend", "descend"],
+            render: (productName: string) => {
+                const limitWords = (text: string, wordLimit: number) => {
+                    const words = text.split(' ');
+                    return words.length > wordLimit
+                        ? words.slice(0, wordLimit).join(' ') + '...'
+                        : text;
+                };
+                return limitWords(productName, 6); // Giới hạn tên sản phẩm còn 10 từ
+            },
         },
         {
             title: "Giá",
@@ -107,6 +112,7 @@ const ProductPage = () => {
             title: "Ảnh",
             dataIndex: "gallery",
             key: "gallery",
+            width: 150,
             render: (gallery: string[]) => {
                 const firstImage =
                     gallery && gallery.length > 0 ? gallery[0] : "";
@@ -122,8 +128,25 @@ const ProductPage = () => {
             },
         },
         {
-            title:"Mô tả",
-            dataIndex:"description",
+            title: "Mô tả",
+            dataIndex: "description",
+            ellipsis: true,
+            render: (_: any, product: IProduct) => {
+                const limitWords = (text: string, wordLimit: number) => {
+                    const words = text.split(' ');
+                    return words.length > wordLimit
+                        ? words.slice(0, wordLimit).join(' ') + '...'
+                        : text;
+                };
+
+                return (
+                    <div
+                        dangerouslySetInnerHTML={{
+                            __html: limitWords(product?.description || "", 20),
+                        }}
+                    />
+                );
+            }
         },
         {
             title: "Hành động",

@@ -5,6 +5,7 @@ import LayoutAdmin from "@/pages/(dashboard)/layout";
 import ProductAddPage from "@/pages/(dashboard)/products/add";
 import ProductEditPage from "@/pages/(dashboard)/products/edit";
 import ProductPage from "@/pages/(dashboard)/products/list";
+import ListRoom from "@/pages/(dashboard)/room/list";
 import ServiceAddPage from "@/pages/(dashboard)/service/add";
 import ServiceEditPage from "@/pages/(dashboard)/service/edit";
 import ListService from "@/pages/(dashboard)/service/list";
@@ -33,6 +34,8 @@ const Router = () => {
                     <Route path="service" element={<ListService />} />
                     <Route path="serviceAdd" element={<ServiceAddPage />} />
                     <Route path=":id/serviceEdit" element={<ServiceEditPage />} />
+                    {/* {Room} */}
+                    <Route path="room" element={<ListRoom />} />
                 </Route>
                 <Route path="/" element={<Layout />}>
                     <Route index element={<HomePages />} />

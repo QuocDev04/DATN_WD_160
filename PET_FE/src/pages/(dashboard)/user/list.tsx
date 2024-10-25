@@ -4,7 +4,7 @@ import instance from "@/configs/axios";
 import { QuestionCircleOutlined } from "@ant-design/icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button, notification, Popconfirm, Table, TableColumnsType } from "antd";
-import { AiFillDelete, AiFillEdit, AiTwotoneDelete, AiTwotoneTool } from "react-icons/ai";
+import {  AiFillEdit, AiTwotoneDelete } from "react-icons/ai";
 import { Link } from "react-router-dom";
 
 const ListUser = () => {
