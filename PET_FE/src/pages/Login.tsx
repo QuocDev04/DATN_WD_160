@@ -1,6 +1,6 @@
 import React from "react";
 import { Form, Input, Button, Typography } from "antd";
-import "../styles/Signin.css"; // Đảm bảo đường dẫn là chính xác
+import "../styles/Signin.css";
 import cat from "../images/cat.png";
 import dog from "../images/dog.png";
 
@@ -43,7 +43,7 @@ const SignIn = () => {
             >
               <Input
                 placeholder="Email hoặc số điện thoại"
-                style={{ width: "100%" }} // Đảm bảo input rộng
+                style={{ width: "100%" }}
               />
             </Form.Item>
 
@@ -53,7 +53,7 @@ const SignIn = () => {
             >
               <Input.Password
                 placeholder="Mật khẩu"
-                style={{ width: "100%" }} // Đảm bảo input rộng
+                style={{ width: "100%" }}
               />
             </Form.Item>
 
@@ -69,7 +69,7 @@ const SignIn = () => {
 
             <Form.Item>
               <p style={{ textAlign: "center" }}>
-                Bạn quên tài khoản? <a href="#">Đăng ký Pet hotel</a>
+                Bạn quên tài khoản? <a href="/signup">Đăng ký Pet hotel</a>
               </p>
             </Form.Item>
           </Form>
