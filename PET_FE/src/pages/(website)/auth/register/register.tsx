@@ -27,7 +27,7 @@ const RegisterPages = () => {
                     type: "success",
                     content: "Bạn đăng ký thành công",
                 });
-                setTimeout(()=>navigate('/login'),500)
+                setTimeout(() => navigate('/login'), 500)
             } catch (error) {
                 messageApi.open({
                     type: "error",
@@ -57,113 +57,126 @@ const RegisterPages = () => {
     return (
         <div>
             {contextHolder}
-            <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
-                <div className="mx-auto max-w-lg">
-                    <h1 className="text-center text-2xl font-bold text-indigo-600 sm:text-3xl">
-                        Get started today
-                    </h1>
-                    <div className="mb-0 mt-6 space-y-4 rounded-lg p-4 shadow-lg sm:p-6 lg:p-8">
-                        <p className="text-center text-lg font-medium">
-                            Đăng ký để trở thành thành viên
-                        </p>
-                        <Form
-                            validateMessages={validateMessages}
-                            name="basic"
-                            labelCol={{ span: 8 }}
-                            wrapperCol={{ span: 16 }}
-                            style={{ maxWidth: 600 }}
-                            initialValues={{ remember: true }}
-                            autoComplete="off"
-                            onFinish={onFinish}
-                        >
-                            <Form.Item<FieldType>
-                                label="Tên tài khoản"
-                                name="name"
-                                validateTrigger="onBlur"
-                                rules={[
-                                    { required: true },
-                                    { type: "string", min: 6, max: 30 },
-                                ]}
+            <div className="h-screen py-16 sm:px-6 lg:px-8 flex bg-white">
+                <div className="mx-auto flex">
+                    <div className="image-container">
+                        <img alt="" src="../../../../../public/cat.png" className="pt-28 mx-10" />
+                    </div>
+                    <div>
+                        <h1 className="text-center text-2xl font-bold text-[#8b4d02] sm:text-3xl">
+                            PET HOTEL
+                        </h1>
+                        <div className="mb-0 mt-6 space-y-4 rounded-lg p-4 shadow-lg sm:p-6 lg:p-8">
+                            <p className="text-center text-lg font-medium">
+                                Đăng ký để trở thành thành viên PetHotel
+                            </p>
+
+                            <Form
+                                validateMessages={validateMessages}
+                                name="basic"
+                                labelCol={{ span: 8 }}
+                                wrapperCol={{ span: 16 }}
+                                style={{ maxWidth: 600 }}
+                                initialValues={{ remember: true }}
+                                autoComplete="off"
+                                onFinish={onFinish}
                             >
-                                <Input
-                                    prefix={
-                                        <UserOutlined className="site-form-item-icon" />
-                                    }
-                                    placeholder="Tên tài khoản"
-                                />
-                            </Form.Item>
-                            <Form.Item<FieldType>
-                                label="Email"
-                                name="email"
-                                validateTrigger="onBlur"
-                                rules={[{ required: true }, { type: "email" }]}
-                            >
-                                <Input
-                                    prefix={
-                                        <AiTwotoneMail className="site-form-item-icon" />
-                                    }
-                                    placeholder="Email của bạn"
-                                />
-                            </Form.Item>
-                            <Form.Item<FieldType>
-                                label="Mật Khẩu"
-                                name="password"
-                                validateTrigger="onBlur"
-                                rules={[
-                                    { required: true },
-                                    { type: "string", min: 6, max: 30 },
-                                ]}
-                            >
-                                <Input.Password
-                                    prefix={
-                                        <LockOutlined className="site-form-item-icon" />
-                                    }
-                                    type="password"
-                                    placeholder="Mật Khẩu"
-                                />
-                            </Form.Item>
-                            <Form.Item
-                                label="Nhập lại mật khẩu"
-                                name="confirmPassword"
-                                validateTrigger="onBlur"
-                                dependencies={["password"]}
-                                rules={[
-                                    { required: true },
-                                    { type: "string", min: 6, max: 30 },
-                                    ({ getFieldValue }) => ({
-                                        validator(_, value) {
-                                            if (
-                                                !value ||
-                                                getFieldValue("password") ===
-                                                value
-                                            ) {
-                                                return Promise.resolve();
-                                            }
-                                            return Promise.reject(
-                                                new Error(
-                                                    "Mật khẩu xác nhận không khớp!",
-                                                ),
-                                            );
-                                        },
-                                    }),
-                                ]}
-                            >
-                                <Input.Password
-                                    prefix={
-                                        <LockOutlined className="site-form-item-icon" />
-                                    }
-                                    placeholder="Nhập lại mật khẩu"
-                                />
-                            </Form.Item>
-                            <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                                <Button type="primary" htmlType="submit">
-                                    Đăng Ký
-                                </Button>
-                                <Link to={"/login"} className="ml-3">
-                                    Trở Về
-                                </Link>
-                            </Form.Item>
-                        </Form>
+                                <Form.Item<FieldType>
+                                    label="Tên tài khoản"
+                                    name="name"
+                                    validateTrigger="onBlur"
+                                    rules={[
+                                        { required: true },
+                                        { type: "string", min: 6, max: 30 },
+                                    ]}
+                                >
+                                    <Input
+                                        prefix={
+                                            <UserOutlined className="site-form-item-icon" />
+                                        }
+                                        placeholder="Tên tài khoản"
+                                    />
+                                </Form.Item>
+                                <Form.Item<FieldType>
+                                    label="Email"
+                                    name="email"
+                                    validateTrigger="onBlur"
+                                    rules={[{ required: true }, { type: "email" }]}
+                                >
+                                    <Input
+                                        prefix={
+                                            <AiTwotoneMail className="site-form-item-icon" />
+                                        }
+                                        placeholder="Email của bạn"
+                                    />
+                                </Form.Item>
+                                <Form.Item<FieldType>
+                                    label="Mật Khẩu"
+                                    name="password"
+                                    validateTrigger="onBlur"
+                                    rules={[
+                                        { required: true },
+                                        { type: "string", min: 6, max: 30 },
+                                    ]}
+                                >
+                                    <Input.Password
+                                        prefix={
+                                            <LockOutlined className="site-form-item-icon" />
+                                        }
+                                        type="password"
+                                        placeholder="Mật Khẩu"
+                                    />
+                                </Form.Item>
+                                <Form.Item
+                                    label="Nhập lại mật khẩu"
+                                    name="confirmPassword"
+                                    validateTrigger="onBlur"
+                                    dependencies={["password"]}
+                                    rules={[
+                                        { required: true },
+                                        { type: "string", min: 6, max: 30 },
+                                        ({ getFieldValue }) => ({
+                                            validator(_, value) {
+                                                if (
+                                                    !value ||
+                                                    getFieldValue("password") ===
+                                                    value
+                                                ) {
+                                                    return Promise.resolve();
+                                                }
+                                                return Promise.reject(
+                                                    new Error(
+                                                        "Mật khẩu xác nhận không khớp!",
+                                                    ),
+                                                );
+                                            },
+                                        }),
+                                    ]}
+                                >
+                                    <Input.Password
+                                        prefix={
+                                            <LockOutlined className="site-form-item-icon" />
+                                        }
+                                        placeholder="Nhập lại mật khẩu"
+                                    />
+                                </Form.Item>
+                                <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                                    <Button type="primary" htmlType="submit">
+                                        Đăng Ký
+                                    </Button>
+                                    <Link to={"/login"} className="ml-3">
+                                        Đăng Nhập
+                                    </Link>
+                                </Form.Item>
+                            </Form>
+
+                        </div>
+                    </div>
+                    <div className="image-container">
+                        <img
+                            src="../../../../../public/dog.png"
+                            className="pt-24  mx-10"
+                        />
                     </div>
                 </div>
             </div>

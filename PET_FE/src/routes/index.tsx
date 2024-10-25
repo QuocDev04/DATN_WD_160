@@ -14,6 +14,9 @@ import ListUser from "@/pages/(dashboard)/user/list";
 import LoginPages from "@/pages/(website)/auth/login/login";
 import RegisterPages from "@/pages/(website)/auth/register/register";
 import HomePages from "@/pages/(website)/home/pages";
+import HotlinePage from "@/pages/(website)/hotline/pages";
+import PetMagazine from "@/pages/(website)/petMagazine/pages";
+import ShopIntroduction from "@/pages/(website)/Shopintroduction/pages";
 import Layout from "@/pages/layout";
 import { Route, Routes } from "react-router-dom";
 
@@ -39,11 +42,13 @@ const Router = () => {
                 </Route>
                 <Route path="/" element={<Layout />}>
                     <Route index element={<HomePages />} />
+                    <Route path="/PetMagazine" element={<PetMagazine />} />
+                    <Route path="/Shop" element={<ShopIntroduction />} />
+                    <Route path="/Hotline" element={<HotlinePage />} />
                 </Route>
                 <Route path="register" element={<RegisterPages />} />
                 <Route path="login" element={<LoginPages />} />
             </Routes>
-
         </>
     );
 };

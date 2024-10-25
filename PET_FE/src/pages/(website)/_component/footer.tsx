@@ -6,7 +6,7 @@ const FooterPages = () => {
                     <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
                         <div>
                             <div className="flex justify-center text-teal-600 sm:justify-start">
-                                <img src="../public/image.png" className="w-28" />
+                                <img src="../public/logo.png" className="w-28" />
                             </div>
 
                             <p className="mt-6 max-w-md text-center leading-relaxed text-gray-500 sm:max-w-xs sm:text-left">

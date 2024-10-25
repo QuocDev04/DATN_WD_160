@@ -4,6 +4,7 @@ import { Navigation } from "swiper/modules";
 const CmtPages = () => {
     return (
         <div>
+            <img src="https://theme.hstatic.net/1000238938/1000576591/14/banner_collection.jpg?v=386" alt="" className="w-full"/>
             <div className="lg:w-[948px] mx-auto flex justify-center">
                 <strong className="lg:text-[50px] lg:leading-[70px]lg:tracking-[-4.8px] text-center">
                     NHẬN XÉT CỦA KHÁCH HÀNG
@@ -16,7 +17,7 @@ const CmtPages = () => {
                         <div className="relative w-full overflow-hidden">
                             {/* Desktop Side Content */}
                             <div className="hidden lg:block">
-                                <div className="bg-[#05422C] text-white rounded-2xl lg:h-full flex flex-col items-center gap-y-[23px] lg:px-10 lg:pt-[42px] lg:pb-[39px]">
+                                <div className="bg-[#cfa84c] text-white rounded-2xl lg:h-full flex flex-col items-center gap-y-[23px] lg:px-10 lg:pt-[42px] lg:pb-[39px]">
                                     <strong className="lg:font-bold font-normal lg:text-[32px] text-[24px] text-center lg:tracking-[-1.75px] lg:leading-[38px]">
                                         ĐƯỢC BÌNH CHỌN LÀ CỬA HÀNG TRỰC TUYẾN TỐT NHẤT
                                     </strong>

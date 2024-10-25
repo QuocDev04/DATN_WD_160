@@ -25,7 +25,7 @@ const HeaderPages = () => {
                         <div className="flex-1 md:flex md:items-center md:gap-12">
                             <a className="block text-teal-600">
                                 <span className="sr-only">Home</span>
-                                <img src="../public/image.png" className="w-24  hidden md:relative md:block" />
+                                <img src="../public/logo.png" className="w-24  hidden md:relative md:block" />
                             </a>
                             <Search placeholder="Nhập Nội Dung Cần Tìm Kiếm" onSearch={onSearch} enterButton  />
                         </div>
@@ -42,7 +42,7 @@ const HeaderPages = () => {
                                         className="overflow-hidden rounded-full border border-gray-300 shadow-inner"
                                     >
                                         <img
-                                            src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                                            src="https://png.pngtree.com/element_our/20200610/ourmid/pngtree-character-default-avatar-image_2237203.jpg"
                                             alt=""
                                             className="size-10 object-cover"
                                         />
@@ -82,7 +82,7 @@ const HeaderPages = () => {
                         </li>
 
                         <li>
-                            <Link to={''} className="text-gray-500 transition hover:text-gray-500/75"> Tạp Chí Thú Cưng </Link >
+                            <Link to={'/PetMagazine'} className="text-gray-500 transition hover:text-gray-500/75"> Tạp Chí Thú Cưng </Link >
                         </li>
 
                         <li>
@@ -90,11 +90,11 @@ const HeaderPages = () => {
                         </li>
 
                         <li>
-                            <Link to={''} className="text-gray-500 transition hover:text-gray-500/75"> Liên Hệ </Link >
+                            <Link to={'/Hotline'} className="text-gray-500 transition hover:text-gray-500/75"> Liên Hệ </Link >
                         </li>
 
                         <li>
-                            <Link to={''} className="text-gray-500 transition hover:text-gray-500/75"> Giới Thiệu Về Shop </Link >
+                            <Link to={'/Shop'} className="text-gray-500 transition hover:text-gray-500/75"> Giới Thiệu Về Shop </Link >
                         </li>
             </ul> 
                 </div>

@@ -16,6 +16,15 @@ body {
   position: relative;
   height: 100%;
 }
+.image-container {
+    height: 100%;
+}
+
+@media (min-width: 768px) {
+    .form-container {
+        max-width: 50%;
+    }
+}
 
 body {
   background: #eee;
