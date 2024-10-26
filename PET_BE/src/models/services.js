@@ -7,30 +7,15 @@ const ServicesSchema = mongoose.Schema(
             type:String,
             required: true,
         },
-        description:{
+        descriptionService:{
             type: String,
         },
-        price:{
+        priceService:{
             type:Number,
             required: true,
         },
-        totalPrice:{
-            type:Number,
-        },
-        petId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Pet",
-            required: true,
-        },
-        categoryId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Category",
-            required: true,
-        },
-        commentId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Comment",
-            required: true,
+        galleryService: {
+            type: [String],
         },
     }, {
         timestamps: true, versionKey: false

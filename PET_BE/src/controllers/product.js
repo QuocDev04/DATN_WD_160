@@ -1,6 +1,5 @@
 import Product from "../models/product";
-import { ExamsSchame } from '../schema/validate'
-
+import { StatusCodes } from "http-status-codes";
 export const getAllProduct = async (req, res) => {
     try {
         const getAll = await Product.find()
@@ -23,31 +22,15 @@ export const getIdProduct = async (req, res) => {
 }
 export const postProduct = async (req, res) => {
     try {
-        const { error } = ExamsSchame.validate(req.body, { abortEarly: false })
-        if (error) {
-            const messages = error.details.map(({ message }) => message)
-            return res.status(400).json({
-                messages
-            })
-        }
-        const msg = await Exams.create(req.body)
-        res.json(msg)
+        const product = await Product.create(req.body);
+        return res.status(StatusCodes.CREATED).json(product);
     } catch (error) {
-        res.status(400).json({
-            message: "fix"
-        })
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error });
     }
-}
+};
 export const putProduct = async (req, res) => {
     try {
-        const { error } = ExamsSchame.validate(req.body, { abortEarly: false })
-        if (error) {
-            const messages = error.details.map(({ message }) => message)
-            return res.status(400).json({
-                messages
-            })
-        }
-        const msg = await Exams.findByIdAndUpdate(req.params.id, req.body)
+        const msg = await Product.findByIdAndUpdate(req.params.id, req.body)
         res.json(msg)
     } catch (error) {
         res.status(400).json({

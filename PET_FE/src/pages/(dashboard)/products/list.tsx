@@ -6,19 +6,28 @@ import {
 import { Link } from "react-router-dom";
 import { QuestionCircleOutlined } from "@ant-design/icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Button, Empty, message, Popconfirm, Table, TableColumnsType } from "antd";
+import { Button, Empty, notification, Popconfirm, Table, TableColumnsType } from "antd";
 
 import instance from "@/configs/axios";
 import { IProduct } from "@/common/types/IProduct";
 
 const ProductPage = () => {
-    const [messageApi, contextHolder] = message.useMessage();
+    const [api, contextHolder] = notification.useNotification();
     const { data, isLoading } = useQuery({
         queryKey: ["product"],
         queryFn: () => instance.get(`/product`),
     });
-    console.log(data?.data);
-
+    const openNotification =
+        (pauseOnHover: boolean) =>
+            (type: "success" | "error", message: string, description: string) => {
+                api.open({
+                    message,
+                    description,
+                    type,
+                    showProgress: true,
+                    pauseOnHover,
+                });
+            };
     const queryClient = useQueryClient();
     const { mutate } = useMutation({
         mutationFn: async (id: string) => {
@@ -29,27 +38,26 @@ const ProductPage = () => {
             }
         },
         onSuccess: () => {
-            messageApi.open({
-                type: "success",
-                content: "Xóa sản phẩm thành công",
-            });
+            openNotification(false)(
+                "success",
+                "Bạn Xóa Thành Công",
+                "Bạn Đã Xóa Thành Công",
+            )
             queryClient.invalidateQueries({
                 queryKey: ["product"],
             });
         },
-        onError: () => {
-            messageApi.open({
-                type: "success",
-                content: "Xóa sản phẩm thất bại",
-            });
-        },
+        onError: () =>
+            openNotification(false)(
+                "error",
+                "Bạn Xóa Thất Bại",
+                "Bạn Đã Xóa Thất Bại",
+            ),
     });
-
     const dataSource = data?.data.map((product: IProduct) => ({
         key: product._id,
         ...product,
     }));
-
     const exchangeRate = 1;
     const formatCurrency = (price: number) => {
         const priceInVND = price * exchangeRate;
@@ -58,30 +66,38 @@ const ProductPage = () => {
             currency: "VND",
         });
     };
-
     const createFilter = (products: IProduct[]) => {
         return products
-            .map((product: IProduct) => product.name)
+            .map((product: IProduct) => product.productName)
             .filter(
                 (value: string, index: number, self: string[]) =>
                     self.indexOf(value) === index,
             )
             .map((name: string) => ({ text: name, value: name }));
     };
-
     const columns: TableColumnsType = [
         {
             title: "Tên Sản Phẩm",
-            width: 200,
-            dataIndex: "name",
+            width: 250,
+            dataIndex: "productName",
             key: "name",
             fixed: "left",
             filterSearch: true,
             filters: data ? createFilter(data?.data) : [],
             onFilter: (value: any, product: IProduct) =>
-                product.name.includes(value),
-            sorter: (a: IProduct, b: IProduct) => a.name.localeCompare(b.name),
+                product.productName.includes(value),
+            sorter: (a: IProduct, b: IProduct) =>
+                a.productName.localeCompare(b.productName),
             sortDirections: ["ascend", "descend"],
+            render: (productName: string) => {
+                const limitWords = (text: string, wordLimit: number) => {
+                    const words = text.split(' ');
+                    return words.length > wordLimit
+                        ? words.slice(0, wordLimit).join(' ') + '...'
+                        : text;
+                };
+                return limitWords(productName, 6); // Giới hạn tên sản phẩm còn 10 từ
+            },
         },
         {
             title: "Giá",
@@ -96,6 +112,7 @@ const ProductPage = () => {
             title: "Ảnh",
             dataIndex: "gallery",
             key: "gallery",
+            width: 150,
             render: (gallery: string[]) => {
                 const firstImage =
                     gallery && gallery.length > 0 ? gallery[0] : "";
@@ -109,6 +126,27 @@ const ProductPage = () => {
                     "Không có ảnh nào"
                 );
             },
+        },
+        {
+            title: "Mô tả",
+            dataIndex: "description",
+            ellipsis: true,
+            render: (_: any, product: IProduct) => {
+                const limitWords = (text: string, wordLimit: number) => {
+                    const words = text.split(' ');
+                    return words.length > wordLimit
+                        ? words.slice(0, wordLimit).join(' ') + '...'
+                        : text;
+                };
+
+                return (
+                    <div
+                        dangerouslySetInnerHTML={{
+                            __html: limitWords(product?.description || "", 20),
+                        }}
+                    />
+                );
+            }
         },
         {
             title: "Hành động",
@@ -155,7 +193,7 @@ const ProductPage = () => {
     );
     return (
         <div>
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between mb-5">
                 <h1>Quản lý sản phẩm</h1>
                 <Link to={"/admin/add"}>
                     {" "}
@@ -171,11 +209,6 @@ const ProductPage = () => {
                 columns={columns}
                 dataSource={dataSource}
                 pagination={{ pageSize: 50 }}
-                expandable={{
-                    expandedRowRender: (record) => (
-                        <p style={{ margin: 0 }}>Mô tả: {record.description}</p>
-                    ),
-                }}
             />
         </div>
     );
