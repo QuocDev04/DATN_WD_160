@@ -1,4 +1,4 @@
-import { IService } from "@/common/types/IService";
+import { IService } from "@/common/IService";
 import instance from "@/configs/axios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button, notification, Popconfirm, Table, TableColumnsType } from "antd";

@@ -9,7 +9,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button, Empty, notification, Popconfirm, Table, TableColumnsType } from "antd";
 
 import instance from "@/configs/axios";
-import { IProduct } from "@/common/types/IProduct";
+import { IProduct } from "@/common/IProduct";
 
 const ProductPage = () => {
     const [api, contextHolder] = notification.useNotification();

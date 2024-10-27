@@ -14,7 +14,7 @@ import {
 } from "antd";
 import { Link } from "react-router-dom";
 import { AiFillBackward } from "react-icons/ai";
-import { AddIProduct } from "@/common/types/IProduct";
+import { AddIProduct } from "@/common/IProduct";
 import { useMutation } from "@tanstack/react-query";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import instance from "@/configs/axios";

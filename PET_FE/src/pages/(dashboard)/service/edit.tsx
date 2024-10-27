@@ -20,7 +20,7 @@ import instance from "@/configs/axios";
 import { useEffect, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { AddIService } from "@/common/types/IService";
+import { AddIService } from "@/common/IService";
 type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 const ServiceEditPage = () => {
     const { id } = useParams();

@@ -4,10 +4,13 @@ import { AiTwotoneMail } from "react-icons/ai";
 import { Link, useNavigate } from "react-router-dom";
 import instance from "@/configs/axios";
 import { useMutation } from "@tanstack/react-query";
+
 type FieldType = {
-    password: string;
     email: string;
+    password: string;
+    username: string;
 };
+
 const LoginPages = () => {
     const [messageApi, contextHolder] = message.useMessage();
     const navigate = useNavigate();
@@ -16,14 +19,13 @@ const LoginPages = () => {
         mutationFn: async (data: FieldType) => {
             try {
                 const response = await instance.post(`/signin`, data);
-                console.log(response.data);
                 if (response.status !== 200) {
                     return messageApi.open({
                         type: "error",
                         content: "Bạn đăng nhập thất bại",
                     });
                 }
-                const { accessToken, role } = response.data; // Lấy accessToken và role từ response.data
+                const { accessToken, role } = response.data;
                 if (accessToken && role) {
                     localStorage.setItem("token", accessToken);
                     localStorage.setItem("role", role);
@@ -31,12 +33,7 @@ const LoginPages = () => {
                         type: "success",
                         content: "Bạn đăng nhập thành công",
                     });
-
-                    if (role === "admin") {
-                        navigate("/admin");
-                    } else {
-                        navigate("/");
-                    }
+                    navigate(role === "admin" ? "/admin" : "/");
                 } else {
                     messageApi.open({
                         type: "error",
@@ -46,29 +43,30 @@ const LoginPages = () => {
             } catch (error) {
                 messageApi.open({
                     type: "error",
-                    content: "Đã xảy ra lỗi. Vui lòng thử lại sau.",
+                    content: "Tài Khoản Không Tồn Tại",
                 });
                 throw new Error("error");
             }
         },
     });
+
     const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
-        console.log("Success:", values);
         mutate(values);
     };
+
     const validateMessages = {
-        required: "${label} Không được bỏ trống!",
+        required: "${label} không được bỏ trống!",
         types: {
-            email: "${label} không đúng định dạng @gmail.com!",
-            number: "${label} is not a valid number!",
+            email: "${label} phải là một email hợp lệ!",
         },
-        number: {
-            range: "${label} must be between ${min} and ${max}!",
+        pattern: {
+            mismatch: "${label} phải có đuôi @gmail.com!",
         },
         string: {
-            range: "${label} không được nhỏ hơn ${min} và lớn hơn ${max}!",
+            range: "${label} phải có độ dài từ ${min} đến ${max} ký tự!",
         },
     };
+
     return (
         <div>
             {contextHolder}
@@ -77,7 +75,7 @@ const LoginPages = () => {
                     <div className="image-container">
                         <img alt="" src="../../../../../public/cat.png" className="pt-28 mx-10" />
                     </div>
-                    <div >
+                    <div>
                         <h1 className="text-center text-2xl font-bold text-[#8b4d02] sm:text-3xl">
                             PET HOTEL
                         </h1>
@@ -99,12 +97,14 @@ const LoginPages = () => {
                                     label="Email"
                                     name="email"
                                     validateTrigger="onBlur"
-                                    rules={[{ required: true }, { type: "email" }]}
+                                    rules={[
+                                        { required: true, message: validateMessages.required.replace("${label}", "Email") },
+                                        { type: "email", message: validateMessages.types.email.replace("${label}", "Email") },
+                                        { pattern: /^[a-zA-Z0-9._%+-]+@gmail\.com$/, message: validateMessages.pattern.mismatch.replace("${label}", "Email") }
+                                    ]}
                                 >
                                     <Input
-                                        prefix={
-                                            <AiTwotoneMail className="site-form-item-icon" />
-                                        }
+                                        prefix={<AiTwotoneMail className="site-form-item-icon" />}
                                         placeholder="Email của bạn"
                                     />
                                 </Form.Item>
@@ -113,14 +113,12 @@ const LoginPages = () => {
                                     name="password"
                                     validateTrigger="onBlur"
                                     rules={[
-                                        { required: true },
-                                        { type: "string", min: 6, max: 30 },
+                                        { required: true, message: validateMessages.required.replace("${label}", "Mật Khẩu") },
+                                        { type: "string", min: 6, max: 30, message: validateMessages.string.range.replace("${label}", "Mật Khẩu").replace("${min}", "6").replace("${max}", "30") }
                                     ]}
                                 >
                                     <Input.Password
-                                        prefix={
-                                            <LockOutlined className="site-form-item-icon" />
-                                        }
+                                        prefix={<LockOutlined className="site-form-item-icon" />}
                                         type="password"
                                         placeholder="Mật Khẩu"
                                     />
@@ -128,7 +126,8 @@ const LoginPages = () => {
                                 <Form.Item wrapperCol={{ offset: 5, span: 18 }}>
                                     <Button type="primary" htmlType="submit" className="w-full">
                                         Đăng Nhập
-                                    </Button> <p className="pt-4">
+                                    </Button>
+                                    <p className="pt-4">
                                         Bạn quên mật khẩu? <Link to={"/register"}>Đăng ký</Link>
                                     </p>
                                 </Form.Item>
@@ -142,7 +141,6 @@ const LoginPages = () => {
                         />
                     </div>
                 </div>
-
             </div>
         </div>
     );
