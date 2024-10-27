@@ -1,24 +1,16 @@
 import mongoose from "mongoose";
 
-
-
 const roomSchema = new mongoose.Schema(
     {
         roomName: {
             type: String,
             required: true,
         },
-        combo: [{
-            title: {
-                type: String,
-                required: true,
-            }
-        }],
-        description: {
+        roomdescription: {
             type: String,
             required: true,
         },
-        price: {
+        roomprice: {
             type: Number,
             required: true
         },
@@ -30,14 +22,7 @@ const roomSchema = new mongoose.Schema(
             ref: "Category",
             required: true,
         },
-        totalPrice: {
-            type: Number,
-        },
-        attrubite: {
-            type: String,
-            required: true,
-        },
-        gallely: {
+        roomgallely: {
             type: [String],
             required: true,
         },

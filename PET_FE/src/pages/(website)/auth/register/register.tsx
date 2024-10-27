@@ -42,16 +42,15 @@ const RegisterPages = () => {
         mutate(values);
     };
     const validateMessages = {
-        required: "${label} Không được bỏ trống!",
+        required: "${label} không được bỏ trống!",
         types: {
-            email: "${label} không đúng định dạng @gmail.com!",
-            number: "${label} is not a valid number!",
+            email: "${label} phải là một email hợp lệ!",
         },
-        number: {
-            range: "${label} must be between ${min} and ${max}!",
+        pattern: {
+            mismatch: "${label} phải có đuôi @gmail.com!",
         },
         string: {
-            range: "${label} không được nhỏ hơn ${min} và lớn hơn ${max}!",
+            range: "${label} phải có độ dài từ ${min} đến ${max} ký tự!",
         },
     };
     return (
@@ -60,7 +59,7 @@ const RegisterPages = () => {
             <div className="h-screen py-16 sm:px-6 lg:px-8 flex bg-white">
                 <div className="mx-auto flex">
                     <div className="image-container">
-                        <img alt="" src="../../../../../public/cat.png" className="pt-28 mx-10" />
+                        <img alt="" src="../../../../../public/cat.png" className="pt-28" />
                     </div>
                     <div>
                         <h1 className="text-center text-2xl font-bold text-[#8b4d02] sm:text-3xl">
@@ -101,8 +100,11 @@ const RegisterPages = () => {
                                     label="Email"
                                     name="email"
                                     validateTrigger="onBlur"
-                                    rules={[{ required: true }, { type: "email" }]}
-                                >
+                                    rules={[
+                                        { required: true, message: validateMessages.required.replace("${label}", "Email") },
+                                        { type: "email", message: validateMessages.types.email.replace("${label}", "Email") },
+                                        { pattern: /^[a-zA-Z0-9._%+-]+@gmail\.com$/, message: validateMessages.pattern.mismatch.replace("${label}", "Email") }
+                                    ]}                                >
                                     <Input
                                         prefix={
                                             <AiTwotoneMail className="site-form-item-icon" />
@@ -115,8 +117,8 @@ const RegisterPages = () => {
                                     name="password"
                                     validateTrigger="onBlur"
                                     rules={[
-                                        { required: true },
-                                        { type: "string", min: 6, max: 30 },
+                                        { required: true, message: validateMessages.required.replace("${label}", "Mật Khẩu") },
+                                        { type: "string", min: 6, max: 30, message: validateMessages.string.range.replace("${label}", "Mật Khẩu").replace("${min}", "6").replace("${max}", "30") }
                                     ]}
                                 >
                                     <Input.Password

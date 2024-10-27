@@ -1,167 +1,42 @@
+import Link from "antd/es/typography/Link";
+
 const MainPages = () => {
     return (
         <>
-            <section>
-                <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
-                    <header>
-                        <h2 className="text-xl font-bold text-red-600 sm:text-3xl">Phòng Hot</h2>
-                    </header>
-                    <ul className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                        <li>
-                            <a href="#" className="group block overflow-hidden">
-                                <img
-                                    src="https://petboutique123.wordpress.com/wp-content/uploads/2019/11/ks-cho-meo500-5587-1549156792.jpg"
-                                    alt=""
-                                    className="h-[350px] w-full object-cover transition duration-500 group-hover:scale-105 sm:h-[450px]"
-                                />
+            <div className="mx-auto max-w-screen-xl px-4 py-12 sm:px-6 lg:px-8">
+                <header className="mb-8 text-center">
+                    <h2 className="text-2xl font-bold text-red-600 sm:text-4xl pb-4">
+                        Đặt Phòng Cho Thú Cưng Của Bạn
+                    </h2>
+                </header>
 
-                                <div className="relative bg-white pt-3">
-                                    <h3 className="text-xs text-gray-700 group-hover:underline group-hover:underline-offset-4">
-                                        Basic Tee
-                                    </h3>
-
-                                    <p className="mt-2">
-                                        <span className="sr-only"> Regular Price </span>
-
-                                        <span className="tracking-wider text-gray-900"> 45456465 </span>
-                                    </p>
-                                </div>
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="#" className="group block overflow-hidden">
-                                <img
-                                    src="https://petboutique123.wordpress.com/wp-content/uploads/2019/11/ks-cho-meo500-5587-1549156792.jpg"
-                                    alt=""
-                                    className="h-[350px] w-full object-cover transition duration-500 group-hover:scale-105 sm:h-[450px]"
-                                />
-
-                                <div className="relative bg-white pt-3">
-                                    <h3 className="text-xs text-gray-700 group-hover:underline group-hover:underline-offset-4">
-                                        Basic Tee
-                                    </h3>
-
-                                    <p className="mt-2">
-                                        <span className="sr-only"> Regular Price </span>
-
-                                        <span className="tracking-wider text-gray-900"> 45456465 </span>
-                                    </p>
-                                </div>
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="#" className="group block overflow-hidden">
-                                <img
-                                    src="https://petboutique123.wordpress.com/wp-content/uploads/2019/11/ks-cho-meo500-5587-1549156792.jpg"
-                                    alt=""
-                                    className="h-[350px] w-full object-cover transition duration-500 group-hover:scale-105 sm:h-[450px]"
-                                />
-
-                                <div className="relative bg-white pt-3">
-                                    <h3 className="text-xs text-gray-700 group-hover:underline group-hover:underline-offset-4">
-                                        Basic Tee
-                                    </h3>
-
-                                    <p className="mt-2">
-                                        <span className="sr-only"> Regular Price </span>
-
-                                        <span className="tracking-wider text-gray-900">45456465</span>
-                                    </p>
-                                </div>
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="#" className="group block overflow-hidden">
-                                <img
-                                    src="https://petboutique123.wordpress.com/wp-content/uploads/2019/11/ks-cho-meo500-5587-1549156792.jpg"
-                                    alt=""
-                                    className="h-[350px] w-full object-cover transition duration-500 group-hover:scale-105 sm:h-[450px]"
-                                />
-
-                                <div className="relative bg-white pt-3">
-                                    <h3 className="text-xs text-gray-700 group-hover:underline group-hover:underline-offset-4">
-                                        Basic Tee
-                                    </h3>
-
-                                    <p className="mt-2">
-                                        <span className="sr-only"> Regular Price </span>
-
-                                        <span className="tracking-wider text-gray-900"> 45456465 </span>
-                                    </p>
-                                </div>
-                            </a>
-                        </li>
-                    </ul>
-
-                    <ol className="mt-8 flex justify-center gap-1 text-xs font-medium">
-                        <li>
-                            <a
-                                href="#"
-                                className="inline-flex size-8 items-center justify-center rounded border border-gray-100"
+                {/* Main Service Article */}
+                <article className="mb-12 flex flex-col sm:flex-row bg-white rounded-lg shadow-lg transition hover:shadow-xl overflow-hidden">
+                    <div className="sm:basis-1/3">
+                        <img
+                            src="https://i.pinimg.com/236x/5a/3a/25/5a3a25641c384af03fe31f5654f34b2a.jpg"
+                            className="w-full "
+                        />
+                    </div>
+                    <div className="flex-1 p-6">
+                        <h3 className="text-xl font-bold text-gray-800 mb-2">
+                            Phòng Thoáng Mát - Nơi Tận Hưởng Không Gian Sống Lý Tưởng
+                        </h3>
+                        <p className="text-lg text-gray-600 mb-4">
+                            Chào mừng bạn đến với Phòng Thoáng Mát, nơi thú cưng của bạn không chỉ có một chỗ ở mà còn là một trải nghiệm tuyệt vời. Phòng được thiết kế rộng rãi, thoáng đãng, với ánh sáng tự nhiên tràn ngập, tạo cảm giác dễ chịu và thư giãn cho các chú thú cưng. Các trang thiết bị hiện đại cùng không gian vui chơi sẽ giúp thú cưng của bạn luôn năng động và hạnh phúc. Hãy để chúng tôi chăm sóc và cung cấp cho chúng những khoảnh khắc tuyệt vời nhất trong suốt thời gian ở đây!
+                        </p>
+                        <div className="text-right">
+                            <Link
+                                className="bg-yellow-400 px-4 py-5 text-lg font-semibold uppercase text-gray-900 rounded-md transition hover:bg-yellow-500"
                             >
-                                <span className="sr-only">Prev Page</span>
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    className="size-3"
-                                    viewBox="0 0 20 20"
-                                    fill="currentColor"
-                                >
-                                    <path
-                                        fillRule="evenodd"
-                                        d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                                        clipRule="evenodd"
-                                    />
-                                </svg>
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="#" className="block size-8 rounded border border-gray-100 text-center leading-8">
-                                1
-                            </a>
-                        </li>
-
-                        <li className="block size-8 rounded border-black bg-black text-center leading-8 text-white">2</li>
-
-                        <li>
-                            <a href="#" className="block size-8 rounded border border-gray-100 text-center leading-8">
-                                3
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="#" className="block size-8 rounded border border-gray-100 text-center leading-8">
-                                4
-                            </a>
-                        </li>
-
-                        <li>
-                            <a
-                                href="#"
-                                className="inline-flex size-8 items-center justify-center rounded border border-gray-100"
-                            >
-                                <span className="sr-only">Next Page</span>
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    className="size-3"
-                                    viewBox="0 0 20 20"
-                                    fill="currentColor"
-                                >
-                                    <path
-                                        fillRule="evenodd"
-                                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                                        clipRule="evenodd"
-                                    />
-                                </svg>
-                            </a>
-                        </li>
-                    </ol>
-                </div>
-            </section>
+                               Đặt Phòng
+                            </Link>
+                        </div>
+                    </div>
+                </article>
+            </div>
         </>
-    )
-}
-export default MainPages
+    );
+};
+
+export default MainPages;

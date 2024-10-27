@@ -15,7 +15,7 @@ import instance from "@/configs/axios";
 import { useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { AddIService } from "@/common/types/IService";
+import { AddIService } from "@/common/IService";
 const ServiceAddPage = () => {
     const [value, setValue] = useState("");
     const [messageApi, contextHolder] = message.useMessage();
