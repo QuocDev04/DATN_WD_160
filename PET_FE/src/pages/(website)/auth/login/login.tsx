@@ -43,7 +43,7 @@ const LoginPages = () => {
             } catch (error) {
                 messageApi.open({
                     type: "error",
-                    content: "Đã xảy ra lỗi. Vui lòng thử lại sau.",
+                    content: "Tài Khoản Không Tồn Tại",
                 });
                 throw new Error("error");
             }
