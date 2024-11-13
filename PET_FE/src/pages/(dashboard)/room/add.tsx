@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
     Button,
+    Checkbox,
     Form,
     FormProps,
     GetProp,
@@ -8,22 +9,23 @@ import {
     Input,
     InputNumber,
     message,
+    Radio,
     Upload,
     UploadFile,
     UploadProps,
 } from "antd";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { AiFillBackward } from "react-icons/ai";
-import { AddIProduct } from "@/common/type/IProduct";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import instance from "@/configs/axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { AddIRoom } from "@/common/type/IRoom";
+import { ICategory } from "@/common/type/ICategory";
 type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
-const ProductEditPage = () => {
-    const { id } = useParams();
+const RoomAdd = () => {
     const [value, setValue] = useState("");
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewImage, setPreviewImage] = useState("");
@@ -31,33 +33,15 @@ const ProductEditPage = () => {
     const [messageApi, contextHolder] = message.useMessage();
     const [form] = Form.useForm();
     const {
-        data: product,
-        isLoading,
-        isError,
-        error,
+        data: category
     } = useQuery({
-        queryKey: ["product", id],
-        queryFn: () => instance.get(`/product/${id}`),
+        queryKey: ["category"],
+        queryFn: () => instance.get("/category"),
     });
-    useEffect(() => {
-        if (product?.data.gallery) {
-            setFileList(
-                product?.data?.gallery?.map((url: any, index: number) => {
-                    return {
-                        uid: index.toString(),
-                        name: `gallery${index}`,
-                        status: "done",
-                        url: url,
-                    };
-                }),
-            );
-        }
-    }, [product]);
-    const queryClient = useQueryClient();
     const { mutate, isPending } = useMutation({
-        mutationFn: async (data: AddIProduct) => {
+        mutationFn: async (data: AddIRoom) => {
             try {
-                return await instance.put(`/product/${id}`, data);
+                return await instance.post("/room", data);
             } catch (error) {
                 throw new Error((error as any).message);
             }
@@ -65,16 +49,14 @@ const ProductEditPage = () => {
         onSuccess: () => {
             messageApi.open({
                 type: "success",
-                content: "Bạn thêm sản phẩm thành công",
+                content: "Bạn thêm phòng thành công",
             });
-            queryClient.invalidateQueries({
-                queryKey: ["product"],
-            });
+            form.resetFields();
         },
         onError: () => {
             messageApi.open({
                 type: "error",
-                content: "Bạn thêm sản phẩm thất bại. Vui lòng thử lại sau!",
+                content: "Bạn thêm phòng thất bại. Vui lòng thử lại sau!",
             });
         },
     });
@@ -98,14 +80,14 @@ const ProductEditPage = () => {
         setFileList(newFileList);
     };
 
-    const onFinish: FormProps<AddIProduct>["onFinish"] = (values) => {
+    const onFinish: FormProps<AddIRoom>["onFinish"] = (values) => {
         const imageUrls = fileList
             .filter((file) => file.status === "done") // Lọc chỉ các ảnh đã tải lên thành công
             .map((file) => file.response?.secure_url); // Lấy URL từ phản hồi
 
         const newValues = {
             ...values,
-            gallery: imageUrls,
+            roomgallely: imageUrls,
         };
         mutate(newValues);
     };
@@ -139,14 +121,11 @@ const ProductEditPage = () => {
     const modules = {
         toolbar: toolbarOptions,
     };
-    if (isLoading) return <div>Loading</div>
-    if (isError) return <div>{error.message}</div>;
-    console.log(product?.data);
     return (
         <>
             <div className="flex items-center justify-between">
-                <h1 className="text-2xl">SỬa sản phẩm</h1>
-                <Link to={"/admin/product"}>
+                <h1 className="text-2xl">Thêm phòng</h1>
+                <Link to={"/admin/room"}>
                     <Button type="primary">
                         <AiFillBackward />
                         Quay lại
@@ -159,30 +138,29 @@ const ProductEditPage = () => {
                 name="basic"
                 layout="vertical"
                 onFinish={onFinish}
-                initialValues={product?.data}
             >
                 <div className="grid grid-cols-[auto,300px]">
                     <div className="py-5">
                         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <Form.Item
-                                label="Tên sản phẩm"
-                                name="productName"
+                                label="Tên phòng"
+                                name="roomName"
                                 rules={[
                                     {
                                         required: true,
-                                        message: "Tên sản phẩm bắt buộc nhập",
+                                        message: "Tên phòng bắt buộc nhập",
                                     },
                                 ]}
                             >
                                 <Input disabled={isPending} />
                             </Form.Item>
                             <Form.Item
-                                label="Giá sản phẩm"
-                                name="price"
+                                label="Giá phòng"
+                                name="roomprice"
                                 rules={[
                                     {
                                         required: true,
-                                        message: "Giá sản phẩm bắt buộc nhập",
+                                        message: "Giá phòng bắt buộc nhập",
                                     },
                                     {
                                         type: "number",
@@ -206,13 +184,10 @@ const ProductEditPage = () => {
                                     }
                                     disabled={isPending}
                                 />
-                                {/* Thuộc tính formatter là một hàm để định dạng giá trị hiển thị trong trường đầu vào.
-                        Hàm formatter nhận vào giá trị value và trả về giá trị đã được định dạng với dấu phẩy để phân cách hàng nghìn.
-                        Biểu thức \B(?=(\d{3})+(?!\d)) là một biểu thức chính quy (regular expre */}
                             </Form.Item>
 
                         </div>
-                        <Form.Item label="Mô tả sản phẩm" name="description" className="mb-16">
+                        <Form.Item label="Mô tả phòng" name="roomdescription" className="mb-16">
                             <ReactQuill
                                 className="h-[300px]"
                                 theme="snow"
@@ -225,32 +200,59 @@ const ProductEditPage = () => {
 
                     </div>
                     <div className="ml-5">
-                        <Form.Item name="gallery">
+                        <Form.Item name="category">
+                            <h1 className="text-lg text-center py-2">Danh mục</h1>
+                            <Radio.Group
+                                style={{ width: "100%", marginLeft: "7px" }}
+                                options={category?.data?.map((category: ICategory) => ({
+                                    label: category.title,
+                                    value: category._id,
+                                }))}
+                                disabled={isPending}
+                                onChange={(e) => {
+                                    // Cập nhật giá trị của trường category
+                                    form.setFieldsValue({
+                                        category: e.target.value,
+                                    });
+                                }}
+                            />
+                        </Form.Item>
+
+                        <Form.Item name="roomgallely"
+                            rules={[
+                                {
+                                    required: false,
+                                    message: "Ảnh phòng bắt buộc phải có",
+                                },
+                            ]}
+                        >
                             <h1 className="text-lg text-center py-2">
-                                Ảnh sản phẩm
+                                Ảnh phòng
                             </h1>
                             <Upload
+                                listType="picture-card"
                                 action="https://api.cloudinary.com/v1_1/ecommercer2021/image/upload"
                                 data={{ upload_preset: "demo-upload" }}
-                                listType="picture-card"
-                                fileList={fileList}
                                 onPreview={handlePreview}
                                 onChange={handleChange}
                                 multiple
+                                disabled={isPending}
                             >
                                 {fileList.length >= 8 ? null : uploadButton}
                             </Upload>
-                            <Image
-                                wrapperStyle={{ display: "none" }}
-                                preview={{
-                                    visible: previewOpen,
-                                    onVisibleChange: (visible) =>
-                                        setPreviewOpen(visible),
-                                    afterOpenChange: (visible) =>
-                                        !visible && setPreviewImage(""),
-                                }}
-                                src={previewImage}
-                            />
+                            {previewImage && (
+                                <Image
+                                    wrapperStyle={{ display: "none" }}
+                                    preview={{
+                                        visible: previewOpen,
+                                        onVisibleChange: (visible) =>
+                                            setPreviewOpen(visible),
+                                        afterOpenChange: (visible) =>
+                                            !visible && setPreviewImage(""),
+                                    }}
+                                    src={previewImage}
+                                />
+                            )}
                         </Form.Item>
                     </div>
                     <Form.Item wrapperCol={{ span: 16 }}>
@@ -264,7 +266,7 @@ const ProductEditPage = () => {
                                     <LoadingOutlined className="animate-spin" />
                                 </>
                             ) : (
-                                "Sửa"
+                                "Thêm"
                             )}
                         </Button>
                     </Form.Item>
@@ -274,4 +276,4 @@ const ProductEditPage = () => {
     );
 };
 
-export default ProductEditPage;
+export default RoomAdd;

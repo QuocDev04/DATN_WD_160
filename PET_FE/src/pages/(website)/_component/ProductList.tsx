@@ -1,4 +1,4 @@
-import { IProduct } from "@/common/IProduct";
+import { IProduct } from "@/common/type/IProduct";
 import ProductItem from "./ProductItem";
 
 type Props = {

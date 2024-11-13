@@ -14,15 +14,15 @@ import {
 } from "antd";
 import { Link, useParams } from "react-router-dom";
 import { AiFillBackward } from "react-icons/ai";
-import { AddIProduct } from "@/common/type/IProduct";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import instance from "@/configs/axios";
 import { useEffect, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { AddIService } from "@/common/type/IService";
 type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
-const ProductEditPage = () => {
+const RoomEditPage = () => {
     const { id } = useParams();
     const [value, setValue] = useState("");
     const [previewOpen, setPreviewOpen] = useState(false);
@@ -36,16 +36,16 @@ const ProductEditPage = () => {
         isError,
         error,
     } = useQuery({
-        queryKey: ["product", id],
-        queryFn: () => instance.get(`/product/${id}`),
+        queryKey: ["service", id],
+        queryFn: () => instance.get(`/room/${id}`),
     });
     useEffect(() => {
-        if (product?.data.gallery) {
+        if (product?.data.roomgallely) {
             setFileList(
-                product?.data?.gallery?.map((url: any, index: number) => {
+                product?.data?.roomgallely?.map((url: any, index: number) => {
                     return {
                         uid: index.toString(),
-                        name: `gallery${index}`,
+                        name: `roomgallely${index}`,
                         status: "done",
                         url: url,
                     };
@@ -55,9 +55,9 @@ const ProductEditPage = () => {
     }, [product]);
     const queryClient = useQueryClient();
     const { mutate, isPending } = useMutation({
-        mutationFn: async (data: AddIProduct) => {
+        mutationFn: async (data: AddIService) => {
             try {
-                return await instance.put(`/product/${id}`, data);
+                return await instance.put(`/room/${id}`, data);
             } catch (error) {
                 throw new Error((error as any).message);
             }
@@ -65,16 +65,16 @@ const ProductEditPage = () => {
         onSuccess: () => {
             messageApi.open({
                 type: "success",
-                content: "Bạn thêm sản phẩm thành công",
+                content: "Bạn sửa phòng thành công",
             });
             queryClient.invalidateQueries({
-                queryKey: ["product"],
+                queryKey: ["room"],
             });
         },
         onError: () => {
             messageApi.open({
                 type: "error",
-                content: "Bạn thêm sản phẩm thất bại. Vui lòng thử lại sau!",
+                content: "Bạn sửa phòng thất bại. Vui lòng thử lại sau!",
             });
         },
     });
@@ -98,14 +98,14 @@ const ProductEditPage = () => {
         setFileList(newFileList);
     };
 
-    const onFinish: FormProps<AddIProduct>["onFinish"] = (values) => {
+    const onFinish: FormProps<AddIService>["onFinish"] = (values) => {
         const imageUrls = fileList
             .filter((file) => file.status === "done") // Lọc chỉ các ảnh đã tải lên thành công
             .map((file) => file.response?.secure_url); // Lấy URL từ phản hồi
 
         const newValues = {
             ...values,
-            gallery: imageUrls,
+            roomgallely: imageUrls,
         };
         mutate(newValues);
     };
@@ -145,8 +145,8 @@ const ProductEditPage = () => {
     return (
         <>
             <div className="flex items-center justify-between">
-                <h1 className="text-2xl">SỬa sản phẩm</h1>
-                <Link to={"/admin/product"}>
+                <h1 className="text-2xl">Sửa phòng</h1>
+                <Link to={"/admin/room"}>
                     <Button type="primary">
                         <AiFillBackward />
                         Quay lại
@@ -165,24 +165,24 @@ const ProductEditPage = () => {
                     <div className="py-5">
                         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <Form.Item
-                                label="Tên sản phẩm"
-                                name="productName"
+                                label="Tên Phòng"
+                                name="roomName"
                                 rules={[
                                     {
                                         required: true,
-                                        message: "Tên sản phẩm bắt buộc nhập",
+                                        message: "Tên dịch vụ bắt buộc nhập",
                                     },
                                 ]}
                             >
                                 <Input disabled={isPending} />
                             </Form.Item>
                             <Form.Item
-                                label="Giá sản phẩm"
-                                name="price"
+                                label="Giá Phòng"
+                                name="roomprice"
                                 rules={[
                                     {
                                         required: true,
-                                        message: "Giá sản phẩm bắt buộc nhập",
+                                        message: "Giá dịch vụ bắt buộc nhập",
                                     },
                                     {
                                         type: "number",
@@ -212,7 +212,7 @@ const ProductEditPage = () => {
                             </Form.Item>
 
                         </div>
-                        <Form.Item label="Mô tả sản phẩm" name="description" className="mb-16">
+                        <Form.Item label="Mô tả phòng" name="description" className="mb-16">
                             <ReactQuill
                                 className="h-[300px]"
                                 theme="snow"
@@ -225,9 +225,9 @@ const ProductEditPage = () => {
 
                     </div>
                     <div className="ml-5">
-                        <Form.Item name="gallery">
+                        <Form.Item name="roomgallely">
                             <h1 className="text-lg text-center py-2">
-                                Ảnh sản phẩm
+                                Ảnh phòng
                             </h1>
                             <Upload
                                 action="https://api.cloudinary.com/v1_1/ecommercer2021/image/upload"
@@ -274,4 +274,4 @@ const ProductEditPage = () => {
     );
 };
 
-export default ProductEditPage;
+export default RoomEditPage;

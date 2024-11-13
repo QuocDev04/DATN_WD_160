@@ -15,10 +15,12 @@ const LayoutAdmin: React.FC = () => {
             setActiveMenu("User");
         } else if (path.includes("/admin/service")) {
             setActiveMenu("Service");
-        } else if(path.includes("/admin/room")){
+        } else if (path.includes("/admin/room")) {
             setActiveMenu("Room")
+        } else if (path.includes("/admin/category")) {
+            setActiveMenu("Category")
         }
-         else {
+        else {
             setActiveMenu("Dashboard");
         }
     }, [location]);
@@ -68,6 +70,12 @@ const LayoutAdmin: React.FC = () => {
                             <Link to={'/admin/room'} onClick={() => handleMenuClick("Room")}>
                                 <i className="bx bxs-doughnut-chart" />
                                 <span className="text">Danh Sách Phòng</span>
+                            </Link>
+                        </li>
+                        <li className={activeMenu === "Category" ? "active" : ""}>
+                            <Link to={'/admin/category'} onClick={() => handleMenuClick("Category")}>
+                                <i className="bx bxs-doughnut-chart" />
+                                <span className="text">Danh Sách Danh Mục</span>
                             </Link>
                         </li>
                     </ul>

@@ -1,4 +1,4 @@
-import { IProduct } from "@/common/IProduct";
+import { IProduct } from "@/common/type/IProduct";
 
 type ProductsItemProps = {
     product: IProduct;
@@ -30,7 +30,7 @@ const ProductItem = ({ product }: ProductsItemProps) => {
                 />
                 <div className="p-4 text-center border-t border-gray-200">
                     <h3 className="text-lg font-bold text-gray-800">
-                        {product.productName}
+                        {product.productName.split(" ").slice(0, 6).join(" ")}
                     </h3>
                     <div className="mt-2">
                         <span className="text-red-600 text-xl font-semibold">

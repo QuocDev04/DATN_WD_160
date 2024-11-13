@@ -8,7 +8,6 @@ const roomSchema = new mongoose.Schema(
         },
         roomdescription: {
             type: String,
-            required: true,
         },
         roomprice: {
             type: Number,
@@ -17,20 +16,22 @@ const roomSchema = new mongoose.Schema(
         status: {
             type: String,
         },
-        categoryId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Category",
-            required: true,
-        },
+        category: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Category",
+                required: true,
+            },
+        ],
         roomgallely: {
             type: [String],
             required: true,
-        },
-        commentId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Comment",
-            required: true,
-        },
+        }
+        // commentId: {
+        //     type: mongoose.Schema.Types.ObjectId,
+        //     ref: "Comment",
+        //     required: true,
+        // },
     },
     {
         timestamps: true, versionKey: false

@@ -9,7 +9,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button, Empty, notification, Popconfirm, Table, TableColumnsType } from "antd";
 
 import instance from "@/configs/axios";
-import { IProduct } from "@/common/IProduct";
+import { IProduct } from "@/common/type/IProduct";
 
 const ProductPage = () => {
     const [api, contextHolder] = notification.useNotification();
@@ -156,7 +156,7 @@ const ProductPage = () => {
             render: (_: any, product: IProduct) => {
                 return (
                     <div>
-                        <Link to={`/admin/${product._id}/edit`}>
+                        <Link to={`/admin/product/${product._id}`}>
                             <Button type="primary" className="mr-2">
                                 <AiFillEdit className="text-xl" />
                             </Button>
@@ -195,7 +195,7 @@ const ProductPage = () => {
         <div>
             <div className="flex items-center justify-between mb-5">
                 <h1>Quản lý sản phẩm</h1>
-                <Link to={"/admin/add"}>
+                <Link to={"/admin/productadd"}>
                     {" "}
                     <Button type="primary">
                         <AiOutlinePlusCircle />
