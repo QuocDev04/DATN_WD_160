@@ -1,4 +1,3 @@
-import { ICategory } from "./ICategory";
 
 export interface IRoom {
     _id: string,
@@ -7,7 +6,6 @@ export interface IRoom {
     roomdescription: string,
     roomgallely: string[],
     status:string,
-    category: ICategory[]
 }
 
 export interface AddIRoom {
@@ -16,6 +14,5 @@ export interface AddIRoom {
     roomdescription: string,
     roomgallely: string[],
     status: string,
-    category: ICategory[]
 
 }   

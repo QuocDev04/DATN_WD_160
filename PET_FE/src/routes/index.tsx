@@ -1,5 +1,7 @@
 
+import PagesBillRoom from "@/pages/(dashboard)/billbkingroom/pages";
 import CategoryAdd from "@/pages/(dashboard)/category/add";
+import CategoryEdit from "@/pages/(dashboard)/category/edit";
 import CategoryList from "@/pages/(dashboard)/category/list";
 import Dashboard from "@/pages/(dashboard)/dashboard/page";
 import LayoutAdmin from "@/pages/(dashboard)/layout";
@@ -16,9 +18,14 @@ import EditUser from "@/pages/(dashboard)/user/edit";
 import ListUser from "@/pages/(dashboard)/user/list";
 import LoginPages from "@/pages/(website)/auth/login/login";
 import RegisterPages from "@/pages/(website)/auth/register/register";
+import PagesBookingRoom from "@/pages/(website)/bookingRoom/pages";
+import ProductDetailPage from "@/pages/(website)/detail/pages";
+import DetalRoom from "@/pages/(website)/detailRoom/pages";
 import HomePages from "@/pages/(website)/home/pages";
 import HotlinePage from "@/pages/(website)/hotline/pages";
 import PetMagazine from "@/pages/(website)/petMagazine/pages";
+import Room from "@/pages/(website)/room/pages";
+import RoomPageComponent from "@/pages/(website)/roompages/pages";
 import ShopIntroduction from "@/pages/(website)/Shopintroduction/pages";
 import Layout from "@/pages/layout";
 import { Route, Routes } from "react-router-dom";
@@ -49,12 +56,22 @@ const Router = () => {
                     {/* {Category} */}
                     <Route path="category" element={<CategoryList />} />
                     <Route path="categoryadd" element={<CategoryAdd />} />
+                    <Route path="category/:id" element={<CategoryEdit />} />
+                    <Route path="bill" element={<PagesBillRoom />} />
+
+                   
                 </Route>
                 <Route path="/" element={<Layout />}>
                     <Route index element={<HomePages />} />
-                    <Route path="/PetMagazine" element={<PetMagazine />} />
-                    <Route path="/Shop" element={<ShopIntroduction />} />
-                    <Route path="/Hotline" element={<HotlinePage />} />
+                    <Route path="PetMagazine" element={<PetMagazine />} />
+                    <Route path="Shop" element={<ShopIntroduction />} />
+                    <Route path="Hotline" element={<HotlinePage />} />
+                    <Route path="/Detailservice/:id" element={<ProductDetailPage />} />
+                    <Route path="Room" element={<Room />} />
+                    <Route path="Roompages" element={<RoomPageComponent />} />
+                    <Route path="Roompages/:id" element={<DetalRoom />} />
+                    <Route path="BookingRoompages/:userId/:id" element={<PagesBookingRoom />} />
+
                 </Route>
                 <Route path="register" element={<RegisterPages />} />
                 <Route path="login" element={<LoginPages />} />

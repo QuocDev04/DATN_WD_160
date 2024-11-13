@@ -37,9 +37,6 @@ const ProductItem = ({ product }: ProductsItemProps) => {
                             {formatCurrency(product.price)}
                         </span>
                     </div>
-                    <button className="mt-4 w-full rounded-md bg-blue-500 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-600">
-                        Mua Tại Shop
-                    </button>
                 </div>
             </div>
         </div>

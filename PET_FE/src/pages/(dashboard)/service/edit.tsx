@@ -146,12 +146,6 @@ const ServiceEditPage = () => {
         <>
             <div className="flex items-center justify-between">
                 <h1 className="text-2xl">SỬa dịch vụ</h1>
-                <Link to={"/admin/service"}>
-                    <Button type="primary">
-                        <AiFillBackward />
-                        Quay lại
-                    </Button>
-                </Link>
             </div>
             {contextHolder}
             <Form
@@ -267,6 +261,11 @@ const ServiceEditPage = () => {
                                 "Sửa"
                             )}
                         </Button>
+                        <Link to={"/admin/service"}>
+                            <Button disabled={isPending} className="ml-3">
+                                Quay lại
+                            </Button>
+                        </Link>
                     </Form.Item>
                 </div>
             </Form>

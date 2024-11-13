@@ -1,6 +1,10 @@
-import Link from "antd/es/typography/Link";
+import { useEffect } from "react";
+import { Link } from "react-router-dom";
 
 const MainPages = () => {
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
     return (
         <>
             <div className="mx-auto max-w-screen-xl px-4 py-12 sm:px-6 lg:px-8">
@@ -26,7 +30,7 @@ const MainPages = () => {
                             Chào mừng bạn đến với Phòng Thoáng Mát, nơi thú cưng của bạn không chỉ có một chỗ ở mà còn là một trải nghiệm tuyệt vời. Phòng được thiết kế rộng rãi, thoáng đãng, với ánh sáng tự nhiên tràn ngập, tạo cảm giác dễ chịu và thư giãn cho các chú thú cưng. Các trang thiết bị hiện đại cùng không gian vui chơi sẽ giúp thú cưng của bạn luôn năng động và hạnh phúc. Hãy để chúng tôi chăm sóc và cung cấp cho chúng những khoảnh khắc tuyệt vời nhất trong suốt thời gian ở đây!
                         </p>
                         <div className="text-right">
-                            <Link
+                            <Link to={'/Room'}
                                 className="bg-yellow-400 px-4 py-5 text-lg font-semibold uppercase text-gray-900 rounded-md transition hover:bg-yellow-500"
                             >
                                Đặt Phòng

@@ -15,7 +15,7 @@ export const getAll = async (req, res) => {
 
 export const getId = async (req, res) => {
     try {
-        const getId = await Category.findById(req.params.id, req, body)
+        const getId = await Category.findById(req.params.id, req.body)
         res.json(getId)
     } catch (error) {
         res.status(StatusCodes.BAD_REQUEST).json({

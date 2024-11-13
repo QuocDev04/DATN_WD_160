@@ -1,31 +1,80 @@
 import mongoose from "mongoose";
 
-
-
-const BookingRoomSchema = new mongoose.Schema(
+const RoomItemSchema = new mongoose.Schema(
     {
-        petId: {
+        roomId: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Pet",
+            ref: "Room",
             required: true,
-        },
-        commentId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Comment",
-            required: true,
-        },
-        checkindate: {
-            type:Date
-        },
-        checkoutdate:{
-            type:Date
-        },
-        totalPrice:{
-            type:Number
         }
     },
-    {
-        timestamps:true, versionKey:false
-    }
+    { _id: false },
 )
+const BookingRoomSchema = new mongoose.Schema(
+    {
+        userId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+            required: true,
+        },
+        items: [RoomItemSchema],
+        paymentMethod: {
+            type: String,
+        },
+        lastName: {
+            type: String,
+            required: true,
+        },
+        petName: {
+            type: String,
+            required: true,
+        },
+        phone: {
+            type: Number,
+            required: true,
+        },
+        age: {
+            type: Number,
+            required: true,
+        },
+        weight: {
+            type: String,
+            required: true,
+        },
+        species: {
+            type: String,
+            required: true,
+        },
+        gender: {
+            type: String,
+            required: true,
+        },
+        height: {
+            type: String,
+            required: true,
+        },
+        orderNotes: {
+            type: String,
+        },
+        totalPrice: {
+            type: Number,
+        },
+        status: {
+            type: String,
+            enum: ["pending", "confirmed", "shipped", "delivered"],
+            default: "pending",
+        },
+        checkindate: {
+            type: Date,
+        },
+        checkoutdate: {
+            type: Date,
+        },
+        createdAt: {
+            type: Date,
+            default: Date.now,
+        },
+    },
+    { timestamps: true, versionKey: false }
+);
 export default mongoose.model("BookingRoom", BookingRoomSchema)

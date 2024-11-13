@@ -59,20 +59,18 @@ const CategoryList = () => {
         },
         {
             title: 'Hành Động',
-            dataIndex: 'roomdescription',
-            key: 'roomdescription',
             fixed: "right",
             width: 150,
-            render: (_: any, room: ICategory) => {
+            render: (_: any, category: ICategory) => {
                 return (
                     <div>
-                        <Link to={`/admin/edit/${room._id}`}>
+                        <Link to={`/admin/category/${category._id}`}>
                             <Button type="primary" className="mr-2">
                                 <AiFillEdit className="text-xl" />
                             </Button>
                         </Link>
                         <Popconfirm
-                            onConfirm={() => mutate(room._id)}
+                            onConfirm={() => mutate(category._id)}
                             title="Xóa Sản Phẩm"
                             description="Bạn có chắc chắn muốn xóa không?"
                             okText="Có"
@@ -105,11 +103,11 @@ const CategoryList = () => {
                     {" "}
                     <Button type="primary">
                         <AiOutlinePlusCircle />
-                        Thêm Category
+                        Thêm Danh Mục
                     </Button>
                 </Link>
             </div>
-            <Table dataSource={dataSource} columns={columns} />;
+            <Table dataSource={dataSource} columns={columns} />
         </>
     )
 }

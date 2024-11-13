@@ -9,7 +9,7 @@ export const getAllProduct = async (req, res) => {
             message: "fix",
         });
     }
-}
+} 
 export const getIdProduct = async (req, res) => {
     try {
         const getId = await Product.findById(req.params.id, req.body)

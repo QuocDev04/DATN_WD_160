@@ -13,7 +13,6 @@ import {
     UploadProps,
 } from "antd";
 import { Link } from "react-router-dom";
-import { AiFillBackward } from "react-icons/ai";
 import { useMutation } from "@tanstack/react-query";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import instance from "@/configs/axios";
@@ -111,12 +110,6 @@ const ServiceAddPage = () => {
         <>
             <div className="flex items-center justify-between">
                 <h1 className="text-2xl">Thêm dịch vụ</h1>
-                <Link to={"/admin/service"}>
-                    <Button type="primary">
-                        <AiFillBackward />
-                        Quay lại
-                    </Button>
-                </Link>
             </div>
             {contextHolder}
             <Form
@@ -237,6 +230,11 @@ const ServiceAddPage = () => {
                                 "Thêm"
                             )}
                         </Button>
+                        <Link to={"/admin/service"}>
+                            <Button  disabled={isPending} className="ml-3">
+                                Quay lại
+                            </Button>
+                        </Link>
                     </Form.Item>
                 </div>
             </Form>
