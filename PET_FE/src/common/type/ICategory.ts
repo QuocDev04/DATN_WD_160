@@ -4,6 +4,6 @@ export interface ICategory {
     title: string,
 }
 
-export interface ICategory {
+export interface AddCategory {
     title: string,
 }   

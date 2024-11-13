@@ -28,8 +28,6 @@ const HeaderPages = () => {
         </div>
     )
     const token = localStorage.getItem("token")
-    const { Search } = Input;
-    const onSearch: SearchProps['onSearch'] = (value, _e, info) => console.log(info?.source, value);
     return (
         <>
             <header className="bg-[#F6F0E2]">
@@ -40,9 +38,38 @@ const HeaderPages = () => {
                                 <span className="sr-only">Home</span>
                                 <img src="../public/logo.png" className="w-24  hidden md:relative md:block" />
                             </a>
-                            <Search placeholder="Nhập Nội Dung Cần Tìm Kiếm" onSearch={onSearch} enterButton  />
+                            <div className="flex items-center justify-center ml-20 bg-[#F6F0E2] ">
+                                <div className=" hidden md:relative md:block ">
+                                    <ul className="flex items-center gap-6 text-[15px]">
+                                        <li>
+                                            <Link to={''} className="text-gray-900 transition hover:text-gray-500/75"> Trang Chủ </Link >
+                                        </li>
+
+                                        <li>
+                                            <Link to={''} className="text-gray-900 transition hover:text-gray-500/75"> Giới Thiệu Sản Phẩm </Link >
+                                        </li>
+
+                                        <li>
+                                            <Link to={'/PetMagazine'} className="text-gray-900 transition hover:text-gray-500/75"> Tạp Chí Thú Cưng </Link >
+                                        </li>
+
+                                        <li>
+                                            <Link to={''} className="text-gray-900 transition hover:text-gray-500/75"> Đặt Phòng </Link >
+                                        </li>
+
+                                        <li>
+                                            <Link to={'/Hotline'} className="text-gray-900 transition hover:text-gray-500/75"> Liên Hệ </Link >
+                                        </li>
+
+                                        <li>
+                                            <Link to={'/Shop'} className="text-gray-900 transition hover:text-gray-500/75"> Giới Thiệu Về Shop </Link >
+                                        </li>
+                                    </ul>
+                                </div>
+
+                            </div>
                         </div>
-                        <div className="md:flex md:items-center md:gap-12 ml-4">
+                        <div className="md:flex md:items-center md:gap-12">
                             <button className="hidden md:relative md:block">Cửa Hàng Gần Bạn</button>
                             <div className="hidden md:relative md:block">
                                 {token ? (
@@ -98,36 +125,7 @@ const HeaderPages = () => {
                     </div>
                 </div>
             </header>
-            <div className="flex items-center justify-center pb-2 bg-[#F6F0E2] ">
-                <div className=" hidden md:relative md:block">
-                       <ul className="flex items-center gap-6 text-md">
-                        <li>
-                            <Link to={''} className="text-gray-500 transition hover:text-gray-500/75"> Trang Chủ </Link >
-                        </li>
-
-                        <li>
-                            <Link to={''} className="text-gray-500 transition hover:text-gray-500/75"> Giới Thiệu Sản Phẩm </Link >
-                        </li>
-
-                        <li>
-                            <Link to={'/PetMagazine'} className="text-gray-500 transition hover:text-gray-500/75"> Tạp Chí Thú Cưng </Link >
-                        </li>
-
-                        <li>
-                            <Link to={''} className="text-gray-500 transition hover:text-gray-500/75"> Đặt Phòng </Link >
-                        </li>
-
-                        <li>
-                            <Link to={'/Hotline'} className="text-gray-500 transition hover:text-gray-500/75"> Liên Hệ </Link >
-                        </li>
-
-                        <li>
-                            <Link to={'/Shop'} className="text-gray-500 transition hover:text-gray-500/75"> Giới Thiệu Về Shop </Link >
-                        </li>
-            </ul> 
-                </div>
-             
-            </div>
+           
            
         </>
     )

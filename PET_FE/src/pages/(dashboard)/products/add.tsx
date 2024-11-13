@@ -116,12 +116,6 @@ const ProductAddPage = () => {
         <>
             <div className="flex items-center justify-between">
                 <h1 className="text-2xl">Thêm sản phẩm</h1>
-                <Link to={"/admin/product"}>
-                    <Button type="primary">
-                        <AiFillBackward />
-                        Quay lại
-                    </Button>
-                </Link>
             </div>
             {contextHolder}
             <Form
@@ -245,6 +239,11 @@ const ProductAddPage = () => {
                                 "Thêm"
                             )}
                         </Button>
+                        <Link to={"/admin/product"}>
+                            <Button disabled={isPending} className="ml-3">
+                                Quay lại
+                            </Button>
+                        </Link>
                     </Form.Item>
                 </div>
             </Form>

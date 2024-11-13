@@ -87,9 +87,6 @@ const EditUser = () => {
             {contextHolder}
             <div className="flex justify-between m-5">
                 <h1 className="text-2xl font-medium">Sửa Thông Tin</h1>
-                <Link to={"/admin/user"}>
-                    <Button type="primary">Quay Lại</Button>
-                </Link>
             </div>
             <Form
                 layout="vertical"
@@ -176,6 +173,9 @@ const EditUser = () => {
                         <Button type="primary" htmlType="submit">
                             Submit
                         </Button>
+                        <Link to={"/admin/user"}>
+                            <Button type="primary">Quay Lại</Button>
+                        </Link>
                     </Space>
                 </Form.Item>
             </Form>

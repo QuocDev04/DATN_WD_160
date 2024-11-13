@@ -110,7 +110,7 @@ const ListService = () => {
             render: (_: any, service: IService) => {
                 return (
                     <div>
-                        <Link to={`/admin/serviceEdit/${service._id}`}>
+                        <Link to={`/admin/service/${service._id}`}>
                             <Button type="primary" className="mr-2">
                                 <AiFillEdit className="text-xl" />
                             </Button>

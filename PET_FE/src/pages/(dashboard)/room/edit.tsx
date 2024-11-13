@@ -146,12 +146,6 @@ const RoomEditPage = () => {
         <>
             <div className="flex items-center justify-between">
                 <h1 className="text-2xl">Sửa phòng</h1>
-                <Link to={"/admin/room"}>
-                    <Button type="primary">
-                        <AiFillBackward />
-                        Quay lại
-                    </Button>
-                </Link>
             </div>
             {contextHolder}
             <Form
@@ -267,6 +261,11 @@ const RoomEditPage = () => {
                                 "Sửa"
                             )}
                         </Button>
+                        <Link to={"/admin/room"}>
+                            <Button className="ml-3" disabled={isPending}>
+                                Quay lại
+                            </Button>
+                        </Link>
                     </Form.Item>
                 </div>
             </Form>

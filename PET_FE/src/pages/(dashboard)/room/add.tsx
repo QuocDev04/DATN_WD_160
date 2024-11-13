@@ -10,6 +10,7 @@ import {
     InputNumber,
     message,
     Radio,
+    Select,
     Upload,
     UploadFile,
     UploadProps,
@@ -125,12 +126,6 @@ const RoomAdd = () => {
         <>
             <div className="flex items-center justify-between">
                 <h1 className="text-2xl">Thêm phòng</h1>
-                <Link to={"/admin/room"}>
-                    <Button type="primary">
-                        <AiFillBackward />
-                        Quay lại
-                    </Button>
-                </Link>
             </div>
             {contextHolder}
             <Form
@@ -199,24 +194,31 @@ const RoomAdd = () => {
                         </Form.Item>
 
                     </div>
-                    <div className="ml-5">
-                        <Form.Item name="category">
-                            <h1 className="text-lg text-center py-2">Danh mục</h1>
-                            <Radio.Group
+                    <div className="ml-5 mt-5">
+                        <Form.Item name="category" label={<h1 className="text-md text-center">Danh mục</h1>} rules={[
+                            {
+                                required: true,
+                                message: "Danh mục bắt buộc chọn",
+                            }
+                        ]}>
+                            <Select
                                 style={{ width: "100%", marginLeft: "7px" }}
                                 options={category?.data?.map((category: ICategory) => ({
                                     label: category.title,
                                     value: category._id,
                                 }))}
+                                placeholder="Chọn danh mục"
                                 disabled={isPending}
-                                onChange={(e) => {
+                                onChange={(value) => {
                                     // Cập nhật giá trị của trường category
                                     form.setFieldsValue({
-                                        category: e.target.value,
+                                        category: value,
                                     });
                                 }}
                             />
                         </Form.Item>
+
+
 
                         <Form.Item name="roomgallely"
                             rules={[
@@ -269,6 +271,11 @@ const RoomAdd = () => {
                                 "Thêm"
                             )}
                         </Button>
+                        <Link to={"/admin/room"}>
+                            <Button className="ml-3" disabled={isPending}>
+                                Quay lại
+                            </Button>
+                        </Link>
                     </Form.Item>
                 </div>
             </Form>

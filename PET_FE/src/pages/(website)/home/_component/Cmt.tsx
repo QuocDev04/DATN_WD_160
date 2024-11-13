@@ -1,6 +1,6 @@
 
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation } from "swiper/modules";
+import { Autoplay } from 'swiper/modules';
 const CmtPages = () => {
     return (
         <div>
@@ -61,27 +61,58 @@ const CmtPages = () => {
                                 <Swiper
                                     slidesPerView={2}
                                     spaceBetween={10}
-                                    navigation={true}
-                                    modules={[Navigation]}
+                                    autoplay={{
+                                        delay: 2000,
+                                    }}
+                                    modules={[Autoplay]}
                                     className="mySwiper"
                                 >
-                                        <SwiperSlide  className="p-4">
-                                            <div className="rounded-xl border p-6 h-full flex flex-col justify-between bg-white shadow-lg">
+                                    {[
+                                        {
+                                            username: "Alice Nguyen",
+                                            rating: 4,
+                                            comment: "The product quality is excellent, and delivery was fast. Will definitely buy again!",
+                                            date: "2 days ago"
+                                        },
+                                        {
+                                            username: "John Tran",
+                                            rating: 5,
+                                            comment: "Absolutely love it! Fits perfectly and is very comfortable.",
+                                            date: "1 week ago"
+                                        },
+                                        {
+                                            username: "Emily Le",
+                                            rating: 3,
+                                            comment: "It's okay, but I expected a bit more for the price. Still satisfied overall.",
+                                            date: "3 days ago"
+                                        },
+                                        {
+                                            username: "Michael Pham",
+                                            rating: 4,
+                                            comment: "Good value for the price. The design is also quite stylish.",
+                                            date: "5 days ago"
+                                        },
+                                        {
+                                            username: "Linda Vo",
+                                            rating: 5,
+                                            comment: "Amazing product! Great quality and fast shipping. Highly recommend!",
+                                            date: "1 day ago"
+                                        }
+                                    ].map((review, index) => (
+                                        <SwiperSlide key={index} className="p-4">
+                                            <div className="rounded-xl border p-6 flex flex-col justify-between bg-white shadow-lg h-[250px]">
                                                 {/* User Info */}
                                                 <div className="flex items-center gap-[16px]">
-                                                    <img
-                                                        className="w-[36px] h-[36px] rounded-full"
-
-                                                    />
-                                                    <span className="font-medium"></span>
+                                                    <img className="w-[36px] h-[36px] rounded-full"  alt={review.username} />
+                                                    <span className="font-medium">{review.username}</span>
                                                 </div>
                                                 <hr className="my-4" />
                                                 {/* Comment */}
-                                                <div className="flex flex-col h-full gap-y-4">
+                                                <div className="flex flex-col h-full justify-center items-start gap-y-4">
                                                     <div className="flex items-center gap-1">
-                                                        {[...Array(4)].map((_, index) => (
+                                                        {[...Array(review.rating)].map((_, i) => (
                                                             <svg
-                                                                key={index}
+                                                                key={i}
                                                                 xmlns="http://www.w3.org/2000/svg"
                                                                 width="16"
                                                                 height="16"
@@ -97,18 +128,15 @@ const CmtPages = () => {
                                                             </svg>
                                                         ))}
                                                     </div>
-                                                    <p className="text-sm text-gray-700">
-                                                      
-                                                    </p>
+                                                    <p className="text-sm text-gray-700 line-clamp-3">{review.comment}</p>
                                                 </div>
-                                                <strong className="text-left text-[#9D9EA2] text-sm mt-4">
-                                                  
-                                                </strong>
+                                                <strong className="text-left text-[#9D9EA2] text-sm mt-4">{review.date}</strong>
                                             </div>
                                         </SwiperSlide>
-                                  
+                                    ))}
                                 </Swiper>
                             </div>
+
                         </div>
                     </div>
 
