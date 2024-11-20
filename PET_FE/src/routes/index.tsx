@@ -21,9 +21,12 @@ import RegisterPages from "@/pages/(website)/auth/register/register";
 import PagesBookingRoom from "@/pages/(website)/bookingRoom/pages";
 import ProductDetailPage from "@/pages/(website)/detail/pages";
 import DetalRoom from "@/pages/(website)/detailRoom/pages";
+import ProductPages from "@/pages/(website)/home/_component/Product";
 import HomePages from "@/pages/(website)/home/pages";
 import HotlinePage from "@/pages/(website)/hotline/pages";
+import MagazineDetail from "@/pages/(website)/petMagazine/_component/Right/detailmagazine/detailmagazine";
 import PetMagazine from "@/pages/(website)/petMagazine/pages";
+import Pages from "@/pages/(website)/Product/pages";
 import Room from "@/pages/(website)/room/pages";
 import RoomPageComponent from "@/pages/(website)/roompages/pages";
 import ShopIntroduction from "@/pages/(website)/Shopintroduction/pages";
@@ -69,7 +72,8 @@ const Router = () => {
                     <Route path="Roompages" element={<RoomPageComponent />} />
                     <Route path="Roompages/:id" element={<DetalRoom />} />
                     <Route path="BookingRoompages/:userId/:id" element={<PagesBookingRoom />} />
-
+                    <Route path="/magazine/:id" element={<MagazineDetail />} />
+                    <Route path="product" element={<Pages />} />
                 </Route>
                 <Route path="register" element={<RegisterPages />} />
                 <Route path="login" element={<LoginPages />} />
