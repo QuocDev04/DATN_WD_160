@@ -70,7 +70,6 @@ export const BookingRoom = async (req, res) => {
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: error.message });
     }
 };
-
 export const getBookingroom = async (req, res) => {
     try {
         const order = await Bookingroom.find().populate({
@@ -110,6 +109,40 @@ export const updateOrder = async (req, res) => {
             return res.status(StatusCodes.NOT_FOUND).json({ error: "Order not found" });
         }
         return res.status(StatusCodes.OK).json(order);
+    } catch (error) {
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: error.message });
+    }
+};
+export const updateBookingRoomStatus = async (req, res) => {
+    try {
+        const { _id } = req.params;
+        const { status } = req.body;
+
+        // Danh sách các trạng thái hợp lệ
+        const validStatus = ["pending", "confirmed", "completed", "cancelled"];
+
+        // Kiểm tra trạng thái hợp lệ
+        if (!validStatus.includes(status)) {
+            return res.status(StatusCodes.BAD_REQUEST).json({ error: "Invalid status" });
+        }
+
+        // Tìm đơn đặt phòng theo `bookingId`
+        const bookingRoom = await Bookingroom.findById(_id);
+        if (!bookingRoom) {
+            return res.status(StatusCodes.NOT_FOUND).json({ error: "Booking not found" });
+        }
+
+        // Kiểm tra không cho phép chuyển từ trạng thái 'cancelled' hoặc 'confirmed' sang 'pending'
+        if ((bookingRoom.status === "cancelled" || bookingRoom.status === "confirmed") && status === "pending") {
+            return res.status(StatusCodes.BAD_REQUEST).json({ error: "Cannot change status to 'pending' from 'cancelled' or 'confirmed'" });
+        }
+
+        // Cập nhật trạng thái mới
+        bookingRoom.status = status;
+        await bookingRoom.save();
+
+        // Trả về phản hồi thành công
+        return res.status(StatusCodes.OK).json({ message: "Booking status updated successfully" });
     } catch (error) {
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: error.message });
     }

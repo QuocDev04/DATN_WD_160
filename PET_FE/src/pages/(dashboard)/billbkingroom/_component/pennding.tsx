@@ -108,7 +108,7 @@ const Pending = () => {
                         {/* Tổng tiền */}
                         <div className="border-t pt-4 flex justify-between items-center">
                             <span className="font-medium text-xl text-gray-800">Tổng tiền:</span>
-                            <span className="text-green-600 font-bold text-2xl">{item.totalPrice.toLocaleString()} VNĐ</span>
+                            <span className="text-green-600 font-bold text-2xl">{item.totalPrice ? item.totalPrice.toLocaleString("vi-VN") : "N/A"} VNĐ</span>
                         </div>
 
                         {/* Trạng thái */}
