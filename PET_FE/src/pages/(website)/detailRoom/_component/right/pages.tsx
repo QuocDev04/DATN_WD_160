@@ -2,12 +2,10 @@ import instance from "@/configs/axios";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {  useNavigate, useParams } from "react-router-dom";
 import MenuRoom from "./menuroom";
-import { notification } from "antd";
 
 const RightPagesComponent = () => {
     const userId = localStorage.getItem("userId");
     const { id } = useParams();
-    const [api, contextHolder] = notification.useNotification();
     const navigate = useNavigate()
     const { data: room } = useQuery({
         queryKey: ['room', id],
@@ -23,16 +21,6 @@ const RightPagesComponent = () => {
         });
     };
 
-    const openNotification = (type: "success" | "error", message: string, description: string) => {
-        api.open({
-            message,
-            description,
-            type,
-            duration: 3,
-            placement: "topRight",
-        });
-    };
-
     const { mutate: bookingRoom } = useMutation({
         mutationFn: async (roomId:string) => {
             return instance.post(`/buynow`, { userId, items: [{ roomId }] });
@@ -41,14 +29,10 @@ const RightPagesComponent = () => {
             const id = data?.data?._id
             navigate(`/BookingRoompages/${userId}/${id}`)
         },
-        onError: () => {
-            openNotification("error", "Mua hàng thất bại", "Vui Lòng Chọn Size");
-        },
     });
 
     return (
         <>
-            {contextHolder}
             <div className="bg-white shadow-lg rounded-2xl overflow-hidden border border-gray-200">
                 <div className="p-8">
                     <h1 className="text-3xl font-semibold text-gray-800 mb-3">{room?.data.roomName}</h1>

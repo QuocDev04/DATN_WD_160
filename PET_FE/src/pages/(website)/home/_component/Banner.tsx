@@ -22,7 +22,7 @@ const Banner = () => {
             className="mySwiper"
         >
             <SwiperSlide>
-                <img src="https://theme.hstatic.net/1000238938/1000576591/14/slider_index_1_1.jpg?v=386" alt="" />
+                <img src="../../../../../images/banner.png" alt="" />
             </SwiperSlide>
             <SwiperSlide>
                 <img src="https://theme.hstatic.net/1000238938/1000576591/14/slider_index_1_3.jpg?v=386" alt="" />

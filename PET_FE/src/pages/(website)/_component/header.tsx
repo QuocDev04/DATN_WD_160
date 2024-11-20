@@ -1,18 +1,23 @@
-import { GetProps, Popover } from "antd";
-import Input from "antd/es/input";
+import {  Popover } from "antd";
 import { Link } from "react-router-dom";
 import { FaUserCircle, FaPhoneVolume, FaFacebook } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
+import { useEffect, useState } from "react";
 
 
 const HeaderPages = () => {
-    type SearchProps = GetProps<typeof Input.Search>;
 
-    // Thêm hàm xử lý đăng xuất
+    const [userId, setUserId] = useState<string | null>(null);
+
+    useEffect(() => {
+        setUserId(localStorage.getItem("userId"));
+    }, []);
+
     const handleLogout = () => {
         localStorage.removeItem("token");
         localStorage.removeItem("userId");
         localStorage.removeItem("role");
+        setUserId(null); // Cập nhật lại state
         window.location.href = "/";
     };
 
@@ -33,8 +38,6 @@ const HeaderPages = () => {
             </Link>
         </div>
     );
-
-    const userId = localStorage.getItem("userId");
 
     const user = (
         <div className="flex flex-col gap-1 p-2 min-w-[150px] bg-[#F6F0E2] rounded-lg shadow-md border border-[#E6D5B8]">

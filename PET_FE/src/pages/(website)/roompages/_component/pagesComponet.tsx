@@ -1,14 +1,11 @@
 import instance from "@/configs/axios"
 import { useQuery } from "@tanstack/react-query"
 import RoomList from "../../_component/RoomList"
-import { FaFilter, FaSearch, FaSortAmountDown, FaHeart } from 'react-icons/fa'
+import {  FaHeart } from 'react-icons/fa'
 import { motion } from "framer-motion"
-import { useState, useEffect } from "react"
+import { useState } from "react"
 
 const PagesComponent = () => {
-    const [priceRange, setPriceRange] = useState({ min: "", max: "" });
-    const [sortOrder, setSortOrder] = useState("asc");
-    const [searchTerm, setSearchTerm] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 8; // Số phòng hiển thị trên mỗi trang
 
@@ -103,13 +100,12 @@ const PagesComponent = () => {
                         </div>
                     </div>
 
-                    {/* Room Grid */}
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+                    <div className="flex flex-col items-center justify-center gap-8">
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.6 }}
-                            className="lg:col-span-3"
+                            className="w-full"
                         >
                             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                                 <RoomList rooms={getCurrentPageItems()} />

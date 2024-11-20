@@ -8,7 +8,8 @@ const Cancelled = () => {
         queryFn: async () => instance.get(`/bookingroom`),
     });
     const pendingBookings = data?.data?.filter((item: any) => item.status === "cancelled");
-
+    console.log(pendingBookings);
+    
     if (isLoading) return <div>Loading...</div>;
 
     if (error) return <div>Error fetching data</div>;
@@ -96,7 +97,9 @@ const Cancelled = () => {
                         {/* Tổng tiền */}
                         <div className="border-t pt-4 flex justify-between items-center">
                             <span className="font-medium text-xl text-gray-800">Tổng tiền:</span>
-                            {/* <span className="text-green-600 font-bold text-2xl">{item.totalPrice.toLocaleString()} VNĐ</span> */}
+                            <span className="text-green-600 font-bold text-2xl">
+                                {item.totalPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}
+                            </span> 
                         </div>
 
                         {/* Trạng thái */}

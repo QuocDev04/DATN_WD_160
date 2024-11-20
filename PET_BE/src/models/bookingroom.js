@@ -30,7 +30,7 @@ const BookingRoomSchema = new mongoose.Schema(
             required: true,
         },
         phone: {
-            type: Number,
+            type: String,
             required: true,
         },
         age: {
@@ -61,7 +61,7 @@ const BookingRoomSchema = new mongoose.Schema(
         },
         status: {
             type: String,
-            enum: ["pending", "confirmed", "shipped", "delivered"],
+            enum: ["pending", "confirmed", "cancelled"],
             default: "pending",
         },
         checkindate: {
