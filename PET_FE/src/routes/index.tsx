@@ -18,7 +18,7 @@ import EditUser from "@/pages/(dashboard)/user/edit";
 import ListUser from "@/pages/(dashboard)/user/list";
 import LoginPages from "@/pages/(website)/auth/login/login";
 import RegisterPages from "@/pages/(website)/auth/register/register";
-import PagesBookingRoom from "@/pages/(website)/bookingRoom/pages";
+import LeftBookingRoom from "@/pages/(website)/bookingRoom/_component/left/LeftBooking";
 import ProductDetailPage from "@/pages/(website)/detail/pages";
 import DetalRoom from "@/pages/(website)/detailRoom/pages";
 import HomePages from "@/pages/(website)/home/pages";
@@ -71,7 +71,7 @@ const Router = () => {
                     <Route path="Room" element={<Room />} />
                     <Route path="Roompages" element={<RoomPageComponent />} />
                     <Route path="Roompages/:id" element={<DetalRoom />} />
-                    <Route path="BookingRoompages/:userId/:id" element={<PagesBookingRoom />} />
+                    <Route path="BookingRoompages/:userId/:id" element={<LeftBookingRoom />} />
                     <Route path="/magazine/:id" element={<MagazineDetail />} />
                     <Route path="product" element={<Pages />} />
                     <Route path="profile" element={<Inormation/>}/>
