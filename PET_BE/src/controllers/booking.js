@@ -119,8 +119,8 @@ export const getBookingroom = async (req, res) => {
 };
 export const getOrderById = async (req, res) => {
     try {
-        const { userId, _id } = req.params;
-        const order = await BuyNow.findOne({ userId, _id })
+        const { userId } = req.params;
+        const order = await Bookingroom.find({ userId})
         if (!order) {
             return res
                 .status(StatusCodes.NOT_FOUND)
