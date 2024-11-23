@@ -1,20 +1,24 @@
 import { IService } from "@/common/type/IService";
 import instance from "@/configs/axios";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { LoadingOutlined } from "@ant-design/icons";
 import {
     Form,
     Input,
     Button,
-    InputNumber,
-    Select,
     notification,
     Image,
+    DatePickerProps,
+    Select,
 } from "antd";
-import type { DatePickerProps } from 'antd';
+import { useState } from "react";
+import dayjs from 'dayjs';
+import buddhistEra from 'dayjs/plugin/buddhistEra';
 import { DatePicker } from 'antd';
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import en from 'antd/es/date-picker/locale/en_US';
+dayjs.extend(buddhistEra);
 type FieldType = {
     firstName: string;
     petName: string;
@@ -30,21 +34,36 @@ type FieldType = {
 
 
 const LeftBookingRoom = () => {
-    const onChange: DatePickerProps['onChange'] = (date, dateString) => {
-        console.log(date, dateString);
+
+    const defaultValue = dayjs('2024-01-01');
+    const buddhistLocale: typeof en = {
+        ...en,
+        lang: {
+            ...en.lang,
+            fieldDateFormat: 'DD-MM-YYYY',
+            fieldDateTimeFormat: 'DD-MM-YYYY HH:mm:ss',
+            yearFormat: 'YYYY',
+            cellYearFormat: 'YYYY',
+        },
     };
+    const onChange: DatePickerProps['onChange'] = (_, dateStr) => {
+        console.log('onChange:', dateStr);
+    };
+    const userId = localStorage.getItem("userId");
     const {
         data: service
     } = useQuery({
         queryKey: ["service"],
         queryFn: () => instance.get("/service"),
     });
+    const { data: userBookings } = useQuery({
+        queryKey: ['userBooking'],
+        queryFn: () => instance.get(`/bookingroom/${userId}`)
+    })
     useEffect(() => {
         window.scrollTo(0, 0)
     }, [])
-    const userId = localStorage.getItem("userId");
     const [api, contextHolder] = notification.useNotification();
-    const queryClient = useQueryClient();
     const [form] = Form.useForm();
     const { id } = useParams()
     const { data } = useQuery({
@@ -72,7 +91,14 @@ const LeftBookingRoom = () => {
                     pauseOnHover,
                 });
             };
-
+    useEffect(() => {
+        if (data?.data) {
+            setTotalRoomPrice(data.data.totalPrice);
+            setTotalPrice(data.data.totalPrice); // Đồng bộ giá ban đầu
+        }
+    }, [data]);
+    const [totalRoomPrice, setTotalRoomPrice] = useState(data?.data?.totalPrice || 0);
+    const [totalPrice, setTotalPrice] = useState(totalRoomPrice);
     const { mutate: createOrder, isPending } = useMutation({
         mutationFn: async (orderData: FieldType) => {
             try {
@@ -86,32 +112,43 @@ const LeftBookingRoom = () => {
             }
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: ["bookingroom"],
-            });
-            nav('/')
-            form.resetFields(); // This line resets the form after booking
             openNotification(false)(
                 "success",
                 "Đặt Phòng Thành Công",
-                "Bạn Đặt Phòng Thành Công",
+                "Bạn Đặt Phòng Thành Công"
             );
+            setTimeout(() => {
+                nav('/')
+            }, 1500); // Reset form sau 1.5 giây
         },
+
         onError: () => {
             openNotification(false)(
                 "error",
                 "Đặt Phòng Thất Bại",
-                "Bạn Đặt Phòng thất bại. Vui Lòng thử lại sau",
+                "Bạn đã đạt số lượng đặt phòng tối đa. Vui lòng thử lại sau."
             );
         },
     });
     const onFinish = (values: FieldType) => {
-        createOrder(values);
+        // if (userBookings?.data?.length >= 2) {
+        //     openNotification(false)(
+        //         "error",
+        //         "Đặt Phòng Thất Bại",
+        //         "Bạn đã đạt số lượng đặt phòng tối đa. Vui lòng thử lại sau."
+        //     );
+        //     return; // Prevent the booking
+        // }
+
+        createOrder({
+            ...values,
+        });
     };
     return (
         <>
             {contextHolder}
             <Form
+                form={form}
                 onFinish={onFinish}
                 name="validateOnly"
                 layout="vertical"
@@ -121,6 +158,7 @@ const LeftBookingRoom = () => {
                     <div>
                         <div className="grid grid-cols-2 gap-6">
                             <Form.Item
+                                validateTrigger="onBlur"
                                 name="lastName"
                                 label="Tên Chủ"
                                 rules={[
@@ -132,10 +170,11 @@ const LeftBookingRoom = () => {
                             >
                                 <Input
                                     className="py-3 rounded-xl"
-                                // disabled={isPending}
+                                    disabled={isPending}
                                 />
                             </Form.Item>
                             <Form.Item
+                                validateTrigger="onBlur"
                                 name="petName"
                                 label="Tên Thú Cưng"
                                 rules={[
@@ -147,12 +186,13 @@ const LeftBookingRoom = () => {
                             >
                                 <Input
                                     className="py-3 rounded-xl"
-                                // disabled={isPending}
+                                    disabled={isPending}
                                 />
                             </Form.Item>
                         </div>
                         <div className="grid grid-cols-3 gap-6">
                             <Form.Item
+                                validateTrigger="onBlur"
                                 name="age"
                                 label="Tuổi"
                                 rules={[
@@ -165,10 +205,11 @@ const LeftBookingRoom = () => {
                             >
                                 <Input
                                     className="py-3 rounded-xl"
-                                // disabled={isPending}
+                                    disabled={isPending}
                                 />
                             </Form.Item>
                             <Form.Item
+                                validateTrigger="onBlur"
                                 name="weight"
                                 label="Cân Nặng"
                                 rules={[
@@ -180,10 +221,11 @@ const LeftBookingRoom = () => {
                             >
                                 <Input
                                     className="py-3 rounded-xl"
-                                // disabled={isPending}
+                                    disabled={isPending}
                                 />
                             </Form.Item>
                             <Form.Item
+                                validateTrigger="onBlur"
                                 name="height"
                                 label="Chiều Cao"
                                 rules={[
@@ -196,12 +238,13 @@ const LeftBookingRoom = () => {
                             >
                                 <Input
                                     className="py-3 rounded-xl"
-                                // disabled={isPending}
+                                    disabled={isPending}
                                 />
                             </Form.Item>
                         </div>
                         <div className="grid grid-cols-3 gap-6">
                             <Form.Item
+                                validateTrigger="onBlur"
                                 name="species"
                                 label="Giống Loài"
                                 rules={[
@@ -214,10 +257,11 @@ const LeftBookingRoom = () => {
                                 <Input
                                     className="py-3 rounded-xl"
                                     placeholder="Giống Loài"
-                                // disabled={isPending}
+                                    disabled={isPending}
                                 />
                             </Form.Item>
                             <Form.Item
+                                validateTrigger="onBlur"
                                 name="gender"
                                 label="Giới Tính"
                                 rules={[
@@ -228,37 +272,55 @@ const LeftBookingRoom = () => {
                                 ]}
                             >
                                 <Input
-                                    // disabled={isPending}
+                                    disabled={isPending}
                                     className="py-3 rounded-xl"
                                     placeholder="Giới Tính"
                                 />
                             </Form.Item>
                             <Form.Item
+                                validateTrigger="onBlur"
                                 name="phone"
                                 label="Số điện thoại"
                                 rules={[
                                     {
                                         required: true,
-                                        message:
-                                            "Vui lòng nhập số điện thoại!",
+                                        message: "Vui lòng nhập số điện thoại!",
                                     },
                                     {
-                                        type: "number",
-                                        min: 0,
-                                        message:
-                                            "Vui lòng nhập đúng số điện thoại",
+                                        validator: (_, value) => {
+                                            if (!value) {
+                                                return Promise.resolve(); // Giá trị trống sẽ được xử lý bởi required
+                                            }
+                                            if (!/^0\d+$/.test(value)) {
+                                                return Promise.reject(new Error("Số điện thoại phải bắt đầu bằng số 0!"));
+                                            }
+                                            if (value.length !== 10) {
+                                                return Promise.reject(new Error("Số điện thoại phải có đúng 10 chữ số!"));
+                                            }
+                                            return Promise.resolve();
+                                        },
                                     },
                                 ]}
                             >
-                                <InputNumber
+                                <Input
                                     className="py-2 rounded-xl w-56"
-                                // disabled={isPending}
+                                    onChange={(e) => {
+                                        const onlyNumbers = e.target.value.replace(/\D/g, ""); // Loại bỏ tất cả ký tự không phải số
+                                        if (!onlyNumbers.startsWith("0")) {
+                                            form.setFieldsValue({ phone: `0${onlyNumbers}` }); // Đảm bảo số luôn bắt đầu bằng 0
+                                        } else {
+                                            form.setFieldsValue({ phone: onlyNumbers });
+                                        }
+                                    }}
                                 />
                             </Form.Item>
+
+
                         </div>
 
                         <div className="grid grid-cols-3 gap-6">
                             <Form.Item
+                                validateTrigger="onBlur"
                                 name="checkindate"
                                 label="Thời Gian Bắt Đầu"
                                 rules={[
@@ -269,13 +331,16 @@ const LeftBookingRoom = () => {
                                 ]}
                             >
                                 <DatePicker
-                                    placeholder="Nhập ngày bắt đầu"
-                                    format="YYYY-MM-DD"
+                                    defaultValue={defaultValue}
+                                    showTime
+                                    locale={buddhistLocale}
+                                    onChange={onChange}
                                     className="w-52"
                                 />
                             </Form.Item>
 
                             <Form.Item
+                                validateTrigger="onBlur"
                                 name="checkoutdate"
                                 label="Thời Gian Kết Thúc"
                                 rules={[
@@ -286,34 +351,50 @@ const LeftBookingRoom = () => {
                                 ]}
                             >
                                 <DatePicker
-                                    placeholder="Nhập ngày kết thúc"
-                                    format="YYYY-MM-DD"
+                                    defaultValue={defaultValue}
+                                    showTime
+                                    locale={buddhistLocale}
+                                    onChange={onChange}
                                     className="w-52"
                                 />
                             </Form.Item>
-                            <Form.Item name="service" label={<h1 className="text-md text-center">Dịch Vụ</h1>} rules={[
-                                {
-                                    required: true,
-                                    message: "Dịch Vụ bắt buộc chọn",
-                                }
+                            <Form.Item name="service" validateTrigger="onBlur" label={<h1 className="text-md text-center">Dịch Vụ</h1>} rules={[
                             ]}>
                                 <Select
+                                    mode="multiple" // Cho phép chọn nhiều mục
                                     style={{ width: "100%", marginLeft: "7px" }}
+                                    placeholder="Chọn dịch vụ"
                                     options={service?.data?.map((service: IService) => ({
-                                        label: service.servicesName,
+                                        label: `${service.servicesName} (${formatCurrency(service.priceService)})`,
                                         value: service._id,
+                                        price: service.priceService, // Thêm giá vào thuộc tính tùy chỉnh
                                     }))}
-                                    placeholder="Chọn Dịch Vụ"
-                                // disabled={isPending}
-                                // onChange={(value) => {
-                                //     // Cập nhật giá trị của trường category
-                                //     form.setFieldsValue({
-                                //         category: value,
-                                //     });
-                                // }}
+                                    onChange={(selectedValues) => {
+                                        // Lọc các dịch vụ được chọn
+                                        const selectedServices = service?.data?.filter((s: IService) =>
+                                            selectedValues.includes(s._id)
+                                        );
+
+                                        // Tính tổng giá dịch vụ
+                                        const totalServicePrice = selectedServices?.reduce(
+                                            (total: number, s: IService) => total + s.priceService,
+                                            0
+                                        );
+
+                                        // Cập nhật giá trị form và tổng giá
+                                        form.setFieldsValue({
+                                            service: selectedValues,
+                                        });
+
+                                        setTotalPrice(totalRoomPrice + (totalServicePrice || 0));
+                                    }}
+                                    disabled={isPending}
                                 />
+
+
                             </Form.Item>
                         </div>
+                     
                     </div>
                     <div className="rounded-lg mt-3 ">
                         <ul className="text-base grid grid-cols-2 md:grid-cols-2 gap-6">
@@ -338,44 +419,14 @@ const LeftBookingRoom = () => {
                             ))}
                         </ul>
                         <div className="border rounded-2xl flex flex-col gap-y-5 lg:p-6 px-5 py-[22px]">
-                            <div className="flex flex-col gap-y-[17px] border-b pb-5">
-                                <section className="flex justify-between text-sm">
-                                    <span className="text-[#9D9EA2]">
-                                        Tổng tất cả{" "}
-                                    </span>
-                                    <p>
-                                        {formatCurrency(
-                                            data?.data?.totalPrice
-                                        )}
-                                    </p>
-                                </section>
+                            <div className="flex justify-between text-sm">
+                                <span className="text-[#9D9EA2]">Tổng giá dịch vụ</span>
+                                <p>{formatCurrency(totalPrice - totalRoomPrice)}</p>
                             </div>
-                            {/* <Radio.Group
-                                    style={{ width: "100%" }}
-                                    onChange={(e) => {
-                                        setSelectedPaymentMethod(e.target.value);
-                                    }}
-                                    value={selectedPaymentMethod}
-                                >
-                                    <Row>
-                                        <Col span={12}>
-                                            <Radio
-                                                value="COD"
-                                                // disabled={isPending}
-                                            >
-                                                Thanh toán khi nhận hàng (COD)
-                                            </Radio>
-                                        </Col>
-                                        <Col span={12}>
-                                            <Radio
-                                                value="ONLINE"
-                                                // disabled={isPending}
-                                            >
-                                                Thanh Toán trực tuyến (Payment)
-                                            </Radio>
-                                        </Col>
-                                    </Row>
-                                </Radio.Group> */}
+                            <div className="flex justify-between text-sm">
+                                <span className="text-[#9D9EA2]">Tổng tất cả</span>
+                                <p>{formatCurrency(totalPrice)}</p>
+                            </div>
                             <div className="mt-4">
                                 <Button
                                     type="primary"
@@ -398,19 +449,19 @@ const LeftBookingRoom = () => {
                                 </span>
                                 <div className="flex items-center gap-x-3 *:cursor-pointer">
                                     <img
-                                        src="../Images/mastercard_v1.png"
+                                        src="../../../../../../images/mastercard_v1.png"
                                         alt=""
                                     />
                                     <img
-                                        src="../Images/mastercard_v2.png"
+                                        src="../../../../../../images/mastercard_v2.png"
                                         alt=""
                                     />
                                     <img
-                                        src="../Images/mastercard_v3.png"
+                                        src="../../../../../../images/mastercard_v3.png"
                                         alt=""
                                     />
                                     <img
-                                        src="../Images/mastercard_v4.png"
+                                        src="../../../../../../images/mastercard_v4.png"
                                         alt=""
                                     />
                                 </div>

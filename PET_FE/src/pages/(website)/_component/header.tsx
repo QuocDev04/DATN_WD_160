@@ -1,133 +1,198 @@
-import { GetProps, Popover } from "antd";
-import Input from "antd/es/input";
-import { AiOutlineUser } from "react-icons/ai";
+import {  Popover } from "antd";
 import { Link } from "react-router-dom";
+import { FaUserCircle, FaPhoneVolume, FaFacebook } from "react-icons/fa";
+import { MdEmail } from "react-icons/md";
+import { useEffect, useState } from "react";
 
 
 const HeaderPages = () => {
-    type SearchProps = GetProps<typeof Input.Search>;
+
+    const [userId, setUserId] = useState<string | null>(null);
+
+    useEffect(() => {
+        setUserId(localStorage.getItem("userId"));
+    }, []);
+
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("userId");
+        localStorage.removeItem("role");
+        setUserId(null); // Cập nhật lại state
+        window.location.href = "/";
+    };
+
     const account = (
-        <div>
+        <div className="flex flex-col gap-1 p-2 min-w-[150px] bg-[#F6F0E2] rounded-lg shadow-md border border-[#E6D5B8]">
+            <h3 className="text-[#8B4513] text-sm font-medium pb-1 border-b border-[#E6D5B8] mb-1">
+                Tài khoản
+            </h3>
             <Link to={"/login"}>
-                <div>Đăng nhập</div>
+                <div className="hover:bg-[#E6D5B8] px-3 py-1.5 rounded-md transition-all text-[#8B4513] text-sm">
+                    Đăng nhập
+                </div>
             </Link>
             <Link to={"/register"}>
-                <div>Đăng ký</div>
+                <div className="hover:bg-[#E6D5B8] px-3 py-1.5 rounded-md transition-all text-[#8B4513] text-sm">
+                    Đăng ký
+                </div>
             </Link>
         </div>
     );
-    const userId = localStorage.getItem("userId")
+
     const user = (
-        <div>
-             <Link to={"/"}>
-                <div>Thông Tin</div>
+        <div className="flex flex-col gap-1 p-2 min-w-[150px] bg-[#F6F0E2] rounded-lg shadow-md border border-[#E6D5B8]">
+            <h3 className="text-[#8B4513] text-sm font-medium pb-1 border-b border-[#E6D5B8] mb-1">
+                Tài khoản
+            </h3>
+            <Link to={"/profile"}>
+                <div className="hover:bg-[#E6D5B8] px-3 py-1.5 rounded-md transition-all text-[#8B4513] text-sm">
+                    Thông Tin
+                </div>
             </Link>
-            <Link to={"/"}>
-                <div>Đăng Xuất</div>
-            </Link>
+            <div
+                onClick={handleLogout}
+                className="hover:bg-[#E6D5B8] px-3 py-1.5 rounded-md transition-all cursor-pointer text-red-600 hover:text-red-700 text-sm"
+            >
+                Đăng Xuất
+            </div>
         </div>
-    )
-    const token = localStorage.getItem("token")
+    );
+
+    const token = localStorage.getItem("token");
     return (
         <>
-            <header className="bg-[#F6F0E2]">
-                <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
-                    <div className="flex items-center justify-between">
-                        <div className="flex-1 md:flex md:items-center md:gap-12">
-                            <a className="block text-teal-600">
-                                <span className="sr-only">Home</span>
-                                <img src="../public/logo.png" className="w-24  hidden md:relative md:block" />
-                            </a>
-                            <div className="flex items-center justify-center ml-20 bg-[#F6F0E2] ">
-                                <div className=" hidden md:relative md:block ">
-                                    <ul className="flex items-center gap-6 text-[15px]">
-                                        <li>
-                                            <Link to={''} className="text-gray-900 transition hover:text-gray-500/75"> Trang Chủ </Link >
-                                        </li>
-
-                                        <li>
-                                            <Link to={''} className="text-gray-900 transition hover:text-gray-500/75"> Giới Thiệu Sản Phẩm </Link >
-                                        </li>
-
-                                        <li>
-                                            <Link to={'/PetMagazine'} className="text-gray-900 transition hover:text-gray-500/75"> Tạp Chí Thú Cưng </Link >
-                                        </li>
-
-                                        <li>
-                                            <Link to={''} className="text-gray-900 transition hover:text-gray-500/75"> Đặt Phòng </Link >
-                                        </li>
-
-                                        <li>
-                                            <Link to={'/Hotline'} className="text-gray-900 transition hover:text-gray-500/75"> Liên Hệ </Link >
-                                        </li>
-
-                                        <li>
-                                            <Link to={'/Shop'} className="text-gray-900 transition hover:text-gray-500/75"> Giới Thiệu Về Shop </Link >
-                                        </li>
-                                    </ul>
+            <header className="bg-gradient-to-b from-[#F6F0E2] to-[#E6D5B8]  mb-[3px] h-[110px] ">
+                <div className="border-b border-[#8B4513]/20">
+                    <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="flex items-center justify-between py-2">
+                            {/* Hotline */}
+                            <div className="inline-flex items-center gap-2 px-2 group">
+                                <span className="text-[#8B4513] text-sm italic">
+                                    Pet-Hotel sẵn sàng phục vụ bạn:
+                                </span>
+                                <div className="inline-flex items-center gap-1">
+                                    <FaPhoneVolume className="text-[#8B4513] text-base" />
+                                    <a href="tel:0909090909" className="text-[#8B4513] text-sm font-medium 
+                                    hover:text-[#EE0C6F] transition-all duration-300">
+                                        090.909.0909
+                                    </a>
                                 </div>
+                            </div>
 
+                            {/* Social Icons */}
+                            <div className="flex items-center gap-3">
+                                <a
+                                    href="https://facebook.com"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-[#8B4513] hover:text-[#6B3E26] transition-all duration-300"
+                                >
+                                    <FaFacebook className="text-xl hover:scale-110" />
+                                </a>
+                                <a
+                                    href="mailto:example@gmail.com"
+                                    className="text-[#8B4513] hover:text-[#6B3E26] transition-all duration-300"
+                                >
+                                    <MdEmail className="text-xl hover:scale-110" />
+                                </a>
                             </div>
                         </div>
-                        <div className="md:flex md:items-center md:gap-12">
-                            <button className="hidden md:relative md:block">Cửa Hàng Gần Bạn</button>
-                            <div className="hidden md:relative md:block">
-                                {token ? (
-                            <Popover
-                                content={user}
-                                trigger="click"
-                                className="cursor-pointer"
-                            >
-                                {token &&  <Popover
-                                    content={user}
-                                    trigger="click"
-                                    className="cursor-pointer"
-                                >
-                                    <button
-                                        type="button"
-                                        className="overflow-hidden rounded-full border border-gray-300 shadow-inner"
-                                    >
-                                        <img
-                                            src="https://png.pngtree.com/element_our/20200610/ourmid/pngtree-character-default-avatar-image_2237203.jpg"
-                                            alt=""
-                                            className="size-10 object-cover"
-                                        />
-                                    </button>
-                                </Popover>}
-                            </Popover>
-                        ) : (
-                            <Popover
-                                content={account}
-                                trigger="click"
-                                className="cursor-pointer"
-                            >
-                               <AiOutlineUser className="size-6" />
-                            </Popover>
-                        )}
-                            </div>
+                    </div>
+                </div>
 
-                            <div className="block md:hidden">
-                                <button className="rounded bg-gray-100 p-2 text-gray-600 transition hover:text-gray-600/75">
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        className="size-5"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke="currentColor"
-                                        strokeWidth="2"
-                                    >
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-                                    </svg>
-                                </button>
-                            </div>
+                {/* Main Navigation */}
+                <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-1">
+                    <div className="flex items-center justify-between">
+                        {/* Logo */}
+                        <div className="flex-1 md:flex md:items-center md:gap-12">
+                            <Link to="/" className="block transition-transform hover:scale-105">
+                                <span className="sr-only">Home</span>
+                                <img src="../public/logo.png" className="w-16 hidden md:block" alt="Logo" />
+                            </Link>
 
+                            {/* Navigation Links */}
+                            <nav className="hidden md:flex flex-1 justify-center">
+                                <ul className="flex items-center gap-6 text-[15px]">
+                                    <li>
+                                        <Link to={'/'} className="text-[#8B4513] font-medium transition-all duration-300 
+                                        hover:text-[#6B3E26] relative after:content-[''] after:absolute after:w-0 
+                                        after:h-0.5 after:bg-[#6B3E26] after:left-0 after:-bottom-1 
+                                        hover:after:w-full after:transition-all after:duration-300">
+                                            Trang Chủ
+                                        </Link>
+                                    </li>
+                                    <span className="text-[#8B4513]">|</span>
+                                    <li>
+                                        <Link to={'/product'} className="text-[#8B4513] font-medium transition-all duration-300 
+                                        hover:text-[#6B3E26] relative after:content-[''] after:absolute after:w-0 
+                                        after:h-0.5 after:bg-[#6B3E26] after:left-0 after:-bottom-1 
+                                        hover:after:w-full after:transition-all after:duration-300">
+                                            Giới Thiệu Sản Phẩm
+                                        </Link>
+                                    </li>
+                                    <span className="text-[#8B4513]">|</span>
+                                    <li>
+                                        <Link to={'/petmagazine'} className="text-[#8B4513] font-medium transition-all duration-300 
+                                        hover:text-[#6B3E26] relative after:content-[''] after:absolute after:w-0 
+                                        after:h-0.5 after:bg-[#6B3E26] after:left-0 after:-bottom-1 
+                                        hover:after:w-full after:transition-all after:duration-300">
+                                            Tạp Chí Thú Cưng
+                                        </Link>
+                                    </li>
+                                    <span className="text-[#8B4513]">|</span>
+                                    <li>
+                                        <Link to={'/Room'} className="text-[#8B4513] font-medium transition-all duration-300 
+                                        hover:text-[#6B3E26] relative after:content-[''] after:absolute after:w-0 
+                                        after:h-0.5 after:bg-[#6B3E26] after:left-0 after:-bottom-1 
+                                        hover:after:w-full after:transition-all after:duration-300">
+                                            Đặt Phòng
+                                        </Link>
+                                    </li>
+                                    <span className="text-[#8B4513]">|</span>
+                                    <li>
+                                        <Link to={'/Hotline'} className="text-[#8B4513] font-medium transition-all duration-300 
+                                        hover:text-[#6B3E26] relative after:content-[''] after:absolute after:w-0 
+                                        after:h-0.5 after:bg-[#6B3E26] after:left-0 after:-bottom-1 
+                                        hover:after:w-full after:transition-all after:duration-300">
+                                            Liên Hệ
+                                        </Link>
+                                    </li>
+                                    <span className="text-[#8B4513]">|</span>
+                                    <li>
+                                        <Link to={'/Shop'} className="text-[#8B4513] font-medium transition-all duration-300 
+                                        hover:text-[#6B3E26] relative after:content-[''] after:absolute after:w-0 
+                                        after:h-0.5 after:bg-[#6B3E26] after:left-0 after:-bottom-1 
+                                        hover:after:w-full after:transition-all after:duration-300">
+                                            Giới Thiệu Về Shop
+                                        </Link>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+
+                        {/* User Menu */}
+                        <div className="flex items-center gap-4">
+                            {token ? (
+                                <Popover content={user} trigger="click" className="cursor-pointer">
+                                    <div className="text-[#8B4513] hover:text-[#6B3E26] transition-all duration-300 hover:scale-110">
+                                        <FaUserCircle className="text-2xl" />
+                                    </div>
+                                </Popover>
+                            ) : (
+                                <Popover content={account} trigger="click" className="cursor-pointer">
+                                    <div className="text-[#8B4513] hover:text-[#EE0C6F] 
+                                    transition-all duration-300 hover:scale-110">
+                                        <FaUserCircle className="text-2xl" />
+                                    </div>
+                                </Popover>
+                            )}
                         </div>
                     </div>
                 </div>
             </header>
-           
-           
+            <div className="h-[7px] bg-white"></div>
         </>
-    )
-}
+    );
+};
+
 export default HeaderPages

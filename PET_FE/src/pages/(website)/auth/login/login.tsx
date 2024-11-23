@@ -25,10 +25,13 @@ const LoginPages = () => {
                         content: "Bạn đăng nhập thất bại",
                     });
                 }
-                const { accessToken, role } = response.data;
-                if (accessToken && role) {
+                const { accessToken, role, userId } = response.data; // Lấy userId từ response
+                if (accessToken && role && userId) {
+                    // Lưu thông tin vào localStorage
                     localStorage.setItem("token", accessToken);
                     localStorage.setItem("role", role);
+                    localStorage.setItem("userId", userId); // Lưu userId vào localStorage
+
                     messageApi.open({
                         type: "success",
                         content: "Bạn đăng nhập thành công",
@@ -37,7 +40,7 @@ const LoginPages = () => {
                 } else {
                     messageApi.open({
                         type: "error",
-                        content: "Token hoặc role không tồn tại trong response",
+                        content: "Token, role hoặc userId không tồn tại trong response",
                     });
                 }
             } catch (error) {
