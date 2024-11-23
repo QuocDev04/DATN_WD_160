@@ -37,23 +37,9 @@ const RightPagesComponent = () => {
                 <div className="p-8">
                     <h1 className="text-3xl font-semibold text-gray-800 mb-3">{room?.data.roomName}</h1>
                     <p className="text-gray-500 text-sm mb-4">
-                        Thương hiệu: <span className="text-gray-600 font-medium">PET HOTEL</span> |
-                        Mã sản phẩm: <span className="italic text-gray-500">{room?.data._id}</span>
+                        Thương hiệu: <span className="text-gray-600 font-medium">PET HOTEL</span>
                     </p>
                     <p className="text-red-600 text-2xl font-extrabold mb-5">{formatCurrency(room?.data.roomprice)}</p>
-
-                    {/* Promotions */}
-                    <div className="flex space-x-3 mb-6">
-                        <span className="bg-blue-100 text-blue-600 py-2 px-4 rounded-full text-xs font-semibold transform transition duration-300 hover:scale-105">
-                            EGA50TH...
-                        </span>
-                        <span className="bg-yellow-100 text-yellow-600 py-2 px-4 rounded-full text-xs font-semibold transform transition duration-300 hover:scale-105">
-                            EGA30TH...
-                        </span>
-                        <span className="bg-green-100 text-green-600 py-2 px-4 rounded-full text-xs font-semibold transform transition duration-300 hover:scale-105">
-                            FREESHIP...
-                        </span>
-                    </div>
 
                     {/* Amenities */}
                     <div className="bg-gray-50 p-4 rounded-lg shadow-md mb-6">

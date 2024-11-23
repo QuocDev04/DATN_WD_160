@@ -2,14 +2,13 @@ import instance from "@/configs/axios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { notification } from "antd";
 
-const Pending = () => {
+const BillBooking = () => {
     const queryClient = useQueryClient();
     const { data, isLoading, error } = useQuery({
         queryKey: ["bookingroom"],
         queryFn: async () => instance.get(`/bookingroom`),
     });
     const [api, contextHolder] = notification.useNotification();
-    const pendingBookings = data?.data?.filter((item: any) => item.status === "pending");
     const openNotification =
         (pauseOnHover: boolean) =>
             (type: "success" | "error", message: string, description: string) => {
@@ -25,29 +24,31 @@ const Pending = () => {
         mutationFn: async ({ bookingId, status }: { bookingId: string, status: string }) => {
             try {
                 return await instance.patch(`/bookingroom/${bookingId}/status`, { status });
-            } catch (error) {
-                throw new Error("Error updating booking status");
+            } catch (error: any) {  // Đảm bảo rằng bạn có thể truy cập thông tin lỗi
+                // Nếu lỗi có phản hồi từ backend, in chi tiết lỗi
+                throw new Error(error?.response?.data?.message || "Error updating booking status");
             }
         },
         onSuccess: () => {
             openNotification(false)(
                 "success",
                 "Chuyển Trạng Thái Thành Công",
-                "BạnChuyển Trạng Thái Thành Công"
+                "Bạn Chuyển Trạng Thái Thành Công"
             );
             queryClient.invalidateQueries({
                 queryKey: ["bookingroom"],
             });
         },
-
-        onError: () => {
+        onError: (error: any) => {
+            const errorMessage = error.message || "Có lỗi xảy ra. Vui lòng thử lại!";
             openNotification(false)(
                 "error",
                 "Chuyển Trạng Thái Thất Bại",
-                "Bạn Chuyển Trạng Thái thất bại. Vui Lòng thử lại sau",
+                errorMessage,  
             );
         },
     });
+
 
     // Handle loading state
     if (isLoading) return <div>Loading...</div>;
@@ -58,9 +59,9 @@ const Pending = () => {
     return (
         <>
             {contextHolder}
-            {pendingBookings?.map((item: any) => (
-                <div key={item._id} className="flex items-center justify-center min-h-screen bg-gray-100">
-                    <div className="w-full max-w-5xl bg-white border border-gray-200 rounded-lg shadow-md p-8 space-y-6">
+            {data?.data?.map((item: any) => (
+                <div key={item._id} className="flex items-center justify-center min-h-screen mx-16">
+                    <div className="w-screen max-w-5xl bg-white border border-gray-200 rounded-lg shadow-md p-8 space-y-6">
                         <h2 className="text-3xl font-bold text-gray-800 text-center">
                             Thông Tin Đặt Phòng
                         </h2>
@@ -124,15 +125,6 @@ const Pending = () => {
                             <button className="w-1/2 py-3 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
                                 Tải hóa đơn
                             </button>
-
-                            {/* Nút xác nhận */}
-                            <button
-                                className="w-1/2 py-3 px-4 bg-green-600 text-white rounded-lg hover:bg-green-700"
-                                onClick={() => patch({ bookingId: item._id, status: "confirmed" })}  // Thay đổi trạng thái thành "confirmed"
-                            >
-                                Xác Nhận
-                            </button>
-
                             {/* Nút hủy */}
                             <button
                                 className="w-1/2 py-3 px-4 bg-red-600 text-white rounded-lg hover:bg-red-700"
@@ -148,4 +140,4 @@ const Pending = () => {
     );
 };
 
-export default Pending;
+export default BillBooking;

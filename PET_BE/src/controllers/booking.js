@@ -147,28 +147,31 @@ export const updateOrder = async (req, res) => {
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: error.message });
     }
 };
+
 export const updateBookingRoomStatus = async (req, res) => {
     try {
         const { _id } = req.params;
         const { status } = req.body;
 
-        // Danh sách các trạng thái hợp lệ
-        const validStatus = ["pending", "confirmed", "cancelled"];
+        // Danh sách trạng thái hợp lệ
+        const VALID_STATUS = ["pending", "confirmed", "cancelled"];
 
         // Kiểm tra trạng thái hợp lệ
-        if (!validStatus.includes(status)) {
+        if (!VALID_STATUS.includes(status)) {
             return res.status(StatusCodes.BAD_REQUEST).json({ error: "Invalid status" });
         }
 
-        // Tìm đơn đặt phòng theo `bookingId`
+        // Tìm đơn đặt phòng theo ID
         const bookingRoom = await Bookingroom.findById(_id);
         if (!bookingRoom) {
             return res.status(StatusCodes.NOT_FOUND).json({ error: "Booking not found" });
         }
 
-        // Kiểm tra không cho phép chuyển từ trạng thái 'cancelled' hoặc 'confirmed' sang 'pending'
-        if ((bookingRoom.status === "cancelled" || bookingRoom.status === "confirmed") && status === "pending") {
-            return res.status(StatusCodes.BAD_REQUEST).json({ error: "Cannot change status to 'pending' from 'cancelled' or 'confirmed'" });
+        // Kiểm tra không cho phép thay đổi trạng thái từ 'cancelled' hoặc 'confirmed'
+        if (bookingRoom.status === "cancelled" || bookingRoom.status === "confirmed") {
+            return res.status(StatusCodes.BAD_REQUEST).json({
+                error: `Cannot change status from '${bookingRoom.status}' as it is already finalized`
+            });
         }
 
         // Cập nhật trạng thái mới
@@ -181,3 +184,4 @@ export const updateBookingRoomStatus = async (req, res) => {
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: error.message });
     }
 };
+
