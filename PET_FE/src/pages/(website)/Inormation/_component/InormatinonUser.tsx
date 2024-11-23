@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Button, Form, Image, Input, InputNumber, Space } from "antd";
 
 const InformationUser = () => {
-    const userId = localStorage.getItem("userId"); // Lấy userId từ localStorage
+    const userId = localStorage.getItem("userId"); 
 
     const { data, isLoading, error } = useQuery({
         queryKey: ["user", userId],

@@ -4,10 +4,13 @@ import { notification } from "antd";
 
 const BillBooking = () => {
     const queryClient = useQueryClient();
+    const userId = localStorage.getItem("userId");
     const { data, isLoading, error } = useQuery({
-        queryKey: ["bookingroom"],
-        queryFn: async () => instance.get(`/bookingroom`),
+        queryKey: ["bookingroom", userId],
+        queryFn: async () => instance.get(`/bookingroom/${userId}`),
     });
+    console.log(data?.data);
+    
     const [api, contextHolder] = notification.useNotification();
     const openNotification =
         (pauseOnHover: boolean) =>
@@ -18,14 +21,13 @@ const BillBooking = () => {
                     type,
                     showProgress: true,
                     pauseOnHover,
-                })
+                });
             };
     const { mutate: patch } = useMutation({
         mutationFn: async ({ bookingId, status }: { bookingId: string, status: string }) => {
             try {
                 return await instance.patch(`/bookingroom/${bookingId}/status`, { status });
-            } catch (error: any) {  // Đảm bảo rằng bạn có thể truy cập thông tin lỗi
-                // Nếu lỗi có phản hồi từ backend, in chi tiết lỗi
+            } catch (error: any) {  
                 throw new Error(error?.response?.data?.message || "Error updating booking status");
             }
         },
@@ -44,16 +46,13 @@ const BillBooking = () => {
             openNotification(false)(
                 "error",
                 "Chuyển Trạng Thái Thất Bại",
-                errorMessage,  
+                errorMessage
             );
         },
     });
 
-
-    // Handle loading state
     if (isLoading) return <div>Loading...</div>;
 
-    // Handle error state
     if (error) return <div>Error fetching data</div>;
 
     return (
