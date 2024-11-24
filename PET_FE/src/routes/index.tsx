@@ -26,6 +26,7 @@ import HotlinePage from "@/pages/(website)/hotline/pages";
 import Inormation from "@/pages/(website)/Inormation/pages";
 import MagazineDetail from "@/pages/(website)/petMagazine/_component/Right/detailmagazine/detailmagazine";
 import PetMagazine from "@/pages/(website)/petMagazine/pages";
+import ProductDetail from "@/pages/(website)/Product/_component/detailProduct";
 import Pages from "@/pages/(website)/Product/pages";
 import Room from "@/pages/(website)/room/pages";
 import RoomPageComponent from "@/pages/(website)/roompages/pages";
@@ -74,6 +75,7 @@ const Router = () => {
                     <Route path="BookingRoompages/:userId/:id" element={<LeftBookingRoom />} />
                     <Route path="/magazine/:id" element={<MagazineDetail />} />
                     <Route path="product" element={<Pages />} />
+                    <Route path="product/:id" element={<ProductDetail />} />
                     <Route path="profile" element={<Inormation/>}/>
                 </Route>
                 <Route path="register" element={<RegisterPages />} />

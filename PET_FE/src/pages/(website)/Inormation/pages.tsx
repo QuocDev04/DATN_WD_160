@@ -16,18 +16,14 @@ const Inormation = () => {
         }
     ];
     return (
-        <div className="container mx-auto max-w-[1440px] mb-96 p-4 pt-14 md:p-8 ">
-            <div className="mx-auto max-w-[1200px] rounded-md bg-white border border-black">
-                <div className="flex items-center justify-between">
+     
                     <Tabs
                         defaultActiveKey="1"
                         items={items}
                         type="card"
                         className="px-4 overflow-y-auto"
                     />
-                </div>
-            </div>
-        </div>
+              
     )
 }
 export default Inormation

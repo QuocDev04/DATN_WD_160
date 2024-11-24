@@ -1,114 +1,13 @@
+import instance from "@/configs/axios";
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { Link } from 'react-router-dom';
-
-interface Product {
-    id: number;
-    name: string;
-    price: number;
-    image: string;
-    description?: string;
-    discount?: number;
-    category?: string;
-}
-
-const mockProducts = [
-    {
-        id: 1,
-        name: "Royal Canin Mini Adult",
-        price: 250000,
-        image: "https://www.petmart.vn/wp-content/uploads/2019/04/thuc-an-hat-royal-canin-mini-adult-cho-cho-truong-thanh-1.jpg",
-        description: "Thức ăn cao cấp cho chó trưởng thành giống nhỏ",
-        discount: 10,
-        category: "food"
-    },
-    {
-        id: 2,
-        name: "Vòng cổ da cao cấp",
-        price: 180000,
-        image: "https://bizweb.dktcdn.net/100/346/633/products/1-3.jpg",
-        description: "Vòng cổ da thật, êm ái, phù hợp cho chó mèo",
-        discount: 0,
-        category: "accessories"
-    },
-    {
-        id: 3,
-        name: "Đồ chơi bóng cao su",
-        price: 45000,
-        image: "https://www.petmart.vn/wp-content/uploads/2016/09/do-choi-cao-su-cho-cho-1.jpg",
-        description: "Đồ chơi cao su bền bỉ, an toàn cho thú cưng",
-        discount: 5,
-        category: "toys"
-    },
-    {
-        id: 4,
-        name: "Đồ chơi bóng cao su",
-        price: 45000,
-        image: "https://www.petmart.vn/wp-content/uploads/2016/09/do-choi-cao-su-cho-cho-1.jpg",
-        description: "Đồ chơi cao su bền bỉ, an toàn cho thú cưng",
-        discount: 5,
-        category: "toys"
-    }, {
-        id: 5,
-        name: "Đồ chơi bóng cao su",
-        price: 45000,
-        image: "https://www.petmart.vn/wp-content/uploads/2016/09/do-choi-cao-su-cho-cho-1.jpg",
-        description: "Đồ chơi cao su bền bỉ, an toàn cho thú cưng",
-        discount: 5,
-        category: "toys"
-    },
-    {
-        id: 6,
-        name: "Đồ chơi bóng cao su",
-        price: 45000,
-        image: "https://www.petmart.vn/wp-content/uploads/2016/09/do-choi-cao-su-cho-cho-1.jpg",
-        description: "Đồ chơi cao su bền bỉ, an toàn cho thú cưng",
-        discount: 5,
-        category: "toys"
-    },
-    {
-        id: 7,
-        name: "Đồ chơi bóng cao su",
-        price: 45000,
-        image: "https://www.petmart.vn/wp-content/uploads/2016/09/do-choi-cao-su-cho-cho-1.jpg",
-        description: "Đồ chơi cao su bền bỉ, an toàn cho thú cưng",
-        discount: 5,
-        category: "toys"
-    },
-    {
-        id: 8,
-        name: "Đồ chơi bóng cao su",
-        price: 45000,
-        image: "https://www.petmart.vn/wp-content/uploads/2016/09/do-choi-cao-su-cho-cho-1.jpg",
-        description: "Đồ chơi cao su bền bỉ, an toàn cho thú cưng",
-        discount: 5,
-        category: "toys"
-    },
-    {
-        id: 9,
-        name: "Đồ chơi bóng cao su",
-        price: 45000,
-        image: "https://www.petmart.vn/wp-content/uploads/2016/09/do-choi-cao-su-cho-cho-1.jpg",
-        description: "Đồ chơi cao su bền bỉ, an toàn cho thú cưng",
-        discount: 5,
-        category: "toys"
-    },
-    {
-        id: 10,
-        name: "Đồ chơi bóng cao su",
-        price: 45000,
-        image: "https://www.petmart.vn/wp-content/uploads/2016/09/do-choi-cao-su-cho-cho-1.jpg",
-        description: "Đồ chơi cao su bền bỉ, an toàn cho thú cưng",
-        discount: 5,
-        category: "toys"
-    },
-];
-
 const ProductPage = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedCategory, setSelectedCategory] = useState("all");
     const [sortBy, setSortBy] = useState("default");
     const [currentPage, setCurrentPage] = useState(1);
-    const productsPerPage = 8; // Số sản phẩm mỗi trang
+    const itemsPerPage = 8; // Số sản phẩm trên mỗi trang
 
     const categories = [
         { id: 'all', name: 'Tất cả' },
@@ -126,44 +25,22 @@ const ProductPage = () => {
         { value: 'name-desc', label: 'Tên Z-A' }
     ];
 
-    // Hàm lọc và sắp xếp sản phẩm
-    const getFilteredAndSortedProducts = () => {
-        let result = [...mockProducts];
+    const {data} = useQuery({
+        queryKey:['product'],
+        queryFn: () => instance.get('/product')
+    })
 
-        // Lọc theo danh mục
-        if (selectedCategory !== 'all') {
-            result = result.filter(product => product.category === selectedCategory);
-        }
+    // Tính toán số trang và sản phẩm hiển thị
+    const totalPages = Math.ceil((data?.data?.length || 0) / itemsPerPage);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const currentProducts = data?.data?.slice(startIndex, endIndex);
 
-        // Sắp xếp sản phẩm
-        switch (sortBy) {
-            case 'price-asc':
-                result.sort((a, b) => a.price - b.price);
-                break;
-            case 'price-desc':
-                result.sort((a, b) => b.price - a.price);
-                break;
-            case 'name-asc':
-                result.sort((a, b) => a.name.localeCompare(b.name));
-                break;
-            case 'name-desc':
-                result.sort((a, b) => b.name.localeCompare(a.name));
-                break;
-            default:
-                break;
-        }
-
-        return result;
+    // Hàm xử lý chuyển trang
+    const handlePageChange = (pageNumber: number) => {
+        setCurrentPage(pageNumber);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
-
-    // Lấy sản phẩm đã được lọc và sắp xếp
-    const filteredProducts = getFilteredAndSortedProducts();
-
-    // Tính toán sản phẩm cho trang hiện tại
-    const indexOfLastProduct = currentPage * productsPerPage;
-    const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-    const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
-    const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
 
     return (
         <div>
@@ -228,33 +105,35 @@ const ProductPage = () => {
             {/* Products Grid */}
             <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                    {currentProducts.map((product) => (
+                    {currentProducts?.map((product:any) => (
                         <div key={product.id} className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow">
                             <div className="relative pb-[100%]">
                                 <img
-                                    src={product.image}
+                                    src={product.gallery[0]}
                                     alt={product.name}
-                                    className="absolute top-0 left-0 w-full h-full object-cover rounded-t-lg"
+                                    className="absolute p-5 w-full h-full object-cover rounded-t-lg"
                                 />
-                                {product.discount > 0 && (
-                                    <span className="absolute top-2 right-2 bg-red-500 text-white px-1.5 py-0.5 rounded-full text-xs">
-                                        -{product.discount}%
-                                    </span>
-                                )}
+                                <div className="absolute top-3 right-3">
+                                    <img src="/logo.png" alt="Logo" className="w-8 h-8" />
+                                </div>
                             </div>
                             <div className="p-3">
                                 <h3 className="text-sm font-medium text-gray-800 line-clamp-2 min-h-[40px]">
-                                    {product.name}
+                                    {product.productName}
                                 </h3>
                                 <p className="text-xs text-gray-500 mt-1 line-clamp-2 min-h-[32px]">
-                                    {product.description}
+                                    <div
+                                        dangerouslySetInnerHTML={{
+                                            __html: data?.data?.description || "",
+                                        }}
+                                    />
                                 </p>
                                 <div className="flex justify-between items-center mt-2">
                                     <span className="text-sm font-bold text-[#cfa84c]">
                                         {product.price.toLocaleString('vi-VN')}đ
                                     </span>
                                     <Link
-                                        to={`/product/${product.id}`}
+                                        to={`/product/${product._id}`}
                                         className="px-3 py-1.5 bg-[#cfa84c] text-white text-xs rounded-full 
                                         hover:bg-[#b08d3a] transition-colors"
                                     >
@@ -266,42 +145,65 @@ const ProductPage = () => {
                     ))}
                 </div>
 
-                {/* Pagination */}
+                {/* Pagination Component */}
                 {totalPages > 1 && (
-                    <div className="flex justify-center items-center gap-2 mt-8 mb-8">
+                    <div className="flex justify-center items-center space-x-2 my-8">
                         <button
-                            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                            onClick={() => handlePageChange(currentPage - 1)}
                             disabled={currentPage === 1}
-                            className={`px-4 py-2 rounded-lg border ${currentPage === 1
+                            className={`px-3 py-1 rounded-md ${
+                                currentPage === 1
                                     ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                                    : 'bg-white text-gray-700 hover:bg-gray-50'
-                                }`}
+                                    : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
+                            }`}
                         >
-                            Trước
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
+                            </svg>
                         </button>
 
-                        {[...Array(totalPages)].map((_, index) => (
-                            <button
-                                key={index + 1}
-                                onClick={() => setCurrentPage(index + 1)}
-                                className={`w-10 h-10 rounded-lg ${currentPage === index + 1
-                                        ? 'bg-[#cfa84c] text-white'
-                                        : 'bg-white text-gray-700 hover:bg-gray-50'
-                                    }`}
-                            >
-                                {index + 1}
-                            </button>
-                        ))}
+                        {[...Array(totalPages)].map((_, index) => {
+                            const pageNumber = index + 1;
+                            // Hiển thị 3 trang trước và sau trang hiện tại
+                            if (
+                                pageNumber === 1 ||
+                                pageNumber === totalPages ||
+                                (pageNumber >= currentPage - 2 && pageNumber <= currentPage + 2)
+                            ) {
+                                return (
+                                    <button
+                                        key={pageNumber}
+                                        onClick={() => handlePageChange(pageNumber)}
+                                        className={`px-4 py-2 rounded-md ${
+                                            currentPage === pageNumber
+                                                ? 'bg-[#cfa84c] text-white'
+                                                : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
+                                        }`}
+                                    >
+                                        {pageNumber}
+                                    </button>
+                                );
+                            } else if (
+                                pageNumber === currentPage - 3 ||
+                                pageNumber === currentPage + 3
+                            ) {
+                                return <span key={pageNumber} className="px-2">...</span>;
+                            }
+                            return null;
+                        })}
 
                         <button
-                            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                            onClick={() => handlePageChange(currentPage + 1)}
                             disabled={currentPage === totalPages}
-                            className={`px-4 py-2 rounded-lg border ${currentPage === totalPages
+                            className={`px-3 py-1 rounded-md ${
+                                currentPage === totalPages
                                     ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                                    : 'bg-white text-gray-700 hover:bg-gray-50'
-                                }`}
+                                    : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
+                            }`}
                         >
-                            Sau
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                            </svg>
                         </button>
                     </div>
                 )}

@@ -120,7 +120,10 @@ export const getBookingroom = async (req, res) => {
 export const getOrderById = async (req, res) => {
     try {
         const { userId } = req.params;
-        const order = await Bookingroom.find({ userId})
+        const order = await Bookingroom.find({ userId}).populate({
+            path: "items.roomId",
+            select: "roomName roomprice roomgallely" // Chỉ lấy các trường cần thiết
+        });
         if (!order) {
             return res
                 .status(StatusCodes.NOT_FOUND)

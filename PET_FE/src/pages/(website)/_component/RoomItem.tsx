@@ -34,7 +34,7 @@ const RoomItem = ({room}: RoomItemProps) => {
                             </span>
                         </div>
                         <Link to={`/Roompages/${room._id}`}>
-                            <button className="mt-4 w-full rounded-md bg-blue-500 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-600">
+                            <button className="mt-4 w-full rounded-md bg-[#8B4513] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#8B4513]">
                                 Đặt Phòng
                             </button>
                         </Link>  

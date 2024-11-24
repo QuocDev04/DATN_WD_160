@@ -47,11 +47,12 @@ const LeftPagesComponent = () => {
         <>
             <div>
                 <div className="w-full h-full">
-                    <div className=" cursor-pointer w-full bg-white border grid place-items-center mb:rounded-xl lg:rounded-3xl shadow-lg mb-10">
+                    <div className="cursor-pointer w-full bg-white border grid place-items-center mb:rounded-[2rem] lg:rounded-[3rem] shadow-lg mb-10 overflow-hidden">
                         <Image
                             className="h-10"
                             src={img}
                             preview={{
+                                rootClassName: "rounded-[2rem]",
                                 toolbarRender: (
                                     _,
                                     {
