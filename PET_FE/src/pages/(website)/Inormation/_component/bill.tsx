@@ -1,6 +1,16 @@
 import instance from "@/configs/axios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { notification } from "antd";
+import { notification, Modal } from "antd";
+import { useState } from "react";
+
+// Thêm constant cho các lý do hủy đơn
+const CANCEL_REASONS = [
+    { value: "change_schedule", label: "Thay đổi lịch trình" },
+    { value: "found_better_option", label: "Tìm được phương án tốt hơn" },
+    { value: "price_too_high", label: "Giá cả không phù hợp" },
+    { value: "emergency", label: "Có việc khẩn cấp" },
+    { value: "other", label: "Lý do khác" }
+];
 
 const BillBooking = () => {
     const queryClient = useQueryClient();
@@ -23,10 +33,14 @@ const BillBooking = () => {
                     pauseOnHover,
                 });
             };
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedBookingId, setSelectedBookingId] = useState<string>("");
+    const [cancelReason, setCancelReason] = useState<string>("");
+
     const { mutate: patch } = useMutation({
-        mutationFn: async ({ bookingId, status }: { bookingId: string, status: string }) => {
+        mutationFn: async ({ bookingId, status, cancelReason }: { bookingId: string, status: string, cancelReason?: string }) => {
             try {
-                return await instance.patch(`/bookingroom/${bookingId}/status`, { status });
+                return await instance.patch(`/bookingroom/${bookingId}/status`, { status, cancelReason });
             } catch (error: any) {  
                 throw new Error(error?.response?.data?.message || "Error updating booking status");
             }
@@ -50,6 +64,30 @@ const BillBooking = () => {
             );
         },
     });
+
+    const handleCancelClick = (bookingId: string) => {
+        setSelectedBookingId(bookingId);
+        setIsModalOpen(true);
+    };
+
+    const handleConfirmCancel = () => {
+        if (!cancelReason.trim()) {
+            openNotification(false)(
+                "error",
+                "Lỗi",
+                "Vui lòng nhập lý do hủy đơn"
+            );
+            return;
+        }
+
+        patch({
+            bookingId: selectedBookingId,
+            status: "cancelled",
+            cancelReason: cancelReason
+        });
+        setIsModalOpen(false);
+        setCancelReason("");
+    };
 
     if (isLoading) return <div>Loading...</div>;
 
@@ -135,6 +173,18 @@ const BillBooking = () => {
                                                 <span className="text-gray-600">Trả phòng:</span>
                                                 <span className="font-medium text-gray-800">{new Date(item.checkoutdate).toLocaleString("vi-VN")}</span>
                                             </div>
+                                            {/* Thêm phần hiển thị lý do hủy */}
+                                            {item.status === "cancelled" && item.cancelReason && (
+                                                <div className="mt-4 p-4 bg-red-50 rounded-lg border border-red-100">
+                                                    <div className="flex items-center gap-2 mb-2">
+                                                        <svg className="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                        </svg>
+                                                        <span className="font-medium text-red-700">Lý do hủy đơn:</span>
+                                                    </div>
+                                                    <p className="text-red-600 ml-7">{item.cancelReason}</p>
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
@@ -158,7 +208,7 @@ const BillBooking = () => {
                                     {item.status === "pending" && (
                                         <div className="flex justify-end">
                                             <button
-                                                onClick={() => patch({ bookingId: item._id, status: "cancelled" })}
+                                                onClick={() => handleCancelClick(item._id)}
                                                 className="px-6 py-2.5 bg-white border border-red-200 text-red-600 text-sm font-medium rounded-lg hover:bg-red-50 transition-colors duration-200 flex items-center gap-2"
                                             >
                                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -174,6 +224,36 @@ const BillBooking = () => {
                     ))}
                 </div>
             </div>
+
+            <Modal
+                title="Xác nhận hủy đơn"
+                open={isModalOpen}
+                onOk={handleConfirmCancel}
+                onCancel={() => {
+                    setIsModalOpen(false);
+                    setCancelReason("");
+                }}
+                okText="Xác nhận"
+                cancelText="Hủy"
+            >
+                <div className="mt-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Lý do hủy đơn *
+                    </label>
+                    <select
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        value={cancelReason}
+                        onChange={(e) => setCancelReason(e.target.value)}
+                    >
+                        <option value="">-- Chọn lý do hủy --</option>
+                        {CANCEL_REASONS.map((reason) => (
+                            <option key={reason.value} value={reason.label}>
+                                {reason.label}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+            </Modal>
         </>
     );
 };

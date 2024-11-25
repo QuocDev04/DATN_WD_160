@@ -32,6 +32,21 @@ type FieldType = {
     checkoutdate: Date;
 };
 
+// Định nghĩa các giới hạn validation
+const PET_VALIDATION = {
+    AGE: {
+        MIN: 2,     // Tối thiểu 2 tháng tuổi
+        MAX: 180    // Tối đa 15 năm (180 tháng)
+    },
+    WEIGHT: {
+        MIN: 0.5,   // Tối thiểu 0.5kg (cho mèo nhỏ)
+        MAX: 50     // Tối đa 50kg (cho chó lớn)
+    },
+    HEIGHT: {
+        MIN: 10,    // Tối thiểu 10cm
+        MAX: 120    // Tối đa 120cm
+    }
+};
 
 const LeftBookingRoom = () => {
 
@@ -215,16 +230,28 @@ const LeftBookingRoom = () => {
                                     name="age"
                                     label={<span className="font-medium">Tuổi</span>}
                                     rules={[
-                                        { required: true, message: "Vui lòng nhập Tuổi!" },
-                                        { pattern: /^[0-9]+$/, message: "Vui lòng chỉ nhập số!" }
+                                        { required: true, message: "Vui lòng nhập tuổi!" },
+                                        { type: 'number', message: "Vui lòng chỉ nhập số!" },
+                                        { 
+                                            type: 'number',
+                                            min: PET_VALIDATION.AGE.MIN,
+                                            message: `Thú cưng phải từ ${PET_VALIDATION.AGE.MIN} tháng tuổi trở lên`
+                                        },
+                                        { 
+                                            type: 'number',
+                                            max: PET_VALIDATION.AGE.MAX,
+                                            message: `Thú cưng không được quá ${PET_VALIDATION.AGE.MAX} tháng tuổi`
+                                        }
                                     ]}
+                                    tooltip="Nhập tuổi theo tháng (từ 2-180 tháng)"
                                 >
                                     <Input
                                         type="number"
-                                        className="h-12 rounded-xl border-gray-200 hover:border-blue-400 focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-400"
-                                        placeholder="Nhập tuổi"
+                                        className="h-12 rounded-xl border-gray-200"
+                                        placeholder="VD: 24"
                                         disabled={isPending}
-                                        min={0}
+                                        min={PET_VALIDATION.AGE.MIN}
+                                        max={PET_VALIDATION.AGE.MAX}
                                         addonAfter="tháng"
                                     />
                                 </Form.Item>
@@ -232,16 +259,29 @@ const LeftBookingRoom = () => {
                                     name="weight"
                                     label={<span className="font-medium">Cân Nặng</span>}
                                     rules={[
-                                        { required: true, message: "Vui lòng nhập Cân Nặng!" },
-                                        { pattern: /^[0-9]+$/, message: "Vui lòng chỉ nhập số!" }
+                                        { required: true, message: "Vui lòng nhập cân nặng!" },
+                                        { type: 'number', message: "Vui lòng chỉ nhập số!" },
+                                        { 
+                                            type: 'number',
+                                            min: PET_VALIDATION.WEIGHT.MIN,
+                                            message: `Cân nặng phải từ ${PET_VALIDATION.WEIGHT.MIN}kg trở lên`
+                                        },
+                                        { 
+                                            type: 'number',
+                                            max: PET_VALIDATION.WEIGHT.MAX,
+                                            message: `Cân nặng không được quá ${PET_VALIDATION.WEIGHT.MAX}kg`
+                                        }
                                     ]}
+                                    tooltip="Nhập cân nặng từ 0.5-50kg"
                                 >
-                                    <Input 
+                                    <Input
                                         type="number"
-                                        className="h-12 rounded-xl border-gray-200 hover:border-blue-400 focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-400"
-                                        placeholder="Nhập cân nặng"
+                                        className="h-12 rounded-xl border-gray-200"
+                                        placeholder="VD: 15.5"
                                         disabled={isPending}
-                                        min={0}
+                                        min={PET_VALIDATION.WEIGHT.MIN}
+                                        max={PET_VALIDATION.WEIGHT.MAX}
+                                        step="0.1"
                                         addonAfter="kg"
                                     />
                                 </Form.Item>
@@ -249,16 +289,28 @@ const LeftBookingRoom = () => {
                                     name="height"
                                     label={<span className="font-medium">Chiều Cao</span>}
                                     rules={[
-                                        { required: true, message: "Vui lòng nhập Chiều Cao!" },
-                                        { pattern: /^[0-9]+$/, message: "Vui lòng chỉ nhập số!" }
+                                        { required: true, message: "Vui lòng nhập chiều cao!" },
+                                        { type: 'number', message: "Vui lòng chỉ nhập số!" },
+                                        { 
+                                            type: 'number',
+                                            min: PET_VALIDATION.HEIGHT.MIN,
+                                            message: `Chiều cao phải từ ${PET_VALIDATION.HEIGHT.MIN}cm trở lên`
+                                        },
+                                        { 
+                                            type: 'number',
+                                            max: PET_VALIDATION.HEIGHT.MAX,
+                                            message: `Chiều cao không được quá ${PET_VALIDATION.HEIGHT.MAX}cm`
+                                        }
                                     ]}
+                                    tooltip="Nhập chiều cao từ 10-120cm"
                                 >
-                                    <Input 
+                                    <Input
                                         type="number"
-                                        className="h-12 rounded-xl border-gray-200 hover:border-blue-400 focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-400"
-                                        placeholder="Nhập chiều cao"
+                                        className="h-12 rounded-xl border-gray-200"
+                                        placeholder="VD: 45"
                                         disabled={isPending}
-                                        min={0}
+                                        min={PET_VALIDATION.HEIGHT.MIN}
+                                        max={PET_VALIDATION.HEIGHT.MAX}
                                         addonAfter="cm"
                                     />
                                 </Form.Item>

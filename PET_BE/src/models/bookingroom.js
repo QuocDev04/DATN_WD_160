@@ -64,6 +64,12 @@ const BookingRoomSchema = new mongoose.Schema(
             enum: ["pending", "confirmed", "cancelled"],
             default: "pending",
         },
+        cancelReason: {
+            type: String,
+            required: function() {
+                return this.status === "cancelled";
+            }
+        },
         checkindate: {
             type: Date,
         },

@@ -154,7 +154,7 @@ export const updateOrder = async (req, res) => {
 export const updateBookingRoomStatus = async (req, res) => {
     try {
         const { _id } = req.params;
-        const { status } = req.body;
+        const { status, cancelReason } = req.body;
 
         // Danh sách trạng thái hợp lệ
         const VALID_STATUS = ["pending", "confirmed", "cancelled"];
@@ -162,6 +162,13 @@ export const updateBookingRoomStatus = async (req, res) => {
         // Kiểm tra trạng thái hợp lệ
         if (!VALID_STATUS.includes(status)) {
             return res.status(StatusCodes.BAD_REQUEST).json({ error: "Invalid status" });
+        }
+
+        // Kiểm tra lý do hủy khi status là cancelled
+        if (status === "cancelled" && !cancelReason) {
+            return res.status(StatusCodes.BAD_REQUEST).json({ 
+                error: "Vui lòng cung cấp lý do hủy đơn đặt phòng" 
+            });
         }
 
         // Tìm đơn đặt phòng theo ID
@@ -177,12 +184,18 @@ export const updateBookingRoomStatus = async (req, res) => {
             });
         }
 
-        // Cập nhật trạng thái mới
+        // Cập nhật trạng thái mới và lý do hủy (nếu có)
         bookingRoom.status = status;
+        if (status === "cancelled") {
+            bookingRoom.cancelReason = cancelReason;
+        }
         await bookingRoom.save();
 
         // Trả về phản hồi thành công
-        return res.status(StatusCodes.OK).json({ message: "Booking status updated successfully" });
+        return res.status(StatusCodes.OK).json({ 
+            message: "Booking status updated successfully",
+            cancelReason: status === "cancelled" ? cancelReason : undefined
+        });
     } catch (error) {
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: error.message });
     }
