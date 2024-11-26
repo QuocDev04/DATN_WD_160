@@ -13,6 +13,14 @@ const InformationUser = () => {
         queryFn: () => instance.get(`/user/${userId}`),
     });
 
+    const { data: bookingData } = useQuery({
+        queryKey: ["bookingroom", userId],
+        queryFn: async () => instance.get(`/bookingroom/${userId}`),
+    });
+
+    console.log("Booking Data:", bookingData?.data);
+    console.log("Booking Statuses:", bookingData?.data?.map((booking:any) => booking.status));
+
     if (isLoading) return <div>Loading...</div>;
     if (error) return <div>Error: {error.message}</div>;
 
@@ -50,19 +58,50 @@ const InformationUser = () => {
                         <h2 className="text-2xl font-bold text-gray-900">{data?.data.name}</h2>
                         <p className="text-gray-500">{data?.data.email}</p>
                     
-                        {/* Chỉ hiện video khi status là confirm */}
-                        {data?.data.status === "confirmed" && (
+                        {/* Debug info */}
+                        <div className="mt-2 text-sm text-gray-500">
+                            Số lượng đặt phòng: {bookingData?.data?.length || 0}
+                        </div>
+                    
+                        {bookingData?.data?.some((booking:any) => booking.status === "confirmed") && (
                             <div className="mt-4">
-                                <p className="text-gray-600 mb-2">Link Video:</p>
-                                <a 
+                                <Button 
+                                    type="primary"
                                     onClick={() => setIsModalOpen(true)}
-                                    className="text-blue-500 hover:text-blue-600 underline cursor-pointer"
+                                    className="bg-blue-500 hover:bg-blue-600"
                                 >
-                                    https://www.youtube.com/watch?v=dQw4w9WgXcQ
-                                </a>
+                                    Xem thú của bạn
+                                </Button>
                             </div>
                         )}
                     </div>
+
+                    {/* Modal */}
+                    {bookingData?.data?.some((booking:any) => booking.status === "confirmed") && (
+                        <Modal
+                            title="Video"
+                            open={isModalOpen}
+                            onCancel={handleCloseModal}
+                            width={800}
+                            footer={null}
+                            destroyOnClose={true}
+                        >
+                            <div className="aspect-video">
+                                {isModalOpen && (
+                                    <iframe
+                                        key={reloadKey}
+                                        width="100%"
+                                        height="100%"
+                                        src="https://www.youtube.com/embed/5530I_pYjbo"
+                                        title="Cute Dogs And Cats Videos"
+                                        frameBorder="0"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowFullScreen
+                                    ></iframe>
+                                )}
+                            </div>
+                        </Modal>
+                    )}
                 </div>
 
                 {/* Form Section */}
@@ -150,31 +189,6 @@ const InformationUser = () => {
                         </div>
                     </Form>
                 </div>
-
-                {/* Video Modal */}
-                <Modal
-                    title="Video"
-                    open={isModalOpen}
-                    onCancel={handleCloseModal}
-                    footer={null}
-                    width={800}
-                    destroyOnClose={true}
-                >
-                    <div className="aspect-video">
-                        {isModalOpen && (
-                            <iframe
-                                key={reloadKey}
-                                width="100%"
-                                height="100%"
-                                src="https://www.youtube.com/embed/dQw4w9WgXcQ?enablejsapi=1&autoplay=0"
-                                title="YouTube video player"
-                                frameBorder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowFullScreen
-                            ></iframe>
-                        )}
-                    </div>
-                </Modal>
             </div>
         </div>
     );
