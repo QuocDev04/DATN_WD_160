@@ -154,10 +154,6 @@ const PagesComponent = () => {
                                             <span className="text-gray-600">Điều hòa</span>
                                         </div>
                                         <div className="flex items-center gap-2">
-                                            <FaBath className="text-[#8B4513]" />
-                                            <span className="text-gray-600">Tắm + Cắt tỉa</span>
-                                        </div>
-                                        <div className="flex items-center gap-2">
                                             <MdCleaningServices className="text-[#8B4513]" />
                                             <span className="text-gray-600">Vệ sinh hàng ngày</span>
                                         </div>

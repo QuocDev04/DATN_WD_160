@@ -217,8 +217,8 @@ const LeftBookingRoom = () => {
                                                 validator: (_, value) => {
                                                     if (!value) return Promise.resolve();
                                                     const num = Number(value);
-                                                    if (num < 0 || num > 240) {
-                                                        return Promise.reject('Tuổi phải từ 0 đến 240 tháng!');
+                                                    if (num < 1 || num > 120 ){
+                                                        return Promise.reject('Tuổi phải từ 1 đến 120 tháng!');
                                                     }
                                                     return Promise.resolve();
                                                 }
@@ -230,8 +230,8 @@ const LeftBookingRoom = () => {
                                             className="h-12 rounded-xl border-gray-200"
                                             addonAfter="tháng"
                                             disabled={isPending}
-                                            min={0}
-                                            max={240}
+                                            min={1}
+                                            max={120}
                                         />
                                     </Form.Item>
                                     <Form.Item
@@ -244,8 +244,8 @@ const LeftBookingRoom = () => {
                                                 validator: (_, value) => {
                                                     if (!value) return Promise.resolve();
                                                     const num = Number(value);
-                                                    if (num < 0.5 || num > 100) {
-                                                        return Promise.reject('Cân nặng phải từ 0.5kg đến 100kg!');
+                                                    if (num < 0.5 || num > 50) {
+                                                        return Promise.reject('Cân nặng phải từ 0.5kg đến 50kg!');
                                                     }
                                                     return Promise.resolve();
                                                 }
@@ -257,9 +257,9 @@ const LeftBookingRoom = () => {
                                             className="h-12 rounded-xl border-gray-200"
                                             disabled={isPending}
                                             addonAfter="kg"
-                                            min={0.1}
-                                            max={100}
-                                            step={0.1}
+                                            min={0.5}
+                                            max={50}
+                                            step={0.5}
                                         />
                                     </Form.Item>
                                     <Form.Item
