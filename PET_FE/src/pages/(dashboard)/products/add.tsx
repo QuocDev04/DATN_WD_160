@@ -123,6 +123,7 @@ const ProductAddPage = () => {
                 name="basic"
                 layout="vertical"
                 onFinish={onFinish}
+                className="[&_.ant-form-item-required]:before:!content-[''] [&_.ant-form-item-required]:after:!content-['*'] [&_.ant-form-item-required]:after:ml-1 [&_.ant-form-item-required]:after:text-red-500"
             >
                 <div className="grid grid-cols-[auto,300px]">
                     <div className="py-5">
@@ -130,6 +131,7 @@ const ProductAddPage = () => {
                             <Form.Item
                                 label="Tên sản phẩm"
                                 name="productName"
+                                required
                                 rules={[
                                     {
                                         required: true,

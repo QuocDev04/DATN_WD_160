@@ -1,25 +1,32 @@
+import { useState } from 'react';
 import instance from "@/configs/axios"
 import { useQuery } from "@tanstack/react-query"
-import { Empty } from "antd";
+import { Empty, Pagination } from "antd";
 import ProductList from "../../_component/ProductList";
-import { useState } from 'react';
 
 const ProductPages = () => {
-    const [showAll, setShowAll] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 8;
+
     const { data: product, isLoading } = useQuery({
         queryKey: ['product'],
         queryFn: () => instance.get('/product')
     })
+
     if (isLoading) return (
         <div>
-            {" "}
             <Empty
                 image={Empty.PRESENTED_IMAGE_SIMPLE}
                 imageStyle={{ height: 60 }}
             />
         </div>
     );
-    const displayedProducts = showAll ? product?.data : product?.data?.slice(0, 8);
+
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const displayedProducts = product?.data?.slice(startIndex, endIndex);
+    const totalItems = product?.data?.length || 0;
+
     return (
         <>
             <section>
@@ -30,17 +37,14 @@ const ProductPages = () => {
                     <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                         <ProductList products={displayedProducts} />
                     </div>
-                    {product?.data?.length > 8 && (
-                        <div className="text-center mt-8">
-                            <span
-                                onClick={() => setShowAll(!showAll)}
-                                className="cursor-pointer text-base font-semibold 
-                                    text-[#cfa84c] hover:text-[#b08d3a]
-                                    border-b-2 border-[#cfa84c] hover:border-[#b08d3a]
-                                    transition-all duration-300"
-                            >
-                                {showAll ? 'Thu gọn' : 'Xem thêm sản phẩm'}
-                            </span>
+                    {totalItems > itemsPerPage && (
+                        <div className="flex justify-center mt-8">
+                            <Pagination
+                                current={currentPage}
+                                onChange={(page) => setCurrentPage(page)}
+                                total={totalItems}
+                                pageSize={itemsPerPage}
+                            />
                         </div>
                     )}
                 </div>
@@ -48,4 +52,5 @@ const ProductPages = () => {
         </>
     )
 }
+
 export default ProductPages

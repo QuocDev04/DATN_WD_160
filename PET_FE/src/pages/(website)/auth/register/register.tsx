@@ -54,132 +54,144 @@ const RegisterPages = () => {
         },
     };
     return (
-        <div>
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
             {contextHolder}
-            <div className="h-screen py-16 sm:px-6 lg:px-8 flex bg-white">
-                <div className="mx-auto flex">
-                    <div className="image-container">
-                        <img alt="" src="../../../../../public/cat.png" className="pt-28" />
-                    </div>
-                    <div>
-                        <h1 className="text-center text-2xl font-bold text-[#8b4d02] sm:text-3xl">
-                            PET HOTEL
-                        </h1>
-                        <div className="mb-0 mt-6 space-y-4 rounded-lg p-4 shadow-lg sm:p-6 lg:p-8">
-                            <p className="text-center text-lg font-medium">
+            <div className="max-w-6xl w-full mx-auto flex items-center justify-between px-8">
+                <div className="hidden lg:block w-1/4">
+                    <img 
+                        src="../../../../../public/cat.png" 
+                        alt="Cat" 
+                        className="w-full h-auto max-w-[300px]"
+                    />
+                </div>
+
+                <div className="w-full max-w-md">
+                    <div className="bg-white rounded-2xl shadow-xl p-8">
+                        <div className="text-center mb-8">
+                            <h1 className="text-3xl font-bold text-[#8b4d02] mb-2">
+                                PET HOTEL
+                            </h1>
+                            <p className="text-gray-600 text-lg">
                                 Đăng ký để trở thành thành viên PetHotel
                             </p>
-
-                            <Form
-                                validateMessages={validateMessages}
-                                name="basic"
-                                labelCol={{ span: 8 }}
-                                wrapperCol={{ span: 16 }}
-                                style={{ maxWidth: 600 }}
-                                initialValues={{ remember: true }}
-                                autoComplete="off"
-                                onFinish={onFinish}
-                            >
-                                <Form.Item<FieldType>
-                                    label="Tên tài khoản"
-                                    name="name"
-                                    validateTrigger="onBlur"
-                                    rules={[
-                                        { required: true },
-                                        { type: "string", min: 6, max: 30 },
-                                    ]}
-                                >
-                                    <Input
-                                        prefix={
-                                            <UserOutlined className="site-form-item-icon" />
-                                        }
-                                        placeholder="Tên tài khoản"
-                                    />
-                                </Form.Item>
-                                <Form.Item<FieldType>
-                                    label="Email"
-                                    name="email"
-                                    validateTrigger="onBlur"
-                                    rules={[
-                                        { required: true, message: validateMessages.required.replace("${label}", "Email") },
-                                        { type: "email", message: validateMessages.types.email.replace("${label}", "Email") },
-                                        { pattern: /^[a-zA-Z0-9._%+-]+@gmail\.com$/, message: validateMessages.pattern.mismatch.replace("${label}", "Email") }
-                                    ]}                                >
-                                    <Input
-                                        prefix={
-                                            <AiTwotoneMail className="site-form-item-icon" />
-                                        }
-                                        placeholder="Email của bạn"
-                                    />
-                                </Form.Item>
-                                <Form.Item<FieldType>
-                                    label="Mật Khẩu"
-                                    name="password"
-                                    validateTrigger="onBlur"
-                                    rules={[
-                                        { required: true, message: validateMessages.required.replace("${label}", "Mật Khẩu") },
-                                        { type: "string", min: 6, max: 30, message: validateMessages.string.range.replace("${label}", "Mật Khẩu").replace("${min}", "6").replace("${max}", "30") }
-                                    ]}
-                                >
-                                    <Input.Password
-                                        prefix={
-                                            <LockOutlined className="site-form-item-icon" />
-                                        }
-                                        type="password"
-                                        placeholder="Mật Khẩu"
-                                    />
-                                </Form.Item>
-                                <Form.Item
-                                    label="Nhập lại mật khẩu"
-                                    name="confirmPassword"
-                                    validateTrigger="onBlur"
-                                    dependencies={["password"]}
-                                    rules={[
-                                        { required: true },
-                                        { type: "string", min: 6, max: 30 },
-                                        ({ getFieldValue }) => ({
-                                            validator(_, value) {
-                                                if (
-                                                    !value ||
-                                                    getFieldValue("password") ===
-                                                    value
-                                                ) {
-                                                    return Promise.resolve();
-                                                }
-                                                return Promise.reject(
-                                                    new Error(
-                                                        "Mật khẩu xác nhận không khớp!",
-                                                    ),
-                                                );
-                                            },
-                                        }),
-                                    ]}
-                                >
-                                    <Input.Password
-                                        prefix={
-                                            <LockOutlined className="site-form-item-icon" />
-                                        }
-                                        placeholder="Nhập lại mật khẩu"
-                                    />
-                                </Form.Item>
-                                <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                                    <Button type="primary" htmlType="submit">
-                                        Đăng Ký
-                                    </Button>
-                                    <Link to={"/login"} className="ml-3">
-                                        Đăng Nhập
-                                    </Link>
-                                </Form.Item>
-                            </Form>
-
                         </div>
+
+                        <Form
+                            validateMessages={validateMessages}
+                            name="basic"
+                            labelCol={{ span: 24 }}
+                            wrapperCol={{ span: 24 }}
+                            onFinish={onFinish}
+                            autoComplete="off"
+                            layout="vertical"
+                            className="space-y-4"
+                        >
+                            <Form.Item<FieldType>
+                                required={false}
+                                label={<>Tên tài khoản <span className="text-red-500">*</span></>}
+                                name="name"
+                                validateTrigger="onBlur"
+                                rules={[
+                                    { required: true },
+                                    { type: "string", min: 6, max: 30 },
+                                ]}
+                            >
+                                <Input
+                                    prefix={<UserOutlined className="text-gray-400" />}
+                                    placeholder="Tên tài khoản"
+                                    className="h-12 rounded-lg"
+                                />
+                            </Form.Item>
+
+                            <Form.Item<FieldType>
+                                required={false}
+                                label={<>Email <span className="text-red-500">*</span></>}
+                                name="email"
+                                validateTrigger="onBlur"
+                                rules={[
+                                    { required: true },
+                                    { type: "email" },
+                                    { pattern: /^[a-zA-Z0-9._%+-]+@gmail\.com$/ }
+                                ]}
+                            >
+                                <Input
+                                    prefix={<AiTwotoneMail className="text-gray-400" />}
+                                    placeholder="Email của bạn"
+                                    className="h-12 rounded-lg"
+                                />
+                            </Form.Item>
+
+                            <Form.Item<FieldType>
+                                required={false}
+                                label={<>Mật khẩu <span className="text-red-500">*</span></>}
+                                name="password"
+                                validateTrigger="onBlur"
+                                rules={[
+                                    { required: true },
+                                    { type: "string", min: 6, max: 30 }
+                                ]}
+                            >
+                                <Input.Password
+                                    prefix={<LockOutlined className="text-gray-400" />}
+                                    placeholder="Mật khẩu"
+                                    className="h-12 rounded-lg"
+                                />
+                            </Form.Item>
+
+                            <Form.Item
+                                required={false}
+                                label={<>Nhập lại mật khẩu <span className="text-red-500">*</span></>}
+                                name="confirmPassword"
+                                validateTrigger="onBlur"
+                                dependencies={["password"]}
+                                rules={[
+                                    { required: true },
+                                    { type: "string", min: 6, max: 30 },
+                                    ({ getFieldValue }) => ({
+                                        validator(_, value) {
+                                            if (!value || getFieldValue("password") === value) {
+                                                return Promise.resolve();
+                                            }
+                                            return Promise.reject(new Error("Mật khẩu xác nhận không khớp!"));
+                                        },
+                                    }),
+                                ]}
+                            >
+                                <Input.Password
+                                    prefix={<LockOutlined className="text-gray-400" />}
+                                    placeholder="Nhập lại mật khẩu"
+                                    className="h-12 rounded-lg"
+                                />
+                            </Form.Item>
+
+                            <Form.Item wrapperCol={{ span: 24 }} className="mb-0">
+                                <Button 
+                                    type="primary" 
+                                    htmlType="submit" 
+                                    className="w-full h-12 rounded-lg text-lg font-medium bg-[#8b4d02] hover:bg-[#D4A373] border-none transition-all duration-300"
+                                >
+                                    Đăng Ký
+                                </Button>
+                                <div className="mt-6 text-center text-gray-600">
+                                    <span>Đã có tài khoản? </span>
+                                    <Link 
+                                        to="/login" 
+                                        className="text-[#8b4d02] hover:text-[#D4A373] font-medium transition-all duration-300"
+                                    >
+                                        Đăng nhập ngay
+                                    </Link>
+                                </div>
+                            </Form.Item>
+                        </Form>
                     </div>
-                    <div className="image-container">
-                        <img
-                            src="../../../../../public/dog.png"
-                            className="pt-24  mx-10"
-                        />
-                    </div>
+                </div>
+
+                <div className="hidden lg:block w-1/4">
+                    <img 
+                        src="../../../../../public/dog.png" 
+                        alt="Dog"
+                        className="w-full h-auto max-w-[300px] ml-auto"
+                    />
                 </div>
             </div>
         </div>

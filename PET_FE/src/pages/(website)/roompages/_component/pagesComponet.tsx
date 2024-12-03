@@ -1,15 +1,17 @@
 import instance from "@/configs/axios"
 import { useQuery } from "@tanstack/react-query"
-import RoomList from "../../_component/RoomList"
-import {  FaHeart } from 'react-icons/fa'
+import { FaHeart, FaBath, FaRuler, FaTemperatureHigh, FaPaw } from 'react-icons/fa'
+import { MdPets, MdCleaningServices } from 'react-icons/md'
 import { motion } from "framer-motion"
 import { useState } from "react"
+import { IRoom } from "@/common/type/IRoom"
+import { Link } from "react-router-dom"
 
 const PagesComponent = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 8; // Số phòng hiển thị trên mỗi trang
 
-    const { data: room, isLoading } = useQuery({
+    const { data: room } = useQuery({
         queryKey: ['room'],
         queryFn: () => instance.get('/room')
     });
@@ -59,21 +61,28 @@ const PagesComponent = () => {
         <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="min-h-screen bg-gradient-to-b from-[#F6F0E2] to-white"
+            className="min-h-screen bg-gradient-to-b from-[#FFF6E7] to-white"
         >
+            {/* Hero Section - Updated design */}
             <section className="relative">
-                {/* Hero Section */}
-                <div className="relative h-[300px] overflow-hidden">
-                    <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1601758228041-f3b2795255f1')] bg-cover bg-center">
-                        <div className="absolute inset-0 bg-black/50"></div>
+                <div className="relative h-[400px] overflow-hidden">
+                    <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1601758228041-f3b2795255f1')] bg-cover bg-center bg-fixed">
+                        <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-black/40"></div>
                     </div>
                     <div className="relative container mx-auto h-full flex items-center px-4">
-                        <div className="text-white max-w-2xl">
+                        <div className="text-white max-w-3xl">
+                            <motion.span
+                                initial={{ y: 20, opacity: 0 }}
+                                animate={{ y: 0, opacity: 1 }}
+                                className="inline-block px-4 py-2 bg-red-500/20 rounded-full text-red-400 mb-4"
+                            >
+                                Premium Services
+                            </motion.span>
                             <motion.h1
                                 initial={{ y: 20, opacity: 0 }}
                                 animate={{ y: 0, opacity: 1 }}
                                 transition={{ delay: 0.2 }}
-                                className="text-4xl md:text-5xl font-bold mb-4"
+                                className="text-5xl md:text-6xl font-bold mb-6 leading-tight"
                             >
                                 Phòng Cao Cấp
                                 <span className="inline-block ml-3">
@@ -84,39 +93,109 @@ const PagesComponent = () => {
                                 initial={{ y: 20, opacity: 0 }}
                                 animate={{ y: 0, opacity: 1 }}
                                 transition={{ delay: 0.4 }}
-                                className="text-lg text-gray-200"
+                                className="text-xl text-gray-200 max-w-2xl"
                             >
-                                Trải nghiệm sang trọng với dịch vụ spa và chế độ dinh dưỡng riêng cho thú cưng.
+                                Trải nghiệm sang trọng với dịch vụ spa và chế độ dinh dưỡng riêng cho thú cưng của bạn.
                             </motion.p>
                         </div>
                     </div>
                 </div>
 
-                <div className="container mx-auto px-4 py-8">
-                    {/* Search and Filter Section */}
-                    <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <hr /><hr /><hr />
+                {/* Search and Filter Section - Updated with 2 filters */}
+                <div className="container mx-auto px-4 -mt-20 relative z-10 mb-12">
+                    <div className="bg-white rounded-2xl shadow-xl p-8">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div className="space-y-2">
+                                <label className="text-gray-600 font-medium">Giá</label>
+                                <select className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#8B4513]/20">
+                                    <option>Tất cả mức giá</option>
+                                    <option>Dưới 500.000đ</option>
+                                    <option>500.000đ - 1.000.000đ</option>
+                                    <option>Trên 1.000.000đ</option>
+                                </select>
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-gray-600 font-medium">Sắp xếp theo</label>
+                                <select className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#8B4513]/20">
+                                    <option>Mới nhất</option>
+                                    <option>Giá: Thấp đến cao</option>
+                                    <option>Giá: Cao đến thấp</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
+                </div>
 
-                    <div className="flex flex-col items-center justify-center gap-8">
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.6 }}
-                            className="w-full"
-                        >
-                            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                                <RoomList rooms={getCurrentPageItems()} />
+                {/* Updated Room List Section with 4 columns */}
+                <div className="container mx-auto px-4 py-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        {getCurrentPageItems().map((room: IRoom) => (
+                            <div key={room._id} className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+                                <div className="relative">
+                                    <img
+                                        src={room.roomgallely[0]}
+                                        alt={room.roomName}
+                                        className="w-full h-full object-cover"
+                                    />
+
+                                </div>
+
+                                <div className="p-6">
+                                    <h3 className="text-2xl font-bold text-gray-800 mb-2">{room.roomName}</h3>
+
+
+                                    <div className="grid grid-cols-2 gap-4 mb-4">
+                                        <div className="flex items-center gap-2">
+                                            <FaRuler className="text-[#8B4513]" />
+                                            <span className="text-gray-600">1m²</span>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <FaTemperatureHigh className="text-[#8B4513]" />
+                                            <span className="text-gray-600">Điều hòa</span>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <MdCleaningServices className="text-[#8B4513]" />
+                                            <span className="text-gray-600">Vệ sinh hàng ngày</span>
+                                        </div>
+                                    </div>
+
+                                    <div className="border-t border-gray-200 pt-4">
+                                        <div className="flex justify-between items-center mb-4">
+                                            <div className="flex items-center gap-2">
+                                                <FaPaw className="text-[#8B4513]" />
+                                                <span className="text-gray-600">Phù hợp: Đa dạng</span>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <MdPets className="text-[#8B4513]" />
+                                                <span className="text-gray-600">Tối đa: 1 thú cưng</span>
+                                            </div>
+                                        </div>
+
+                                        <div className="flex justify-between items-center">
+                                            <div className="text-2xl font-bold text-red-600">
+                                                {new Intl.NumberFormat('vi-VN', {
+                                                    style: 'currency',
+                                                    currency: 'VND'
+                                                }).format(room.roomprice)}
+                                                <span className="text-sm text-gray-500">/giờ</span>
+                                            </div>
+                                            <Link to={`/Roompages/${room._id}`}>
+                                                <button className="bg-[#8B4513] text-white px-6 py-2 rounded-lg hover:bg-[#6F3709] transition-colors duration-300">
+                                                    Đặt phòng
+                                                </button>
+                                            </Link>
+
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </motion.div>
+                        ))}
                     </div>
 
-                    {/* Pagination - Ch�� hiển thị khi có nhiều hơn itemsPerPage items */}
+                    {/* Pagination - Updated styling */}
                     {totalItems > itemsPerPage && (
-                        <div className="mt-12">
-                            <div className="flex justify-center items-center gap-2">
+                        <div className="mt-16">
+                            <div className="flex justify-center items-center gap-3">
                                 {/* Previous Page Button */}
                                 <button
                                     onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}

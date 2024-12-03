@@ -32,10 +32,8 @@ type FieldType = {
     checkoutdate: Date;
 };
 
-
 const LeftBookingRoom = () => {
 
-    const defaultValue = dayjs('2024-01-01');
     const buddhistLocale: typeof en = {
         ...en,
         lang: {
@@ -45,9 +43,6 @@ const LeftBookingRoom = () => {
             yearFormat: 'YYYY',
             cellYearFormat: 'YYYY',
         },
-    };
-    const onChange: DatePickerProps['onChange'] = (_, dateStr) => {
-        console.log('onChange:', dateStr);
     };
     const userId = localStorage.getItem("userId");
     const {
@@ -131,323 +126,389 @@ const LeftBookingRoom = () => {
         },
     });
     const onFinish = (values: FieldType) => {
-        // if (userBookings?.data?.length >= 2) {
-        //     openNotification(false)(
-        //         "error",
-        //         "Đặt Phòng Thất Bại",
-        //         "Bạn đã đạt số lượng đặt phòng tối đa. Vui lòng thử lại sau."
-        //     );
-        //     return; // Prevent the booking
-        // }
+        if (userBookings?.data?.length >= 2) {
+            openNotification(false)(
+                "error",
+                "Đặt Phòng Thất Bại",
+                "Bạn đã đạt số lượng đặt phòng tối đa. Vui lòng thử lại sau."
+            );
+            return; // Prevent the booking
+        }
 
         createOrder({
             ...values,
         });
     };
+
+    // Thêm state để theo dõi các dịch vụ được chọn
+    const [selectedServices, setSelectedServices] = useState<string[]>([]);
+
+    // Tính tổng giá dịch vụ khi services thay đổi
+    useEffect(() => {
+        const calculateServiceTotal = () => {
+            const serviceTotal = selectedServices.reduce((total, serviceId) => {
+                const serviceItem = service?.data?.find((s: IService) => s._id === serviceId);
+                return total + (serviceItem?.priceService || 0);
+            }, 0);
+
+            setTotalPrice(totalRoomPrice + serviceTotal);
+        };
+
+        calculateServiceTotal();
+    }, [selectedServices, totalRoomPrice, service?.data]);
+
+    // Xử lý khi chọn/bỏ chọn dịch vụ
+    const handleServiceChange = (values: string[]) => {
+        setSelectedServices(values);
+    };
+
     return (
         <>
-            {contextHolder}
-            <Form
-                form={form}
-                onFinish={onFinish}
-                name="validateOnly"
-                layout="vertical"
-                autoComplete="off"
-            >
-                <div className="grid grid-cols-2 gap-6 mx-4">
-                    <div>
-                        <div className="grid grid-cols-2 gap-6">
-                            <Form.Item
-                                validateTrigger="onBlur"
-                                name="lastName"
-                                label="Tên Chủ"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: "Vui lòng nhập tên chủ!",
-                                    },
-                                ]}
-                            >
-                                <Input
-                                    className="py-3 rounded-xl"
-                                    disabled={isPending}
-                                />
-                            </Form.Item>
-                            <Form.Item
-                                validateTrigger="onBlur"
-                                name="petName"
-                                label="Tên Thú Cưng"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: "Vui lòng nhập Tên Thú Cưng!",
-                                    },
-                                ]}
-                            >
-                                <Input
-                                    className="py-3 rounded-xl"
-                                    disabled={isPending}
-                                />
-                            </Form.Item>
-                        </div>
-                        <div className="grid grid-cols-3 gap-6">
-                            <Form.Item
-                                validateTrigger="onBlur"
-                                name="age"
-                                label="Tuổi"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message:
-                                            "Vui lòng nhập Tuổi!",
-                                    },
-                                ]}
-                            >
-                                <Input
-                                    className="py-3 rounded-xl"
-                                    disabled={isPending}
-                                />
-                            </Form.Item>
-                            <Form.Item
-                                validateTrigger="onBlur"
-                                name="weight"
-                                label="Cân Nặng"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: "Vui lòng nhập Cân Nặng!",
-                                    },
-                                ]}
-                            >
-                                <Input
-                                    className="py-3 rounded-xl"
-                                    disabled={isPending}
-                                />
-                            </Form.Item>
-                            <Form.Item
-                                validateTrigger="onBlur"
-                                name="height"
-                                label="Chiều Cao"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message:
-                                            "Vui lòng nhập Chiều Cao!",
-                                    },
-                                ]}
-                            >
-                                <Input
-                                    className="py-3 rounded-xl"
-                                    disabled={isPending}
-                                />
-                            </Form.Item>
-                        </div>
-                        <div className="grid grid-cols-3 gap-6">
-                            <Form.Item
-                                validateTrigger="onBlur"
-                                name="species"
-                                label="Giống Loài"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: "Vui lòng nhập Giống Loài!",
-                                    },
-                                ]}
-                            >
-                                <Input
-                                    className="py-3 rounded-xl"
-                                    placeholder="Giống Loài"
-                                    disabled={isPending}
-                                />
-                            </Form.Item>
-                            <Form.Item
-                                validateTrigger="onBlur"
-                                name="gender"
-                                label="Giới Tính"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: "Vui lòng nhập Giới Tính",
-                                    },
-                                ]}
-                            >
-                                <Input
-                                    disabled={isPending}
-                                    className="py-3 rounded-xl"
-                                    placeholder="Giới Tính"
-                                />
-                            </Form.Item>
-                            <Form.Item
-                                validateTrigger="onBlur"
-                                name="phone"
-                                label="Số điện thoại"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: "Vui lòng nhập số điện thoại!",
-                                    },
-                                    {
-                                        validator: (_, value) => {
-                                            if (!value) {
-                                                return Promise.resolve(); // Giá trị trống sẽ được xử lý bởi required
+            <div className="max-w-7xl mx-auto px-4 py-8">
+                {contextHolder}
+                <Form
+                    form={form}
+                    onFinish={onFinish}
+                    name="validateOnly"
+                    layout="vertical"
+                    autoComplete="off"
+                >
+                    <div className="grid lg:grid-cols-3 gap-8">
+                        {/* Left Column - Personal Information */}
+                        <div className="lg:col-span-2 bg-white rounded-2xl p-6 shadow-sm">
+                            <h2 className="text-2xl font-semibold mb-6">Thông tin đặt phòng</h2>
+
+                            {/* Owner & Pet Information */}
+                            <div className="space-y-6">
+                                <div className="grid md:grid-cols-2 gap-4">
+                                    <Form.Item
+                                        name="lastName"
+                                        label={<span className="font-medium">Tên Chủ <span className="text-red-500">*</span></span>}
+                                        rules={[
+                                            { required: true, message: "Vui lòng nhập tên chủ!" },
+                                            {
+                                                pattern: /^[A-Za-zÀ-ỹ\s]+$/,
+                                                message: "Tên chỉ được chứa chữ cái và khoảng trắng!"
+                                            },
+                                            {
+                                                min: 2,
+                                                message: "Tên phải có ít nhất 2 ký tự!"
+                                            },
+                                            {
+                                                max: 50,
+                                                message: "Tên không được vượt quá 50 ký tự!"
+                                            },
+                                            {
+                                                validator: (_, value) => {
+                                                    if (value && value.trim().length === 0) {
+                                                        return Promise.reject("Tên không được chỉ chứa khoảng trắng!");
+                                                    }
+                                                    if (value && !value.trim().match(/^[A-Za-zÀ-ỹ]/)) {
+                                                        return Promise.reject("Tên phải bắt đầu bằng chữ cái!");
+                                                    }
+                                                    return Promise.resolve();
+                                                }
                                             }
-                                            if (!/^0\d+$/.test(value)) {
-                                                return Promise.reject(new Error("Số điện thoại phải bắt đầu bằng số 0!"));
+                                        ]}
+                                        required={false}
+                                    >
+                                        <Input
+                                            className="h-12 rounded-xl border-gray-200"
+                                            placeholder="Nhập tên của bạn"
+                                            disabled={isPending}
+                                        />
+                                    </Form.Item>
+                                    <Form.Item
+                                        name="petName"
+                                        label={<span className="font-medium">Tên Thú Cưng <span className="text-red-500">*</span></span>}
+                                        rules={[
+                                            { required: true, message: "Vui lòng nhập tên thú cưng!" },
+                                            {
+                                                pattern: /^[A-Za-zÀ-ỹ\s]+$/,
+                                                message: "Tên chỉ được chứa chữ cái và khoảng trắng!"
+                                            },
+                                            {
+                                                min: 2,
+                                                message: "Tên phải có ít nhất 2 ký tự!"
+                                            },
+                                            {
+                                                max: 50,
+                                                message: "Tên không được vượt quá 50 ký tự!"
+                                            },
+                                            {
+                                                validator: (_, value) => {
+                                                    if (value && value.trim().length === 0) {
+                                                        return Promise.reject("Tên không được chỉ chứa khoảng trắng!");
+                                                    }
+                                                    if (value && !value.trim().match(/^[A-Za-zÀ-ỹ]/)) {
+                                                        return Promise.reject("Tên phải bắt đầu bằng chữ cái!");
+                                                    }
+                                                    return Promise.resolve();
+                                                }
                                             }
-                                            if (value.length !== 10) {
-                                                return Promise.reject(new Error("Số điện thoại phải có đúng 10 chữ số!"));
+                                        ]}
+                                        required={false}
+                                    >
+                                        <Input
+                                            className="h-12 rounded-xl border-gray-200"
+                                            placeholder="Nhập tên thú cưng"
+                                            disabled={isPending}
+                                        />
+                                    </Form.Item>
+                                </div>
+
+                                {/* Pet Details Grid */}
+                                <div className="grid md:grid-cols-3 gap-4">
+                                    <Form.Item
+                                        validateTrigger="onBlur"
+                                        name="age"
+                                        label={<span className="font-medium">Tuổi <span className="text-red-500">*</span></span>}
+                                        rules={[
+                                            { required: true, message: "Vui lòng nhập tuổi!" },
+                                            {
+                                                validator: (_, value) => {
+                                                    if (!value) return Promise.resolve();
+                                                    const num = Number(value);
+                                                    if (num < 1 || num > 120 ){
+                                                        return Promise.reject('tuổi thú cưng cần phải đạt 2 tháng tuổi đến 120 tháng tuổi');
+                                                    }
+                                                    return Promise.resolve();
+                                                }
                                             }
-                                            return Promise.resolve();
+                                        ]}
+                                        required={false}
+                                    >
+                                        <Input
+                                            type="number"
+                                            className="h-12 rounded-xl border-gray-200"
+                                            addonAfter="tháng"
+                                            disabled={isPending}
+                                            min={1}
+                                            max={120}
+                                        />
+                                    </Form.Item>
+                                    <Form.Item
+                                        validateTrigger="onBlur"
+                                        name="weight"
+                                        label={<span className="font-medium">Cân Nặng <span className="text-red-500">*</span></span>}
+                                        rules={[
+                                            { required: true, message: "Vui lòng nhập cân nặng!" },
+                                            {
+                                                validator: (_, value) => {
+                                                    if (!value) return Promise.resolve();
+                                                    const num = Number(value);
+                                                    if (num < 0.5 || num > 50) {
+                                                        return Promise.reject('Cân nặng thú cưng cần phải từ 0.5kg đến 50kg! ');
+                                                    }
+                                                    return Promise.resolve();
+                                                }
+                                            }
+                                        ]}
+                                        required={false}
+                                    >
+                                        <Input
+                                            type="number"
+                                            className="h-12 rounded-xl border-gray-200"
+                                            disabled={isPending}
+                                            addonAfter="kg"
+                                            min={0.5}
+                                            max={50}
+                                            step={0.5}
+                                        />
+                                    </Form.Item>
+                                    <Form.Item
+                                        validateTrigger="onBlur"
+                                        name="height"
+                                        label={<span className="font-medium">Chiều Cao <span className="text-red-500">*</span></span>}
+                                        rules={[
+                                            { required: true, message: "Vui lòng nhập chiều cao!" },
+                                            {
+                                                validator: (_, value) => {
+                                                    if (!value) return Promise.resolve();
+                                                    const num = Number(value);
+                                                    if (num < 5 || num > 100) {
+                                                        return Promise.reject('Chiều cao của thú cưng cần phải từ 5cm và dưới 100cm!');
+                                                    }
+                                                    return Promise.resolve();
+                                                }
+                                            }
+                                        ]}
+                                        required={false}
+                                    >
+                                        <Input
+                                            type="number"
+                                            className="h-12 rounded-xl border-gray-200"
+                                            disabled={isPending}
+                                            addonAfter="cm"
+                                            min={5}
+                                            max={110}
+                                        />
+                                    </Form.Item>
+                                </div>
+
+                                {/* Species, Gender, Phone Grid */}
+                                <div className="grid md:grid-cols-3 gap-4">
+                                    <Form.Item
+                                        name="species"
+                                        label={<span className="font-medium">Giống Loài <span className="text-red-500">*</span></span>}
+                                        rules={[{ required: true, message: "Vui lòng chọn giống loài!" }]}
+                                        required={false}
+                                    >
+                                        <Select
+                                            className="h-12 rounded-xl"
+                                            placeholder="Chọn giớng loài của thú cưng"
+                                            disabled={isPending}
+                                            options={[
+                                                { value: 'Chó', label: 'Chó' },
+                                                { value: 'Mèo', label: 'Mèo' }
+                                            ]}
+                                        />
+                                    </Form.Item>
+                                    <Form.Item
+                                        name="gender"
+                                        label={<span className="font-medium">Giới Tính <span className="text-red-500">*</span></span>}
+                                        rules={[{ required: true, message: "Vui lòng chọn giới tính" }]}
+                                        required={false}
+                                    >
+                                        <Select
+                                            className="h-12 rounded-xl"
+                                            placeholder="Chọn giới tính của thú cưng"
+                                            disabled={isPending}
+                                            options={[
+                                                { value: 'Đực', label: 'Đực' },
+                                                { value: 'Cái', label: 'Cái' }
+                                            ]}
+                                        />
+                                    </Form.Item>
+                                    <Form.Item
+                                        name="phone"
+                                        label={<span className="font-medium">Số điện thoại <span className="text-red-500">*</span></span>}
+                                        rules={[{ required: true, message: "Vui lòng nhập số điện thoại!" }, {
+                                            validator: (_, value) => {
+                                                if (!value) {
+                                                    return Promise.resolve(); // Giá trị trống sẽ được xử lý bởi required
+                                                }
+                                                if (!/^0\d+$/.test(value)) {
+                                                    return Promise.reject(new Error("Số điện thoại phải bắt đầu bằng số 0!"));
+                                                }
+                                                if (value.length !== 10) {
+                                                    return Promise.reject(new Error("Số điện thoại phải có đúng 10 chữ số!"));
+                                                }
+                                                return Promise.resolve();
+                                            },
                                         },
-                                    },
-                                ]}
-                            >
-                                <Input
-                                    className="py-2 rounded-xl w-56"
-                                    onChange={(e) => {
-                                        const onlyNumbers = e.target.value.replace(/\D/g, ""); // Loại bỏ tất cả ký tự không phải số
-                                        if (!onlyNumbers.startsWith("0")) {
-                                            form.setFieldsValue({ phone: `0${onlyNumbers}` }); // Đảm bảo số luôn bắt đầu bằng 0
-                                        } else {
-                                            form.setFieldsValue({ phone: onlyNumbers });
-                                        }
-                                    }}
-                                />
-                            </Form.Item>
+                                        ]}
+                                        required={false}
+                                    >
+                                        <Input
+                                            className="h-12 rounded-xl border-gray-200"
+                                            placeholder="Nhập số điện thoại"
+                                            disabled={isPending}
+                                        />
+                                    </Form.Item>
+                                </div>
 
-
-                        </div>
-
-                        <div className="grid grid-cols-3 gap-6">
-                            <Form.Item
-                                validateTrigger="onBlur"
-                                name="checkindate"
-                                label="Thời Gian Bắt Đầu"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: "Vui lòng chọn thời gian bắt đầu!",
-                                    },
-                                ]}
-                            >
-                                <DatePicker
-                                    defaultValue={defaultValue}
-                                    showTime
-                                    locale={buddhistLocale}
-                                    onChange={onChange}
-                                    className="w-52"
-                                />
-                            </Form.Item>
-
-                            <Form.Item
-                                validateTrigger="onBlur"
-                                name="checkoutdate"
-                                label="Thời Gian Kết Thúc"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: "Vui lòng chọn thời gian kết thúc!",
-                                    },
-                                ]}
-                            >
-                                <DatePicker
-                                    defaultValue={defaultValue}
-                                    showTime
-                                    locale={buddhistLocale}
-                                    onChange={onChange}
-                                    className="w-52"
-                                />
-                            </Form.Item>
-                            <Form.Item name="service" validateTrigger="onBlur" label={<h1 className="text-md text-center">Dịch Vụ</h1>} rules={[
-                            ]}>
-                                <Select
-                                    mode="multiple" // Cho phép chọn nhiều mục
-                                    style={{ width: "100%", marginLeft: "7px" }}
-                                    placeholder="Chọn dịch vụ"
-                                    options={service?.data?.map((service: IService) => ({
-                                        label: `${service.servicesName} (${formatCurrency(service.priceService)})`,
-                                        value: service._id,
-                                        price: service.priceService, // Thêm giá vào thuộc tính tùy chỉnh
-                                    }))}
-                                    onChange={(selectedValues) => {
-                                        // Lọc các dịch vụ được chọn
-                                        const selectedServices = service?.data?.filter((s: IService) =>
-                                            selectedValues.includes(s._id)
-                                        );
-
-                                        // Tính tổng giá dịch vụ
-                                        const totalServicePrice = selectedServices?.reduce(
-                                            (total: number, s: IService) => total + s.priceService,
-                                            0
-                                        );
-
-                                        // Cập nhật giá trị form và tổng giá
-                                        form.setFieldsValue({
-                                            service: selectedValues,
-                                        });
-
-                                        setTotalPrice(totalRoomPrice + (totalServicePrice || 0));
-                                    }}
-                                    disabled={isPending}
-                                />
-
-
-                            </Form.Item>
-                        </div>
-                     
-                    </div>
-                    <div className="rounded-lg mt-3 ">
-                        <ul className="text-base grid grid-cols-2 md:grid-cols-2 gap-6">
-                            {data?.data?.items?.map((item: any) => (
-                                <li key={item.roomId._id} className="flex items-center border rounded-lg">
-                                    <Image
-                                        src={item.roomId.roomgallely[0]}
-                                        alt={item.roomId.roomName}
-                                        style={{ width: 120, height: 120, objectFit: 'cover', borderRadius: '8px' }}
-                                    />
-                                    <div className="ml-4">
-                                        <h3 className="text-lg font-semibold text-[#333]">
-                                            Tên: {item.roomId.roomName}
-                                        </h3>
-                                        <dl className=" text-gray-700">
-                                            <dd className="text-xl text-red-500">
-                                                Giá: {formatCurrency(item.roomId.roomprice)}
-                                            </dd>
-                                        </dl>
+                                {/* Dates and Services */}
+                                <div className="grid md:grid-cols-2 gap-4">
+                                    <div className="space-y-4">
+                                        <Form.Item
+                                            name="checkindate"
+                                            label={<span className="font-medium">Thời Gian Bắt Đầu <span className="text-red-500">*</span></span>}
+                                            rules={[{ required: true }]}
+                                            required={false}
+                                        >
+                                            <DatePicker
+                                                className="w-full h-12 rounded-xl border-gray-200"
+                                                showTime
+                                                locale={buddhistLocale}
+                                            />
+                                        </Form.Item>
+                                        <Form.Item
+                                            name="checkoutdate"
+                                            label={<span className="font-medium">Thời Gian Kết Thúc <span className="text-red-500">*</span></span>}
+                                            rules={[{ required: true }]}
+                                            required={false}
+                                        >
+                                            <DatePicker
+                                                className="w-full h-12 rounded-xl border-gray-200"
+                                                showTime
+                                                locale={buddhistLocale}
+                                            />
+                                        </Form.Item>
                                     </div>
-                                </li>
-                            ))}
-                        </ul>
-                        <div className="border rounded-2xl flex flex-col gap-y-5 lg:p-6 px-5 py-[22px]">
-                            <div className="flex justify-between text-sm">
-                                <span className="text-[#9D9EA2]">Tổng giá dịch vụ</span>
-                                <p>{formatCurrency(totalPrice - totalRoomPrice)}</p>
+
+                                    <Form.Item
+                                        name="service"
+                                        label={<span className="font-medium">Dịch Vụ Thêm</span>}
+                                    >
+                                        <Select
+                                            mode="multiple"
+                                            className="w-full"
+                                            placeholder="Chọn dịch vụ bổ sung"
+                                            options={service?.data?.map((service: IService) => ({
+                                                label: `${service.servicesName} (${formatCurrency(service.priceService)})`,
+                                                value: service._id,
+                                            }))}
+                                            onChange={handleServiceChange}
+                                            disabled={isPending}
+                                        />
+                                    </Form.Item>
+                                </div>
                             </div>
-                            <div className="flex justify-between text-sm">
-                                <span className="text-[#9D9EA2]">Tổng tất cả</span>
-                                <p>{formatCurrency(totalPrice)}</p>
+                        </div>
+
+                        {/* Right Column - Order Summary */}
+                        <div className="bg-white rounded-2xl p-6 shadow-sm h-fit">
+                            <h2 className="text-2xl font-semibold mb-6">Chi tiết đơn hàng</h2>
+
+                            {/* Room Details */}
+                            <div className="space-y-4 mb-6">
+                                {data?.data?.items?.map((item: any) => (
+                                    <div key={item.roomId._id} className="flex flex-col p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+                                        <h3 className="text-lg font-semibold text-gray-800 mb-3">{item.roomId.roomName}</h3>
+                                        <Image
+                                            src={item.roomId.roomgallely[0]}
+                                            alt={item.roomId.roomName}
+                                            className="w-full h-48 object-cover rounded-lg shadow-sm"
+                                        />
+                                    </div>
+                                ))}
                             </div>
-                            <div className="mt-4">
-                                <Button
-                                    type="primary"
-                                    htmlType="submit"
-                                    className="w-full text-lg rounded-xl py-4"
-                                // disabled={isPending || !selectedPaymentMethod} // Chỉ kích hoạt khi có phương thức thanh toán được chọn
-                                >
-                                    {isPending ? (
-                                        <>
-                                            <LoadingOutlined className="animate-spin" />
-                                        </>
-                                    ) : (
-                                        "Thanh Toán"
-                                    )}
-                                </Button>
+
+                            {/* Price Summary */}
+                            <div className="space-y-4 border-t pt-4">
+                                <div className="flex justify-between">
+                                    <span className="text-gray-600">Tổng giá phòng</span>
+                                    <span className="font-medium">{formatCurrency(totalRoomPrice)}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span className="text-gray-600">Tổng giá dịch vụ</span>
+                                    <span className="font-medium">{formatCurrency(totalPrice - totalRoomPrice)}</span>
+                                </div>
+                                <div className="flex justify-between text-lg font-semibold">
+                                    <span>Tổng cộng</span>
+                                    <span className="text-red-600">{formatCurrency(totalPrice)}</span>
+                                </div>
                             </div>
-                            <div className="flex flex-col gap-y-4">
-                                <span className="tracking-[0.8px] text-[#717378] text-xs">
-                                    SECURE PAYMENTS PROVIDED BY
-                                </span>
-                                <div className="flex items-center gap-x-3 *:cursor-pointer">
+
+                            {/* Payment Button */}
+                            <Button
+                                type="primary"
+                                htmlType="submit"
+                                className="w-full h-12 mt-6 text-lg font-medium rounded-xl bg-[#8B4513] hover:bg-[#A0522D] border-[#8B4513] hover:border-[#A0522D]"
+                                disabled={isPending}
+                                style={{
+                                    backgroundColor: '#8B4513',
+                                    borderColor: '#8B4513'
+                                }}
+                            >
+                                {isPending ? <LoadingOutlined className="animate-spin" /> : "Thanh Toán"}
+                            </Button>
+
+                            {/* Payment Methods */}
+                            <div className="mt-6 text-center">
+                                <p className="text-sm text-gray-500 mb-3">SECURE PAYMENTS PROVIDED BY</p>
+                                <div className="flex justify-center gap-3">
                                     <img
                                         src="../../../../../../images/mastercard_v1.png"
                                         alt=""
@@ -468,9 +529,10 @@ const LeftBookingRoom = () => {
                             </div>
                         </div>
                     </div>
-                </div>
-            </Form>
+                </Form>
+            </div>
         </>
-    )
+
+    );
 }
 export default LeftBookingRoom

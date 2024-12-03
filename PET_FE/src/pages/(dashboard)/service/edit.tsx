@@ -159,7 +159,8 @@ const ServiceEditPage = () => {
                     <div className="py-5">
                         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <Form.Item
-                                label="Tên dịch vụ"
+                                required={false}
+                                label={<>Tên dịch vụ <span className="text-red-500">*</span></>}
                                 name="servicesName"
                                 rules={[
                                     {
@@ -171,7 +172,8 @@ const ServiceEditPage = () => {
                                 <Input disabled={isPending} />
                             </Form.Item>
                             <Form.Item
-                                label="Giá dịch vụ"
+                                required={false}
+                                label={<>Giá dịch vụ <span className="text-red-500">*</span></>}
                                 name="priceService"
                                 rules={[
                                     {

@@ -159,24 +159,26 @@ const RoomEditPage = () => {
                     <div className="py-5">
                         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <Form.Item
-                                label="Tên Phòng"
+                                required={false}
+                                label={<>Tên Phòng <span className="text-red-500">*</span></>}
                                 name="roomName"
                                 rules={[
                                     {
                                         required: true,
-                                        message: "Tên dịch vụ bắt buộc nhập",
+                                        message: "Tên phòng bắt buộc nhập",
                                     },
                                 ]}
                             >
                                 <Input disabled={isPending} />
                             </Form.Item>
                             <Form.Item
-                                label="Giá Phòng"
+                                required={false}
+                                label={<>Giá Phòng <span className="text-red-500">*</span></>}
                                 name="roomprice"
                                 rules={[
                                     {
                                         required: true,
-                                        message: "Giá dịch vụ bắt buộc nhập",
+                                        message: "Giá phòng bắt buộc nhập",
                                     },
                                     {
                                         type: "number",

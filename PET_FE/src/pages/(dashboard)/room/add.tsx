@@ -138,7 +138,8 @@ const RoomAdd = () => {
                     <div className="py-5">
                         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <Form.Item
-                                label="Tên phòng"
+                                required={false}
+                                label={<>Tên phòng  <span className="text-red-500"> *</span></>}
                                 name="roomName"
                                 rules={[
                                     {
@@ -150,7 +151,8 @@ const RoomAdd = () => {
                                 <Input disabled={isPending} />
                             </Form.Item>
                             <Form.Item
-                                label="Giá phòng"
+                                required={false}
+                                label={<>Giá phòng <span className="text-red-500">*</span></>}
                                 name="roomprice"
                                 rules={[
                                     {
@@ -195,12 +197,16 @@ const RoomAdd = () => {
 
                     </div>
                     <div className="ml-5 mt-5">
-                        <Form.Item name="category" label={<h1 className="text-md text-center">Danh mục</h1>} rules={[
-                            {
-                                required: true,
-                                message: "Danh mục bắt buộc chọn",
-                            }
-                        ]}>
+                        <Form.Item 
+                            required={false}
+                            name="category" 
+                            label={<h1 className="text-md text-center">Danh mục <span className="text-red-500">*</span></h1>} 
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Danh mục bắt buộc chọn",
+                                }
+                            ]}>
                             <Select
                                 style={{ width: "100%", marginLeft: "7px" }}
                                 options={category?.data?.map((category: ICategory) => ({
@@ -224,7 +230,7 @@ const RoomAdd = () => {
                             rules={[
                                 {
                                     required: false,
-                                    message: "Ảnh phòng bắt buộc phải có",
+                                    message: "Ảnh phòng bắt buộc phải có *",
                                 },
                             ]}
                         >

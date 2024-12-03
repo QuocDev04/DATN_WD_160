@@ -60,7 +60,8 @@ const CategoryAdd = () => {
                 <div className="grid grid-cols-[auto,300px]">
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                         <Form.Item
-                            label="Tên danh mục"
+                            required={false}
+                            label={<>Tên danh mục <span className="text-red-500">*</span></>}
                             name="title"
                             rules={[
                                 {

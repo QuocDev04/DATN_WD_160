@@ -145,7 +145,7 @@ const ProductEditPage = () => {
     return (
         <>
             <div className="flex items-center justify-between">
-                <h1 className="text-2xl">SỬa sản phẩm</h1>
+                <h1 className="text-2xl">Sửa sản phẩm</h1>
                
             </div>
             {contextHolder}
@@ -155,6 +155,7 @@ const ProductEditPage = () => {
                 layout="vertical"
                 onFinish={onFinish}
                 initialValues={product?.data}
+                className="[&_.ant-form-item-required]:before:!content-[''] [&_.ant-form-item-required]:after:!content-['*'] [&_.ant-form-item-required]:after:ml-1 [&_.ant-form-item-required]:after:text-red-500"
             >
                 <div className="grid grid-cols-[auto,300px]">
                     <div className="py-5">
@@ -162,6 +163,7 @@ const ProductEditPage = () => {
                             <Form.Item
                                 label="Tên sản phẩm"
                                 name="productName"
+                                required
                                 rules={[
                                     {
                                         required: true,
