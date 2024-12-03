@@ -1,6 +1,6 @@
 import instance from "@/configs/axios";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Button, Form, Image, Input, InputNumber, Modal, notification, Select } from "antd";
+import { Button, Image, Input, Modal, notification, Select } from "antd";
 import { useState } from "react";
 import { VideoCameraOutlined } from "@ant-design/icons";
 const CANCEL_REASONS = [
@@ -199,7 +199,7 @@ const InformationUser = () => {
                                 <p>{userInfo?.email}</p>
                             </div>
                         </div>
-                        {bookingInfo?.some((booking: any) => booking.status === "confirmed") && (
+                        {bookingInfo?.some((booking: any) => booking.status === "completed") && (
                             <div className="relative ml-auto group">
                                 <button
                                     onClick={() => setIsVideoModalOpen(true)}
@@ -364,36 +364,44 @@ const InformationUser = () => {
                                 <div key={booking.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow bg-white">
                                     <div className="flex justify-between items-center mb-2">
                                         <span className="font-semibold text-lg">Phòng: {booking?.items[0]?.roomId?.roomName}</span>
-                                        <span className={`px-3 py-1 rounded-full text-sm ${booking.status === 'confirmed' ? 'bg-green-100 text-green-800' :
+                                        <span className={`px-3 py-1 rounded-full text-sm ${
+                                            booking.status === 'completed' ? 'bg-blue-100 text-blue-800' :
+                                            booking.status === 'confirmed' ? 'bg-green-100 text-green-800' :
                                             booking.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                                                'bg-red-100 text-red-800'
-                                            }`}>
-                                            {booking.status === 'confirmed' ? 'Đã xác nhận' :
-                                                booking.status === 'pending' ? 'Đang chờ' : 'Đã hủy'}
+                                            'bg-red-100 text-red-800'
+                                        }`}>
+                                            {booking.status === 'completed' ? 'Hoàn thành' :
+                                             booking.status === 'confirmed' ? 'Đã xác nhận' :
+                                             booking.status === 'pending' ? 'Đang chờ' : 
+                                             'Đã hủy'}
                                         </span>
                                     </div>
                                     <div className="text-sm text-gray-600 space-y-2">
-                                        <p className="flex items-center"></p>
+                                        {booking.status === 'confirmed' && (
+                                            <div className="text-red-500 font-medium">
+                                                Vui lòng mang thú đến để hoàn tất thủ tục.
+                                            </div>
+                                        )}
                                         <div className="flex justify-between items-center">
                                             <span className="text-gray-600">Nhận phòng:</span>
                                             <span className="font-medium text-gray-800">{new Date(booking.checkindate).toLocaleString("vi-VN")}</span>
                                         </div>
-
                                         <div className="flex justify-between items-center">
                                             <span className="text-gray-600">Trả phòng:</span>
                                             <span className="font-medium text-gray-800">{new Date(booking.checkoutdate).toLocaleString("vi-VN")}</span>
                                         </div>
-
-                                        <p className="flex items-center"></p>
                                         <div className="flex justify-between items-center">
                                             <span className="font-medium text-gray-800">Giá :</span>
-                                            <span className="font-medium text-red-500">{booking?.totalPrice?.toLocaleString('vi-VN', {
-                                                style: 'currency',
-                                                currency: 'VND'
-                                            })}</span>
+                                            <span className="font-medium text-red-500">
+                                                {(
+                                                    booking?.totalPrice +
+                                                    (booking?.services?.reduce((acc: number, service: any) => acc + service.price, 0) || 0)
+                                                ).toLocaleString('vi-VN', {
+                                                    style: 'currency',
+                                                    currency: 'VND'
+                                                })}
+                                            </span>
                                         </div>
-
-                                        {/* Thêm phần hiển thị lý do hủy nếu booking đã bị hủy */}
                                         {booking.status === "cancelled" && booking.cancelReason && (
                                             <div className="flex justify-between items-center mt-2 text-gray-500">
                                                 <span>Lý do hủy:</span>
@@ -402,20 +410,19 @@ const InformationUser = () => {
                                                 </span>
                                             </div>
                                         )}
-
-                                        {booking.status === "pending" && (
-                                        <div className="flex justify-end">
-                                            <button
-                                                onClick={() => handleCancelClick(booking._id)}
-                                                className="px-6 py-2.5 bg-white border border-red-200 text-red-600 text-sm font-medium rounded-lg hover:bg-red-50 transition-colors duration-200 flex items-center gap-2"
-                                            >
-                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
-                                                </svg>
-                                                Hủy đơn
-                                            </button>
-                                        </div>
-                                    )}
+                                        {(booking.status === "pending" || booking.status === "confirmed") && (
+                                            <div className="flex justify-end">
+                                                <button
+                                                    onClick={() => handleCancelClick(booking._id)}
+                                                    className="px-6 py-2.5 bg-white border border-red-200 text-red-600 text-sm font-medium rounded-lg hover:bg-red-50 transition-colors duration-200 flex items-center gap-2"
+                                                >
+                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
+                                                    </svg>
+                                                    Hủy đơn
+                                                </button>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             ))}
@@ -424,7 +431,7 @@ const InformationUser = () => {
                 </div>
             </div>
             {/* Keep the existing Modal */}
-            {bookingInfo?.some((booking: any) => booking.status === "confirmed") && (
+            {bookingInfo?.some((booking: any) => booking.status === "completed") && (
                 <Modal
                     title="Video"
                     open={isVideoModalOpen}
@@ -460,6 +467,7 @@ const InformationUser = () => {
                 }}
                 okText="Xác nhận"
                 cancelText="Hủy"
+                okButtonProps={{ disabled: !cancelReason || (cancelReason === "other" && !cancelReasonDetail) }}
             >
                 <div className="mt-4 space-y-4">
                     <div>
@@ -467,7 +475,7 @@ const InformationUser = () => {
                             Lý do hủy đơn *
                         </label>
                         <Select
-                            className="w-full"
+                            className="w-full border border-gray-300 rounded-lg shadow-sm focus:border-[#8B4513] focus:ring focus:ring-[#8B4513]/50 transition duration-200"
                             placeholder="-- Chọn lý do hủy --"
                             value={cancelReason}
                             onChange={(value) => {
@@ -476,7 +484,17 @@ const InformationUser = () => {
                                     setCancelReasonDetail("");
                                 }
                             }}
-                            options={CANCEL_REASONS}
+                            options={CANCEL_REASONS.map(reason => ({
+                                ...reason,
+                                label: (
+                                    <span className="flex items-center gap-2">
+                                        <svg className="w-4 h-4 text-[#8B4513]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                        </svg>
+                                        {reason.label}
+                                    </span>
+                                )
+                            }))}
                         />
                     </div>
                     
@@ -490,7 +508,7 @@ const InformationUser = () => {
                                 value={cancelReasonDetail}
                                 onChange={(e) => setCancelReasonDetail(e.target.value)}
                                 rows={4}
-                                className="w-full"
+                                className="w-full border border-gray-300 rounded-lg shadow-sm focus:border-[#8B4513] focus:ring focus:ring-[#8B4513]/50 transition duration-200"
                             />
                         </div>
                     )}

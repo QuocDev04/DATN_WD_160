@@ -146,21 +146,55 @@ const Pending = () => {
         try {
             const response = await instance.patch(`/bookingroom/${id}/status`, { status });
             if (response.status === 200) {
+                let successMessage = "";
+                let successDescription = "";
+                
+                // Tùy chỉnh thông báo dựa trên trạng thái
+                if (status === "confirmed") {
+                    successMessage = "Xác nhận thành công";
+                    successDescription = "Đặt phòng đã được xác nhận thành công";
+                } else if (status === "completed") {
+                    successMessage = "Hoàn thành thành công";
+                    successDescription = "Đặt phòng đã được hoàn thành thành công";
+                }
+
                 openNotification(false)(
                     "success",
-                    "Xác nhận thành công",
-                    "Đặt phòng đã được xác nhận thành công"
+                    successMessage,
+                    successDescription
                 );
                 queryClient.invalidateQueries({ queryKey: ["bookingroom"] });
+                
+                // Đóng các modal tương ứng
+                if (status === "confirmed") {
+                    setIsConfirmModalVisible(false);
+                } else if (status === "completed") {
+                    setIsCompleteModalVisible(false);
+                }
+
+                // Cập nhật selectedBooking nếu cần
+                if (selectedBooking && selectedBooking._id === id) {
+                    setSelectedBooking({ ...selectedBooking, status });
+                }
             }
-        } catch (error) {
-            const errorMessage = error?.response?.data?.message || "Có lỗi xảy ra khi xác nhận đặt phòng";
+        } catch (error: any) {
+            const errorMessage = error?.response?.data?.message || "Có lỗi xảy ra khi cập nhật trạng thái";
             openNotification(false)(
                 "error",
-                "Xác nhận thất bại",
+                "Cập nhật thất bại",
                 errorMessage
             );
         }
+    };
+
+    // Thêm state cho modal completed
+    const [isCompleteModalVisible, setIsCompleteModalVisible] = useState(false);
+    const [bookingToComplete, setBookingToComplete] = useState<any>(null);
+
+    // Thêm hàm xử lý hiển thị modal completed
+    const handleCompleteBooking = (record: any) => {
+        setBookingToComplete(record);
+        setIsCompleteModalVisible(true);
     };
 
     const columns: ColumnsType<any> = [
@@ -216,23 +250,41 @@ const Pending = () => {
             filters: [
                 { text: 'Chờ xác nhận', value: 'pending' },
                 { text: 'Đã xác nhận', value: 'confirmed' },
+                { text: 'Đã hoàn thành', value: 'completed' },
                 { text: 'Đã hủy', value: 'cancelled' },
             ],
             onFilter: (value: string, record: any) => record.status === value,
-            render: (record) => (
-                <Tag 
-                    color={
-                        record.status === 'confirmed' ? '#00b894' :
-                        record.status === 'cancelled' ? '#ff7675' : 
-                        '#fdcb6e'
-                    }
-                    className="min-w-[100px] text-center font-semibold text-white"
-                >
-                    {record.status === 'confirmed' ? 'Đã xác nhận' :
-                     record.status === 'cancelled' ? 'Đã hủy' : 
-                     'Chờ xác nhận'}
-                </Tag>
-            ),
+            render: (record) => {
+                let color = '';
+                let text = '';
+                
+                switch(record.status) {
+                    case 'confirmed':
+                        color = '#00b894';
+                        text = 'Đã xác nhận';
+                        break;
+                    case 'cancelled':
+                        color = '#ff7675';
+                        text = 'Đã hủy';
+                        break;
+                    case 'completed':
+                        color = '#6c5ce7';
+                        text = 'Đã hoàn thành';
+                        break;
+                    default:
+                        color = '#fdcb6e';
+                        text = 'Chờ xác nhận';
+                }
+                
+                return (
+                    <Tag 
+                        color={color}
+                        className="min-w-[100px] text-center font-semibold text-white"
+                    >
+                        {text}
+                    </Tag>
+                );
+            }
         },
         {
             title: 'Thao tác',
@@ -273,6 +325,16 @@ const Pending = () => {
                                     Hủy
                                 </Button>
                             </>
+                        )}
+                        {record.status === 'confirmed' && (
+                            <Button
+                                size="small"
+                                onClick={() => handleCompleteBooking(record)}
+                                style={{ backgroundColor: '#6c5ce7', color: 'white' }}
+                                icon={<CheckOutlined />}
+                            >
+                                Hoàn thành
+                            </Button>
                         )}
                     </div>
                 </div>
@@ -368,12 +430,23 @@ const Pending = () => {
                                         color={
                                             selectedBooking.status === 'confirmed' ? '#00b894' :
                                             selectedBooking.status === 'cancelled' ? '#ff7675' : 
+                                            selectedBooking.status === 'completed' ? '#6c5ce7' :
                                             '#fdcb6e'
                                         }
+                                        className="min-w-[100px] text-center font-semibold text-white"
                                     >
-                                        {selectedBooking.status === 'confirmed' ? 'Đã xác nhận' :
-                                         selectedBooking.status === 'cancelled' ? 'Đã hủy' : 
-                                         'Chờ xác nhận'}
+                                        {(() => {
+                                            switch(selectedBooking.status) {
+                                                case 'confirmed':
+                                                    return 'Đã xác nhận';
+                                                case 'cancelled':
+                                                    return 'Đã hủy';
+                                                case 'completed':
+                                                    return 'Đã hoàn thành';
+                                                default:
+                                                    return 'Chờ xác nhận';
+                                            }
+                                        })()}
                                     </Tag>
                                 </div>
                                 <div>
@@ -415,7 +488,7 @@ const Pending = () => {
                 title={
                     <div className="flex items-center space-x-2 border-b pb-3">
                         <CheckOutlined className="text-[#0984e3]" />
-                        <span className="text-xl font-bold text-[#2c3e50]">Xác nhận đặt phòng</span>
+                        <span className="text-xl font-bold text-[#2c3e50]">Xác nhận cho thuê phòng</span>
                     </div>
                 }
                 open={isConfirmModalVisible}
@@ -587,6 +660,84 @@ const Pending = () => {
                         </div>
                     )}
                 </div>
+            </Modal>
+
+            <Modal
+                title={
+                    <div className="flex items-center space-x-2 border-b pb-3">
+                        <CheckOutlined className="text-[#6c5ce7]" />
+                        <span className="text-xl font-bold text-[#2c3e50]">Xác nhận hoàn thành đặt phòng</span>
+                    </div>
+                }
+                open={isCompleteModalVisible}
+                onCancel={() => setIsCompleteModalVisible(false)}
+                footer={[
+                    <Button 
+                        key="cancel" 
+                        onClick={() => setIsCompleteModalVisible(false)}
+                    >
+                        Hủy
+                    </Button>,
+                    <Button
+                        key="complete"
+                        type="primary"
+                        onClick={() => {
+                            if (bookingToComplete) {
+                                updateStatus({ 
+                                    id: bookingToComplete._id, 
+                                    status: "completed" 
+                                });
+                                setIsCompleteModalVisible(false);
+                            }
+                        }}
+                        style={{ backgroundColor: '#6c5ce7' }}
+                    >
+                        Xác nhận hoàn thành
+                    </Button>
+                ]}
+            >
+                {bookingToComplete && (
+                    <div className="p-4 space-y-4">
+                        <div className="bg-purple-50 p-4 rounded-lg">
+                            <p className="text-[#2c3e50] mb-2">
+                                Bạn có chắc chắn muốn đánh dấu đặt phòng này là đã hoàn thành?
+                            </p>
+                            <p className="text-gray-500 text-sm">
+                                Hành động này không thể hoàn tác sau khi xác nhận.
+                            </p>
+                        </div>
+                        
+                        <div className="bg-[#f8fafc] p-4 rounded-lg">
+                            <h3 className="text-lg font-semibold mb-4 text-[#2c3e50]">
+                                Thông tin đặt phòng
+                            </h3>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <p className="text-gray-500 text-sm">Khách hàng</p>
+                                    <p className="font-medium">{bookingToComplete.lastName}</p>
+                                </div>
+                                <div>
+                                    <p className="text-gray-500 text-sm">Phòng</p>
+                                    <p className="font-medium">
+                                        {bookingToComplete.items[0]?.roomId?.roomName}
+                                    </p>
+                                </div>
+                                <div>
+                                    <p className="text-gray-500 text-sm">Ngày nhận phòng</p>
+                                    <p className="font-medium">
+                                        {new Date(bookingToComplete.checkindate).toLocaleDateString("vi-VN")}
+                                    </p>
+                                </div>
+                                <div>
+                                    <p className="text-gray-500 text-sm">Ngày trả phòng</p>
+                                    <p className="font-medium">
+                                        {new Date(bookingToComplete.checkoutdate).toLocaleDateString("vi-VN")}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </Modal>
 
             <style jsx global>{`
