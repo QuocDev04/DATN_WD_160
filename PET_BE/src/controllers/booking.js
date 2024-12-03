@@ -24,39 +24,70 @@ export const BookingRoom = async (req, res) => {
     try {
         let BookingRoomItems = [];
         let totalPrice = 0;
+        let roomPrice = 0;
+        let servicePrice = 0;
 
         // Lấy thông tin "Buy Now Order"
-        const buyNowOrderData = await BuyNow.findById(buyNowOrder).populate('items.roomId');
+        const buyNowOrderData = await BuyNow.findById(buyNowOrder).populate({
+            path: 'items.roomId',
+            select: 'roomName roomprice roomgallely' // Đảm bảo lấy trường roomprice
+        });
+
         if (!buyNowOrderData) {
             return res.status(StatusCodes.NOT_FOUND).json({ error: "Buy Now Order not found" });
         }
 
         // Tính tổng giá phòng
-        BookingRoomItems = buyNowOrderData.items.map(item => {
-            if (typeof item.roomprice === "number" && !isNaN(item.roomprice)) {
-                totalPrice += item.roomprice; // Thêm giá phòng hợp lệ vào tổng giá
-            }
-            return {
-                roomId: item.roomId._id,
-                name: item.roomId.roomName,
-                gallery: item.roomId.roomgallely[0],
-                price: item.roomprice,
-            };
-        });
+        if (buyNowOrderData && Array.isArray(buyNowOrderData.items)) {
+            BookingRoomItems = buyNowOrderData.items.map(item => {
+                if (item.roomId) { // Kiểm tra nếu roomId tồn tại
+                    const roomPriceValue = item.roomId.roomprice; // Lấy giá từ roomId
+                    console.log('Item roomprice:', roomPriceValue, typeof roomPriceValue); // Kiểm tra giá và kiểu dữ liệu
+                    if (typeof roomPriceValue === "number" && !isNaN(roomPriceValue)) {
+                        roomPrice += roomPriceValue;
+                        console.log('Current roomPrice:', roomPrice); // Theo dõi việc cộng dồn
+                    }
+                    return {
+                        roomId: item.roomId._id,
+                        name: item.roomId.roomName,
+                        gallery: item.roomId.roomgallely[0],
+                        price: roomPriceValue,
+                    };
+                } else {
+                    console.error('roomId is undefined for item:', item);
+                    return null;
+                }
+            }).filter(item => item !== null); // Lọc ra các item hợp lệ
+        } else {
+            console.error('buyNowOrderData.items is not an array or is undefined');
+        }
+        console.log('Tổng giá phòng:', roomPrice);
 
         // Tính tổng giá dịch vụ
         if (Array.isArray(service) && service.length > 0) {
             const serviceData = await Service.find({ '_id': { $in: service } });
             serviceData.forEach(serviceItem => {
                 if (typeof serviceItem.priceService === "number" && !isNaN(serviceItem.priceService)) {
-                    totalPrice += serviceItem.priceService; // Thêm giá dịch vụ hợp lệ vào tổng giá
+                    servicePrice += serviceItem.priceService;
                 }
             });
         }
+        console.log('Tổng giá dịch vụ:', servicePrice);
+
+        // Tính tổng giá cuối cùng
+        totalPrice = roomPrice + servicePrice;
+        console.log('Tổng giá cuối cùng:', totalPrice);
 
         // Kiểm tra tổng giá trị cuối cùng
         if (isNaN(totalPrice) || totalPrice <= 0) {
-            return res.status(StatusCodes.BAD_REQUEST).json({ error: "Total price calculation is invalid." });
+            return res.status(StatusCodes.BAD_REQUEST).json({ 
+                error: "Total price calculation is invalid.",
+                details: {
+                    roomPrice,
+                    servicePrice,
+                    totalPrice
+                }
+            });
         }
         // Kiểm tra số phòng đã đặt trong ngày
         const startOfDay = new Date(checkindate);
@@ -156,42 +187,30 @@ export const updateBookingRoomStatus = async (req, res) => {
         const { _id } = req.params;
         const { status, cancelReason } = req.body;
 
-        // Danh sách trạng thái hợp lệ
-        const VALID_STATUS = ["pending", "confirmed", "cancelled"];
+        const VALID_STATUS = ["pending", "confirmed", "cancelled", "completed"];
 
-        // Kiểm tra trạng thái hợp lệ
         if (!VALID_STATUS.includes(status)) {
             return res.status(StatusCodes.BAD_REQUEST).json({ error: "Invalid status" });
         }
 
-        // Kiểm tra lý do hủy khi status là cancelled
-        if (status === "cancelled" && !cancelReason) {
-            return res.status(StatusCodes.BAD_REQUEST).json({ 
-                error: "Vui lòng cung cấp lý do hủy đơn đặt phòng" 
-            });
-        }
-
-        // Tìm đơn đặt phòng theo ID
         const bookingRoom = await Bookingroom.findById(_id);
         if (!bookingRoom) {
             return res.status(StatusCodes.NOT_FOUND).json({ error: "Booking not found" });
         }
 
-        // Kiểm tra không cho phép thay đổi trạng thái từ 'cancelled' hoặc 'confirmed'
-        if (bookingRoom.status === "cancelled" || bookingRoom.status === "confirmed") {
+        // Kiểm tra nếu trạng thái hiện tại là cancelled hoặc completed
+        if (bookingRoom.status === "cancelled" || bookingRoom.status === "completed") {
             return res.status(StatusCodes.BAD_REQUEST).json({
                 error: `Cannot change status from '${bookingRoom.status}' as it is already finalized`
             });
         }
 
-        // Cập nhật trạng thái mới và lý do hủy (nếu có)
         bookingRoom.status = status;
         if (status === "cancelled") {
             bookingRoom.cancelReason = cancelReason;
         }
         await bookingRoom.save();
 
-        // Trả về phản hồi thành công
         return res.status(StatusCodes.OK).json({ 
             message: "Booking status updated successfully",
             cancelReason: status === "cancelled" ? cancelReason : undefined
