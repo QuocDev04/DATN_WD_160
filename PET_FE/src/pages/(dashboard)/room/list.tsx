@@ -87,17 +87,11 @@ const ListRoom = () => {
             key: 'category',
             width: 150,
             render: (_: any, product: IRoom) =>
-                product.category?.map((category: ICategory, index: number) => (
+                product?.category?.map((category: ICategory, index: number) => (
                     <div key={index}>
                         {index + 1}. {category.title}
                     </div>
                 )),
-        },
-        {
-            title: 'Trạng Thái Phòng',
-            dataIndex: 'status',
-            key: 'status',
-            width: 150,
         },
         {
             title: 'Mô Tả Phòng',

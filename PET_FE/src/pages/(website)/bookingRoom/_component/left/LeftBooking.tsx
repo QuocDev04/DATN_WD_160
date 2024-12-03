@@ -183,8 +183,34 @@ const LeftBookingRoom = () => {
                                 <div className="grid md:grid-cols-2 gap-4">
                                     <Form.Item
                                         name="lastName"
-                                        label={<span className="font-medium">Tên Chủ</span>}
-                                        rules={[{ required: true, message: "Vui lòng nhập tên chủ!" }]}
+                                        label={<span className="font-medium">Tên Chủ <span className="text-red-500">*</span></span>}
+                                        rules={[
+                                            { required: true, message: "Vui lòng nhập tên chủ!" },
+                                            {
+                                                pattern: /^[A-Za-zÀ-ỹ\s]+$/,
+                                                message: "Tên chỉ được chứa chữ cái và khoảng trắng!"
+                                            },
+                                            {
+                                                min: 2,
+                                                message: "Tên phải có ít nhất 2 ký tự!"
+                                            },
+                                            {
+                                                max: 50,
+                                                message: "Tên không được vượt quá 50 ký tự!"
+                                            },
+                                            {
+                                                validator: (_, value) => {
+                                                    if (value && value.trim().length === 0) {
+                                                        return Promise.reject("Tên không được chỉ chứa khoảng trắng!");
+                                                    }
+                                                    if (value && !value.trim().match(/^[A-Za-zÀ-ỹ]/)) {
+                                                        return Promise.reject("Tên phải bắt đầu bằng chữ cái!");
+                                                    }
+                                                    return Promise.resolve();
+                                                }
+                                            }
+                                        ]}
+                                        required={false}
                                     >
                                         <Input
                                             className="h-12 rounded-xl border-gray-200"
@@ -194,8 +220,34 @@ const LeftBookingRoom = () => {
                                     </Form.Item>
                                     <Form.Item
                                         name="petName"
-                                        label={<span className="font-medium">Tên Thú Cưng</span>}
-                                        rules={[{ required: true, message: "Vui lòng nhập Tên Thú Cưng!" }]}
+                                        label={<span className="font-medium">Tên Thú Cưng <span className="text-red-500">*</span></span>}
+                                        rules={[
+                                            { required: true, message: "Vui lòng nhập tên thú cưng!" },
+                                            {
+                                                pattern: /^[A-Za-zÀ-ỹ\s]+$/,
+                                                message: "Tên chỉ được chứa chữ cái và khoảng trắng!"
+                                            },
+                                            {
+                                                min: 2,
+                                                message: "Tên phải có ít nhất 2 ký tự!"
+                                            },
+                                            {
+                                                max: 50,
+                                                message: "Tên không được vượt quá 50 ký tự!"
+                                            },
+                                            {
+                                                validator: (_, value) => {
+                                                    if (value && value.trim().length === 0) {
+                                                        return Promise.reject("Tên không được chỉ chứa khoảng trắng!");
+                                                    }
+                                                    if (value && !value.trim().match(/^[A-Za-zÀ-ỹ]/)) {
+                                                        return Promise.reject("Tên phải bắt đầu bằng chữ cái!");
+                                                    }
+                                                    return Promise.resolve();
+                                                }
+                                            }
+                                        ]}
+                                        required={false}
                                     >
                                         <Input
                                             className="h-12 rounded-xl border-gray-200"
@@ -210,7 +262,7 @@ const LeftBookingRoom = () => {
                                     <Form.Item
                                         validateTrigger="onBlur"
                                         name="age"
-                                        label={<span className="font-medium">Tuổi</span>}
+                                        label={<span className="font-medium">Tuổi <span className="text-red-500">*</span></span>}
                                         rules={[
                                             { required: true, message: "Vui lòng nhập tuổi!" },
                                             {
@@ -218,12 +270,13 @@ const LeftBookingRoom = () => {
                                                     if (!value) return Promise.resolve();
                                                     const num = Number(value);
                                                     if (num < 1 || num > 120 ){
-                                                        return Promise.reject('Tuổi phải từ 1 đến 120 tháng!');
+                                                        return Promise.reject('tuổi thú cưng cần phải đạt 2 tháng tuổi đến 120 tháng tuổi');
                                                     }
                                                     return Promise.resolve();
                                                 }
                                             }
                                         ]}
+                                        required={false}
                                     >
                                         <Input
                                             type="number"
@@ -237,7 +290,7 @@ const LeftBookingRoom = () => {
                                     <Form.Item
                                         validateTrigger="onBlur"
                                         name="weight"
-                                        label={<span className="font-medium">Cân Nặng</span>}
+                                        label={<span className="font-medium">Cân Nặng <span className="text-red-500">*</span></span>}
                                         rules={[
                                             { required: true, message: "Vui lòng nhập cân nặng!" },
                                             {
@@ -245,12 +298,13 @@ const LeftBookingRoom = () => {
                                                     if (!value) return Promise.resolve();
                                                     const num = Number(value);
                                                     if (num < 0.5 || num > 50) {
-                                                        return Promise.reject('Cân nặng phải từ 0.5kg đến 50kg!');
+                                                        return Promise.reject('Cân nặng thú cưng cần phải từ 0.5kg đến 50kg! ');
                                                     }
                                                     return Promise.resolve();
                                                 }
                                             }
                                         ]}
+                                        required={false}
                                     >
                                         <Input
                                             type="number"
@@ -265,7 +319,7 @@ const LeftBookingRoom = () => {
                                     <Form.Item
                                         validateTrigger="onBlur"
                                         name="height"
-                                        label={<span className="font-medium">Chiều Cao</span>}
+                                        label={<span className="font-medium">Chiều Cao <span className="text-red-500">*</span></span>}
                                         rules={[
                                             { required: true, message: "Vui lòng nhập chiều cao!" },
                                             {
@@ -273,12 +327,13 @@ const LeftBookingRoom = () => {
                                                     if (!value) return Promise.resolve();
                                                     const num = Number(value);
                                                     if (num < 5 || num > 100) {
-                                                        return Promise.reject('Chiều cao phải từ 5cm đến 100cm!');
+                                                        return Promise.reject('Chiều cao của thú cưng cần phải từ 5cm và dưới 100cm!');
                                                     }
                                                     return Promise.resolve();
                                                 }
                                             }
                                         ]}
+                                        required={false}
                                     >
                                         <Input
                                             type="number"
@@ -286,7 +341,7 @@ const LeftBookingRoom = () => {
                                             disabled={isPending}
                                             addonAfter="cm"
                                             min={5}
-                                            max={150}
+                                            max={110}
                                         />
                                     </Form.Item>
                                 </div>
@@ -295,19 +350,25 @@ const LeftBookingRoom = () => {
                                 <div className="grid md:grid-cols-3 gap-4">
                                     <Form.Item
                                         name="species"
-                                        label={<span className="font-medium">Giống Loài</span>}
-                                        rules={[{ required: true, message: "Vui lòng nhập Giống Loài!" }]}
+                                        label={<span className="font-medium">Giống Loài <span className="text-red-500">*</span></span>}
+                                        rules={[{ required: true, message: "Vui lòng chọn giống loài!" }]}
+                                        required={false}
                                     >
-                                        <Input
-                                            className="h-12 rounded-xl border-gray-200"
-                                            placeholder="Nhập giống loài của thú cưng"
+                                        <Select
+                                            className="h-12 rounded-xl"
+                                            placeholder="Chọn giớng loài của thú cưng"
                                             disabled={isPending}
+                                            options={[
+                                                { value: 'Chó', label: 'Chó' },
+                                                { value: 'Mèo', label: 'Mèo' }
+                                            ]}
                                         />
                                     </Form.Item>
                                     <Form.Item
                                         name="gender"
-                                        label={<span className="font-medium">Giới Tính</span>}
+                                        label={<span className="font-medium">Giới Tính <span className="text-red-500">*</span></span>}
                                         rules={[{ required: true, message: "Vui lòng chọn giới tính" }]}
+                                        required={false}
                                     >
                                         <Select
                                             className="h-12 rounded-xl"
@@ -321,7 +382,7 @@ const LeftBookingRoom = () => {
                                     </Form.Item>
                                     <Form.Item
                                         name="phone"
-                                        label={<span className="font-medium">Số điện thoại</span>}
+                                        label={<span className="font-medium">Số điện thoại <span className="text-red-500">*</span></span>}
                                         rules={[{ required: true, message: "Vui lòng nhập số điện thoại!" }, {
                                             validator: (_, value) => {
                                                 if (!value) {
@@ -337,6 +398,7 @@ const LeftBookingRoom = () => {
                                             },
                                         },
                                         ]}
+                                        required={false}
                                     >
                                         <Input
                                             className="h-12 rounded-xl border-gray-200"
@@ -351,8 +413,9 @@ const LeftBookingRoom = () => {
                                     <div className="space-y-4">
                                         <Form.Item
                                             name="checkindate"
-                                            label={<span className="font-medium">Thời Gian Bắt Đầu</span>}
+                                            label={<span className="font-medium">Thời Gian Bắt Đầu <span className="text-red-500">*</span></span>}
                                             rules={[{ required: true }]}
+                                            required={false}
                                         >
                                             <DatePicker
                                                 className="w-full h-12 rounded-xl border-gray-200"
@@ -362,8 +425,9 @@ const LeftBookingRoom = () => {
                                         </Form.Item>
                                         <Form.Item
                                             name="checkoutdate"
-                                            label={<span className="font-medium">Thời Gian Kết Thúc</span>}
+                                            label={<span className="font-medium">Thời Gian Kết Thúc <span className="text-red-500">*</span></span>}
                                             rules={[{ required: true }]}
+                                            required={false}
                                         >
                                             <DatePicker
                                                 className="w-full h-12 rounded-xl border-gray-200"
@@ -400,18 +464,13 @@ const LeftBookingRoom = () => {
                             {/* Room Details */}
                             <div className="space-y-4 mb-6">
                                 {data?.data?.items?.map((item: any) => (
-                                    <div key={item.roomId._id} className="flex gap-4 p-4 bg-gray-50 rounded-xl">
+                                    <div key={item.roomId._id} className="flex flex-col p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+                                        <h3 className="text-lg font-semibold text-gray-800 mb-3">{item.roomId.roomName}</h3>
                                         <Image
                                             src={item.roomId.roomgallely[0]}
                                             alt={item.roomId.roomName}
-                                            className="w-24 h-24 object-cover rounded-lg"
+                                            className="w-full h-48 object-cover rounded-lg shadow-sm"
                                         />
-                                        <div>
-                                            <h3 className="font-medium">{item.roomId.roomName}</h3>
-                                            <p className="text-lg font-semibold text-primary">
-                                                {formatCurrency(item.roomId.roomprice)}
-                                            </p>
-                                        </div>
                                     </div>
                                 ))}
                             </div>
@@ -428,7 +487,7 @@ const LeftBookingRoom = () => {
                                 </div>
                                 <div className="flex justify-between text-lg font-semibold">
                                     <span>Tổng cộng</span>
-                                    <span className="text-primary">{formatCurrency(totalPrice)}</span>
+                                    <span className="text-red-600">{formatCurrency(totalPrice)}</span>
                                 </div>
                             </div>
 

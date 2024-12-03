@@ -122,7 +122,8 @@ const ServiceAddPage = () => {
                     <div className="py-5">
                         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <Form.Item
-                                label="Tên dịch vụ"
+                                required={false}
+                                label={<>Tên dịch vụ <span className="text-red-500">*</span></>}
                                 name="servicesName"
                                 rules={[
                                     {
@@ -134,7 +135,8 @@ const ServiceAddPage = () => {
                                 <Input disabled={isPending} />
                             </Form.Item>
                             <Form.Item
-                                label="Giá dịch vụ"
+                                required={false}
+                                label={<>Giá dịch vụ <span className="text-red-500">*</span></>}
                                 name="priceService"
                                 rules={[
                                     {
@@ -183,12 +185,12 @@ const ServiceAddPage = () => {
                             rules={[
                                 {
                                     required: false,
-                                    message: "Ảnh phòng bắt buộc phải có",
+                                    message: "Ảnh dịch vụ bắt buộc phải có",
                                 },
                             ]}
                         >
                             <h1 className="text-lg text-center py-2">
-                                Ảnh phòng
+                                Ảnh dịch vụ
                             </h1>
                             <Upload
                                 listType="picture-card"

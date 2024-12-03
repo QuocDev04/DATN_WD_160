@@ -12,6 +12,7 @@
 @tailwind utilities;
 
 #app { height: 100% }
+
 html,
 body {
   position: relative;
@@ -640,4 +641,97 @@ body {
 	#content main .table-data .todo .todo-list {
 		min-width: 420px;
 	}
+}
+@keyframes background-animate {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes shine {
+    from {
+        transform: translateX(-100%);
+    }
+    to {
+        transform: translateX(100%);
+    }
+}
+
+@keyframes shimmer {
+    from {
+        transform: translateX(-100%);
+    }
+    to {
+        transform: translateX(100%);
+    }
+}
+
+@keyframes blob {
+    0% {
+        transform: translate(0px, 0px) scale(1);
+    }
+    33% {
+        transform: translate(30px, -50px) scale(1.1);
+    }
+    66% {
+        transform: translate(-20px, 20px) scale(0.9);
+    }
+    100% {
+        transform: translate(0px, 0px) scale(1);
+    }
+}
+
+.background-animate {
+    background-size: 400%;
+    animation: background-animate 10s ease infinite;
+}
+
+.animate-shine {
+    animation: shine 2s infinite;
+}
+
+.animate-shimmer {
+    animation: shimmer 3s infinite;
+}
+
+.animate-blob {
+    animation: blob 7s infinite;
+}
+
+.animate-fadeIn {
+    animation: fadeIn 0.5s ease-in;
+}
+/* Button Styles */
+.ant-btn.rounded-full {
+    transition: all 0.3s ease;
+}
+
+.ant-btn.rounded-full:hover {
+    background-color: #f3f4f6;
+    transform: translateY(-1px);
+}
+
+/* Badge Styles */
+.ant-badge .ant-badge-count {
+    box-shadow: 0 0 0 2px #ffffff;
+}
+
+/* Dropdown Hover Effect */
+.ant-dropdown-trigger:hover {
+    background-color: #f3f4f6;
+}
+
+/* Icon Colors */
+.anticon {
+    transition: color 0.3s ease;
+}
+
+.ant-btn:hover .anticon {
+    color: #8B4513;
 }
