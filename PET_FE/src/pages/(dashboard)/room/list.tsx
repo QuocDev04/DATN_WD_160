@@ -1,11 +1,12 @@
 import { IRoom } from "@/common/type/IRoom";
 import instance from "@/configs/axios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Button, notification, Popconfirm, Table, TableColumnsType } from "antd";
+import { Button, notification, Popconfirm, Table, TableColumnsType, Select } from "antd";
 import { AiFillEdit, AiOutlinePlusCircle, AiTwotoneDelete } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import { QuestionCircleOutlined } from "@ant-design/icons";
 import { ICategory } from "@/common/type/ICategory";
+import { useState } from "react";
 const ListRoom = () => {
     const [api, contextHolder] = notification.useNotification();
     const { data } = useQuery({
@@ -86,7 +87,7 @@ const ListRoom = () => {
             dataIndex: 'category',
             key: 'category',
             width: 150,
-            render: (_: any, product: IRoom) =>
+render: (_: any, product: IRoom) =>
                 product?.category?.map((category: ICategory, index: number) => (
                     <div key={index}>
                         {index + 1}. {category.title}
@@ -149,16 +150,55 @@ const ListRoom = () => {
             }
         },
     ];
-    const dataSource = data?.data.map((room: IRoom) => ({
-        key: room._id,
-        ...room
-    }))
+    const [selectedCategory, setSelectedCategory] = useState<string>('');
+    const { data: categoriesData, isLoading: categoryLoading, error: categoryError } = useQuery({
+        queryKey: ['category'],
+        queryFn: async () => {
+            try {
+                const response = await instance.get('/category');
+                console.log("Categories Response:", response);
+                return response;
+            } catch (error) {
+                console.error("Error fetching categories:", error);
+                throw error;
+            }
+        }
+    });
+console.log("Categories Data:", categoriesData);
+    console.log("Category Loading:", categoryLoading);
+    console.log("Category Error:", categoryError);
+    const dataSource = data?.data
+        .filter((room: IRoom) => {
+            if (!selectedCategory) return true;
+            return room.category.some((cat:any) => cat._id === selectedCategory);
+        })
+        .map((room: IRoom) => ({
+            key: room._id,
+            ...room
+        }));
     return (
         <>
             <div className="flex items-center justify-between mb-5">
-                <h1>Quản lý Phòng</h1>
+                <div>
+                    <h1>Quản lý Phòng</h1>
+                    <Select
+                        style={{ width: 200, marginTop: 8 }}
+                        placeholder="Lọc theo danh mục"
+                        allowClear
+                        loading={categoryLoading}
+                        onChange={(value) => setSelectedCategory(value)}
+                    >
+                        {categoriesData?.data?.map((category: ICategory) => {
+                            console.log("Mapping category:", category);
+                            return (
+                                <Select.Option key={category._id} value={category._id}>
+                                    {category.title}
+                                </Select.Option>
+                            );
+                        })}
+                    </Select>
+                </div>
                 <Link to={"/admin/roomadd"}>
-                    {" "}
                     <Button type="primary">
                         <AiOutlinePlusCircle />
                         Thêm Phòng
@@ -166,7 +206,7 @@ const ListRoom = () => {
                 </Link>
             </div>
             {contextHolder}
-            <Table dataSource={dataSource} columns={columns} />;
+            <Table dataSource={dataSource} columns={columns} />
         </>
     )
 }

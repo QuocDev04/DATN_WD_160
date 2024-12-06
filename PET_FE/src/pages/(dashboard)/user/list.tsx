@@ -94,8 +94,11 @@ const ListUser = () => {
             sortDirections: ["ascend", "descend"],
         },
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
+>>>>>>> quoc
+=======
 >>>>>>> quoc
         {
             title: "Số Điện Thoại",
@@ -161,9 +164,13 @@ const ListUser = () => {
                 dataSource={dataSource}
                 pagination={{ pageSize: 50 }}
 <<<<<<< HEAD
+<<<<<<< HEAD
                 scroll={{ y: 540, x: 1500 }}
 =======
                 scroll={{ y: 440, x: 1500 }}
+>>>>>>> quoc
+=======
+                scroll={{ y: 540, x: 1500 }}
 >>>>>>> quoc
             />
         </>
