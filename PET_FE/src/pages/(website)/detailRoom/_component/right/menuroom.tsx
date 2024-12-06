@@ -1,5 +1,6 @@
 import { Tabs, TabsProps } from "antd";
 import CmtRoom from "./cmtRoom";
+import Cmt from "./cmt";
 const MenuRoom = () => {
 
     const onChange = (key: string) => {
@@ -10,13 +11,13 @@ const MenuRoom = () => {
             key: '1',
             label: 'Mô Tả',
             children: (
-                <CmtRoom/>
+                <CmtRoom />
             ),
         },
         {
             key: '2',
             label: 'Bình Luận',
-            children: 'Content of Tab Pane 2',
+            children: (<Cmt />),
         }
     ];
     return (
