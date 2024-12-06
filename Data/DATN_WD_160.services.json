@@ -1,0 +1,49 @@
+[{
+  "_id": {
+    "$oid": "6724e4f4d8a46e54aab68b4c"
+  },
+  "servicesName": "Chăm sóc răng miệng",
+  "priceService": 33434,
+  "galleryService": [
+    "https://res.cloudinary.com/ecommercer2021/image/upload/v1730895308/k45yz9anfjqdzoj19vsr.jpg"
+  ],
+  "createdAt": {
+    "$date": "2024-11-01T14:25:56.064Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-06T12:15:10.359Z"
+  },
+  "descriptionService": "<p>gsegsedgsedrtgsertgseyh</p>"
+},
+{
+  "_id": {
+    "$oid": "67276871e863222a792d0925"
+  },
+  "servicesName": "Dịch vụ cắt tỉa lông",
+  "priceService": 324532,
+  "galleryService": [
+    "https://res.cloudinary.com/ecommercer2021/image/upload/v1732629175/gyr40dfsuqtf5n6uvusr.webp"
+  ],
+  "createdAt": {
+    "$date": "2024-11-03T12:11:29.304Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-26T13:52:57.507Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67276880e863222a792d092b"
+  },
+  "servicesName": "Dịch vụ tắm spa",
+  "priceService": 345345,
+  "galleryService": [
+    "https://res.cloudinary.com/ecommercer2021/image/upload/v1732629188/mtdquqhhag8hpit0n8ag.webp"
+  ],
+  "createdAt": {
+    "$date": "2024-11-03T12:11:44.460Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-26T13:53:10.992Z"
+  }
+}]

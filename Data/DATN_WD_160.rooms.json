@@ -1,0 +1,220 @@
+[{
+  "_id": {
+    "$oid": "672b63cc99b8b32fe28a4615"
+  },
+  "roomName": "Vip A1",
+  "roomdescription": "<p>etrt</p>",
+  "roomprice": 1000000,
+  "category": [
+    {
+      "$oid": "6720dba7db21149ec516a51b"
+    }
+  ],
+  "roomgallely": [
+    "https://res.cloudinary.com/ecommercer2021/image/upload/v1730896842/m5ssjm7a5c5pwlzivt8q.jpg"
+  ],
+  "createdAt": {
+    "$date": "2024-11-06T12:40:44.829Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-06T12:40:44.829Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "672c5473117a48414edfab68"
+  },
+  "roomName": "Vip A3",
+  "roomdescription": "<p>dhdfhjfhnrtjfhmrtukdyketyk</p>",
+  "roomprice": 555555,
+  "category": [
+    {
+      "$oid": "6720dba7db21149ec516a51b"
+    }
+  ],
+  "roomgallely": [
+    "https://res.cloudinary.com/ecommercer2021/image/upload/v1730958468/lgzmwcaaru0o86fwqe0h.jpg"
+  ],
+  "createdAt": {
+    "$date": "2024-11-07T05:47:31.238Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-07T05:47:50.496Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "672c54a0117a48414edfab79"
+  },
+  "roomName": "Vip A5",
+  "roomdescription": "<p>kdtiukytotukodtikirtuiyi</p>",
+  "roomprice": 666666,
+  "category": [
+    {
+      "$oid": "6720dba7db21149ec516a51b"
+    }
+  ],
+  "roomgallely": [
+    "https://res.cloudinary.com/ecommercer2021/image/upload/v1730958492/ivdqzgzzhtanqfwn6nvm.jpg"
+  ],
+  "createdAt": {
+    "$date": "2024-11-07T05:48:16.168Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-07T05:48:16.168Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "673df6fa7631a9d09214dbab"
+  },
+  "roomName": "Vip A6",
+  "roomprice": 1000000,
+  "category": [
+    {
+      "$oid": "6720dba7db21149ec516a51b"
+    }
+  ],
+  "roomgallely": [
+    "https://res.cloudinary.com/ecommercer2021/image/upload/v1732114152/wpyksfmsygno8b5h37th.jpg",
+    "https://res.cloudinary.com/ecommercer2021/image/upload/v1732114161/zgj7crpz8digyzvjya24.jpg"
+  ],
+  "createdAt": {
+    "$date": "2024-11-20T14:49:30.600Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-20T14:49:30.600Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "673df7117631a9d09214dbad"
+  },
+  "roomName": "Vip A7",
+  "roomprice": 1000000,
+  "category": [
+    {
+      "$oid": "6720dba7db21149ec516a51b"
+    }
+  ],
+  "roomgallely": [
+    "https://res.cloudinary.com/ecommercer2021/image/upload/v1732114185/asnsanny93jlrovjmavu.jpg",
+    "https://res.cloudinary.com/ecommercer2021/image/upload/v1732114189/yjkp1zqilon8rpkjienq.jpg"
+  ],
+  "createdAt": {
+    "$date": "2024-11-20T14:49:53.713Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-20T14:49:53.713Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "673df7257631a9d09214dbaf"
+  },
+  "roomName": "Vip A7",
+  "roomprice": 1000000,
+  "category": [
+    {
+      "$oid": "6720dba7db21149ec516a51b"
+    }
+  ],
+  "roomgallely": [
+    "https://res.cloudinary.com/ecommercer2021/image/upload/v1732114208/kcub0olusojeikcsyfxk.jpg",
+    "https://res.cloudinary.com/ecommercer2021/image/upload/v1732114211/nmrv1yfftx9m6lk2wvpt.jpg"
+  ],
+  "createdAt": {
+    "$date": "2024-11-20T14:50:13.933Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-20T14:50:13.933Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "673df7f47631a9d09214dbc2"
+  },
+  "roomName": "Vip A10",
+  "roomprice": 1000000,
+  "category": [
+    {
+      "$oid": "6720dba7db21149ec516a51b"
+    }
+  ],
+  "roomgallely": [
+    "https://res.cloudinary.com/ecommercer2021/image/upload/v1732114414/ssdn4ngf85o9h2vbdcvr.jpg",
+    "https://res.cloudinary.com/ecommercer2021/image/upload/v1732114417/ipufkxd471aejz4muucb.jpg"
+  ],
+  "createdAt": {
+    "$date": "2024-11-20T14:53:40.281Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-20T14:53:40.281Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6742fb6010db011fd8d0b701"
+  },
+  "roomName": "Vip b1",
+  "roomdescription": "<p>phòng cho thú cưng</p>",
+  "roomprice": 1100000,
+  "category": [
+    {
+      "$oid": "67257880d8a46e54aab68b6e"
+    }
+  ],
+  "roomgallely": [
+    "https://res.cloudinary.com/ecommercer2021/image/upload/v1732442968/ggbawlnpl17qlglcdsce.jpg"
+  ],
+  "createdAt": {
+    "$date": "2024-11-24T10:09:36.926Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-24T10:09:36.926Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6742fb8610db011fd8d0b703"
+  },
+  "roomName": "phòng cơ bản",
+  "roomdescription": "<p>phòng cơ bản</p>",
+  "roomprice": 5500000,
+  "category": [
+    {
+      "$oid": "6720dbdadb21149ec516a525"
+    }
+  ],
+  "roomgallely": [
+    "https://res.cloudinary.com/ecommercer2021/image/upload/v1732443007/kw9b3j9u7howg9lqyklz.jpg"
+  ],
+  "createdAt": {
+    "$date": "2024-11-24T10:10:14.041Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-24T10:10:14.041Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6742fbcd10db011fd8d0b708"
+  },
+  "roomName": "phòng vip",
+  "roomdescription": "<p>vip</p>",
+  "roomprice": 2200000,
+  "category": [
+    {
+      "$oid": "6720dba7db21149ec516a51b"
+    }
+  ],
+  "roomgallely": [
+    "https://res.cloudinary.com/ecommercer2021/image/upload/v1732443050/nras7bx3ktbteywxznwl.webp"
+  ],
+  "createdAt": {
+    "$date": "2024-11-24T10:11:25.060Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-24T10:11:25.060Z"
+  }
+}]
