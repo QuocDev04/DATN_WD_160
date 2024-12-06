@@ -26,12 +26,12 @@ const roomSchema = new mongoose.Schema(
         roomgallely: {
             type: [String],
             required: true,
-        }
-        // commentId: {
-        //     type: mongoose.Schema.Types.ObjectId,
-        //     ref: "Comment",
-        //     required: true,
-        // },
+        },
+        commentId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Comment",
+            required: true,
+        },
     },
     {
         timestamps: true, versionKey: false

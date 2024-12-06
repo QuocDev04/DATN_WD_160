@@ -1,16 +1,36 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 
 const evaluateSchema = new mongoose.Schema(
     {
-        description:{
-            type:String,
+        user: {
+            userId: {
+                type: Schema.Types.ObjectId,
+                ref: "User",
+                required: true,
+            },
+            name: {
+                type: String,
+                required: true,
+            },
+            avatar: {
+                type: String,
+                required: true,
+            },
         },
-        rating:{
-            type:String
-        }
-    },{
-        timestamps:true, versionKey:false
-    }
+        description: {
+            type: String,
+        },
+        rating: {
+            type: String
+        },
+        roomId: {
+            type: Schema.Types.ObjectId,
+            ref: "Room",
+            required: true,
+        },
+    }, {
+    timestamps: true, versionKey: false
+}
 )
 export default mongoose.model("Comment", evaluateSchema)
