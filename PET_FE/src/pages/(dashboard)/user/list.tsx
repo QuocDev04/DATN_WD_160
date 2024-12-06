@@ -93,7 +93,10 @@ const ListUser = () => {
             sorter: (a: IUser, b: IUser) => a.email.localeCompare(b.email),
             sortDirections: ["ascend", "descend"],
         },
+<<<<<<< HEAD
+=======
 
+>>>>>>> quoc
         {
             title: "Số Điện Thoại",
             dataIndex: "phone",
@@ -157,7 +160,11 @@ const ListUser = () => {
                 columns={columns}
                 dataSource={dataSource}
                 pagination={{ pageSize: 50 }}
+<<<<<<< HEAD
+                scroll={{ y: 540, x: 1500 }}
+=======
                 scroll={{ y: 440, x: 1500 }}
+>>>>>>> quoc
             />
         </>
     );

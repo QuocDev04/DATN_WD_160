@@ -1,0 +1,36 @@
+[{
+  "_id": {
+    "$oid": "6720dba7db21149ec516a51b"
+  },
+  "title": "Cao Cấp",
+  "createdAt": {
+    "$date": "2024-10-29T12:57:11.940Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-05T07:31:01.789Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6720dbdadb21149ec516a525"
+  },
+  "title": "Thịnh Hành",
+  "createdAt": {
+    "$date": "2024-10-29T12:58:02.276Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-05T07:31:14.125Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67257880d8a46e54aab68b6e"
+  },
+  "title": "Cơ Bản",
+  "createdAt": {
+    "$date": "2024-11-02T00:55:28.225Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-05T07:35:40.867Z"
+  }
+}]

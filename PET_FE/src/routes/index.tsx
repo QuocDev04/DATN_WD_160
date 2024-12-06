@@ -38,6 +38,8 @@ const Router = () => {
     return (
         <>
             <Routes>
+                <Route path="/register" element={<RegisterPages />} />
+                <Route path="/signin" element={<LoginPages />} />
                 <Route path="admin" element={<LayoutAdmin />}>
                     <Route index path="/admin" element={<Dashboard />} />
                     {/* User */}

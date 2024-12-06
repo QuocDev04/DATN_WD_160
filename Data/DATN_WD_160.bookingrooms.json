@@ -1,0 +1,75 @@
+[{
+  "_id": {
+    "$oid": "674f23ebf7c87fd8b9c60bf8"
+  },
+  "userId": {
+    "$oid": "674a85bda17865d193d563bb"
+  },
+  "items": [
+    {
+      "roomId": {
+        "$oid": "672c54a0117a48414edfab79"
+      }
+    }
+  ],
+  "lastName": "sdfsdf",
+  "petName": "sdfsdf",
+  "phone": "0987654321",
+  "age": 12,
+  "weight": "12",
+  "species": "Mèo",
+  "gender": "Đực",
+  "height": "12",
+  "totalPrice": 33434,
+  "status": "cancelled",
+  "checkindate": {
+    "$date": "2024-12-03T15:29:43.100Z"
+  },
+  "checkoutdate": {
+    "$date": "2024-12-03T15:29:44.800Z"
+  },
+  "createdAt": {
+    "$date": "2024-12-03T15:29:47.807Z"
+  },
+  "updatedAt": {
+    "$date": "2024-12-03T15:40:54.190Z"
+  },
+  "cancelReason": "found_better_option"
+},
+{
+  "_id": {
+    "$oid": "674f3133f7c87fd8b9c60e02"
+  },
+  "userId": {
+    "$oid": "674a85bda17865d193d563bb"
+  },
+  "items": [
+    {
+      "roomId": {
+        "$oid": "672c54a0117a48414edfab79"
+      }
+    }
+  ],
+  "lastName": "sdfsf",
+  "petName": "sdfsfd",
+  "phone": "0987654321",
+  "age": 12,
+  "weight": "12",
+  "species": "Chó",
+  "gender": "Cái",
+  "height": "12",
+  "totalPrice": 1369977,
+  "status": "completed",
+  "checkindate": {
+    "$date": "2024-12-03T16:26:18.800Z"
+  },
+  "checkoutdate": {
+    "$date": "2024-12-03T16:26:21.000Z"
+  },
+  "createdAt": {
+    "$date": "2024-12-03T16:26:27.218Z"
+  },
+  "updatedAt": {
+    "$date": "2024-12-03T16:26:43.996Z"
+  }
+}]
