@@ -88,7 +88,7 @@ const LayoutAdmin: React.FC = () => {
     ] as MenuProps['items'];
 
     const userMenu = (
-        <Menu className="w-48 p-2">
+<Menu className="w-48 p-2">
             <div className="px-4 py-3">
                 <p className="text-sm text-gray-600">Đăng nhập với</p>
                 <p className="text-sm font-medium text-gray-900">admin@example.com</p>
@@ -113,10 +113,12 @@ const LayoutAdmin: React.FC = () => {
                 trigger={null} 
                 collapsible 
                 collapsed={collapsed}
-                className="shadow-lg"
+                className="shadow-lg fixed left-0 h-screen" 
                 style={{
                     background: token.colorBgContainer,
                     borderRight: `1px solid ${token.colorBorderSecondary}`,
+                    position: 'fixed',
+                    zIndex: 999
                 }}
                 width={280}
             >
@@ -131,19 +133,30 @@ const LayoutAdmin: React.FC = () => {
                     </Link>
                 </div>
 
-                <div className="flex flex-col h-[calc(100vh-4rem)] justify-between">
+                <div className="flex flex-col h-[calc(100vh-4rem)]">
                     <Menu
                         mode="inline"
                         selectedKeys={[activeMenu]}
                         items={menuItems}
                         className="border-r-0 py-4"
+                        style={{ 
+                            height: 'calc(100vh - 4rem - 72px)', // Trừ đi chiều cao của header và profile
+                            position: 'fixed',
+                            width: collapsed ? '80px' : '280px',
+                            overflow: 'hidden',
+                            overflowY: 'auto'
+                        }}
                     />
 
-                    <div className="p-4 border-t border-gray-100">
+                    <div className="p-4 border-t border-gray-100 fixed bottom-0 bg-white"
+                        style={{
+                            width: collapsed ? '80px' : '280px'
+                        }}
+                    >
                         <div className="flex items-center gap-3">
                             <Avatar 
-                                size={40} 
-                                icon={<UserOutlined />}
+                                size={40}
+icon={<UserOutlined />}
                                 className="bg-gradient-to-r from-[#8B4513] to-[#D2691E] text-white flex items-center justify-center"
                             />
                             {!collapsed && (
@@ -157,8 +170,13 @@ const LayoutAdmin: React.FC = () => {
                 </div>
             </Sider>
             
-            <Layout>
-                <Header className="p-0 bg-white border-b border-gray-100">
+            <Layout style={{ marginLeft: collapsed ? '80px' : '280px' }}>
+                <Header 
+                    className="p-0 bg-white border-b border-gray-100 fixed top-0 right-0 z-10" 
+                    style={{ 
+                        width: `calc(100% - ${collapsed ? 80 : 280}px)`,
+                    }}
+                >
                     <div className="flex justify-between items-center h-16 px-6">
                         <div className="flex items-center gap-6">
                             <Button
@@ -195,9 +213,17 @@ const LayoutAdmin: React.FC = () => {
                             </Dropdown>
                         </div>
                     </div>
-                </Header>
+</Header>
 
-                <Content className="m-6">
+                <Content 
+                    className="m-6"
+                    style={{ 
+                        marginTop: '80px', // Tăng margin-top để tránh bị header che
+                        minHeight: 'calc(100vh - 112px)', // 112px = 64px (header) + 2 * 24px (margin)
+                        padding: '24px',
+                        background: token.colorBgContainer,
+                    }}
+                >
                     <div className="min-h-[280px] p-6 bg-white rounded-xl shadow-sm">
                         <Outlet />
                     </div>
