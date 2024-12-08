@@ -180,6 +180,10 @@ const ListRoom = () => {
             key: room._id,
             ...room
         }));
+        if(categoryError){
+            console.log('');
+            
+        }
     return (
         <>
             <div className="flex items-center justify-between mb-5">
