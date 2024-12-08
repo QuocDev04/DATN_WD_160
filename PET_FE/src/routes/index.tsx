@@ -29,7 +29,9 @@ import PetMagazine from "@/pages/(website)/petMagazine/pages";
 import ProductDetail from "@/pages/(website)/Product/_component/detailProduct";
 import Pages from "@/pages/(website)/Product/pages";
 import Room from "@/pages/(website)/room/pages";
-import RoomPageComponent from "@/pages/(website)/roompages/pages";
+import CbComponent from "@/pages/(website)/roompages/_component/coban";
+import PagesComponent from "@/pages/(website)/roompages/_component/pagesComponet";
+import ThinhHanh from "@/pages/(website)/roompages/_component/thinhhanh";
 import ShopIntroduction from "@/pages/(website)/Shopintroduction/pages";
 import Layout from "@/pages/layout";
 import { Route, Routes } from "react-router-dom";
@@ -72,7 +74,9 @@ const Router = () => {
                     <Route path="Hotline" element={<HotlinePage />} />
                     <Route path="/Detailservice/:id" element={<ProductDetailPage />} />
                     <Route path="Room" element={<Room />} />
-                    <Route path="Roompages" element={<RoomPageComponent />} />
+                    <Route path="caocap" element={<PagesComponent />} />
+                    <Route path="coban" element={<CbComponent />} />
+                    <Route path="thinhhanh" element={<ThinhHanh />} />
                     <Route path="Roompages/:id" element={<DetalRoom />} />
                     <Route path="BookingRoompages/:userId/:id" element={<LeftBookingRoom />} />
                     <Route path="/magazine/:id" element={<MagazineDetail />} />

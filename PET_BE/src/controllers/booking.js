@@ -37,27 +37,35 @@ export const BookingRoom = async (req, res) => {
             return res.status(StatusCodes.NOT_FOUND).json({ error: "Buy Now Order not found" });
         }
 
+        // Tính số giờ lưu trú
+        const checkIn = new Date(checkindate);
+        const checkOut = new Date(checkoutdate);
+        const timeStayInHours = Math.max(1, Math.round((checkOut - checkIn) / (1000 * 60 * 60)));
+        console.log('Số giờ lưu trú:', timeStayInHours);
+
         // Tính tổng giá phòng
         if (buyNowOrderData && Array.isArray(buyNowOrderData.items)) {
             BookingRoomItems = buyNowOrderData.items.map(item => {
-                if (item.roomId) { // Kiểm tra nếu roomId tồn tại
-                    const roomPriceValue = item.roomId.roomprice; // Lấy giá từ roomId
-                    console.log('Item roomprice:', roomPriceValue, typeof roomPriceValue); // Kiểm tra giá và kiểu dữ liệu
+                if (item.roomId) {
+                    const roomPriceValue = item.roomId.roomprice;
+                    console.log('Giá phòng mỗi giờ:', roomPriceValue);
+                    
                     if (typeof roomPriceValue === "number" && !isNaN(roomPriceValue)) {
-                        roomPrice += roomPriceValue;
-                        console.log('Current roomPrice:', roomPrice); // Theo dõi việc cộng dồn
+                        const currentRoomPrice = roomPriceValue * timeStayInHours;
+                        console.log(`Phép tính: ${roomPriceValue} × ${timeStayInHours} = ${currentRoomPrice}`);
+                        roomPrice += currentRoomPrice;
                     }
                     return {
                         roomId: item.roomId._id,
                         name: item.roomId.roomName,
                         gallery: item.roomId.roomgallely[0],
-                        price: roomPriceValue,
+                        price: roomPriceValue * timeStayInHours,
                     };
                 } else {
                     console.error('roomId is undefined for item:', item);
                     return null;
                 }
-            }).filter(item => item !== null); // Lọc ra các item hợp lệ
+            }).filter(item => item !== null);
         } else {
             console.error('buyNowOrderData.items is not an array or is undefined');
         }

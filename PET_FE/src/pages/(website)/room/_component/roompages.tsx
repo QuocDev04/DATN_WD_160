@@ -196,7 +196,7 @@ const RoomPages = () => {
                                 >
                                     {room.type === "Cơ Bản" && (
                                         <Link
-                                            to={'/Roompages'}
+                                            to={'/coban'}
                                             className={`block text-center py-3 px-6 rounded-lg font-medium transition-all duration-300
                                                 ${room.recommended
                                                     ? 'bg-[#D2B48C] text-white hover:bg-[#8B4513] shadow-lg hover:shadow-xl'
@@ -209,7 +209,7 @@ const RoomPages = () => {
 
                                     {room.type === "Thịnh Hành" && (
                                         <Link
-                                            to={'/Roompages'}
+                                            to={'/thinhhanh'}
                                             className={`block text-center py-3 px-6 rounded-lg font-medium transition-all duration-300
                                                 ${room.recommended
                                                     ? 'bg-[#D2B48C] text-white hover:bg-[#8B4513] shadow-lg hover:shadow-xl'
@@ -222,7 +222,7 @@ const RoomPages = () => {
 
                                     {room.type === "Cao Cấp" && (
                                         <Link
-                                            to={'/Roompages'}
+                                            to={'/caocap'}
                                             className={`block text-center py-3 px-6 rounded-lg font-medium transition-all duration-300
                                                 ${room.recommended
                                                     ? 'bg-[#D2B48C] text-white hover:bg-[#8B4513] shadow-lg hover:shadow-xl'

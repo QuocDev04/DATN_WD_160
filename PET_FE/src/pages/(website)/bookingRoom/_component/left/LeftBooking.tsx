@@ -8,7 +8,6 @@ import {
     Button,
     notification,
     Image,
-    DatePickerProps,
     Select,
 } from "antd";
 import { useState } from "react";
@@ -160,6 +159,35 @@ const LeftBookingRoom = () => {
     // Xử lý khi chọn/bỏ chọn dịch vụ
     const handleServiceChange = (values: string[]) => {
         setSelectedServices(values);
+    };
+
+    // Thêm hàm tính số giờ giữa 2 mốc thời gian
+    const calculateHours = (startDate: dayjs.Dayjs, endDate: dayjs.Dayjs) => {
+        // Tính số phút giữa 2 mốc thời gian
+        const minutes = endDate.diff(startDate, 'minutes');
+        // Làm tròn lên số gi� nếu có phần lẻ phút
+        const hours = Math.ceil(minutes / 60);
+        return Math.max(hours, 1); // Đảm bảo tối thiểu 1 giờ
+    };
+
+    // Thêm hàm xử lý khi thời gian thay đổi
+    const handleTimeChange = (dates: any, dateStrings: [string, string]) => {
+        const [start, end] = dates;
+        if (start && end) {
+            const hours = calculateHours(start, end);
+            // Lấy giá phòng theo giờ trực tiếp từ data
+            const roomPricePerHour = data?.data?.items?.[0]?.roomId?.roomprice || 0;
+            const newRoomPrice = roomPricePerHour * hours;
+            setTotalRoomPrice(newRoomPrice);
+            
+            // Cập nhật tổng giá bao gồm cả dịch vụ
+            const serviceTotal = selectedServices.reduce((total, serviceId) => {
+                const serviceItem = service?.data?.find((s: IService) => s._id === serviceId);
+                return total + (serviceItem?.priceService || 0);
+            }, 0);
+            
+            setTotalPrice(newRoomPrice + serviceTotal);
+        }
     };
 
     return (
@@ -414,25 +442,64 @@ const LeftBookingRoom = () => {
                                         <Form.Item
                                             name="checkindate"
                                             label={<span className="font-medium">Thời Gian Bắt Đầu <span className="text-red-500">*</span></span>}
-                                            rules={[{ required: true }]}
-                                            required={false}
+                                            rules={[
+                                                { required: true, message: "Vui lòng chọn thời gian bắt đầu!" }
+                                            ]}
                                         >
                                             <DatePicker
                                                 className="w-full h-12 rounded-xl border-gray-200"
-                                                showTime
+                                                showTime={{ format: 'HH:mm' }}
+                                                format="DD-MM-YYYY HH:mm"
                                                 locale={buddhistLocale}
+                                                disabledDate={(current) => {
+                                                    return current && current < dayjs().startOf('day');
+                                                }}
+                                                onChange={(date) => {
+                                                    const checkout = form.getFieldValue('checkoutdate');
+                                                    if (checkout && date) {
+                                                        handleTimeChange([date, checkout], ['', '']);
+                                                    }
+                                                }}
                                             />
                                         </Form.Item>
                                         <Form.Item
                                             name="checkoutdate"
                                             label={<span className="font-medium">Thời Gian Kết Thúc <span className="text-red-500">*</span></span>}
-                                            rules={[{ required: true }]}
-                                            required={false}
+                                            rules={[
+                                                { required: true, message: "Vui lòng chọn thời gian kết thúc!" },
+                                                ({ getFieldValue }) => ({
+                                                    validator(_, value) {
+                                                        const checkinDate = getFieldValue('checkindate');
+                                                        if (!checkinDate || !value) {
+                                                            return Promise.resolve();
+                                                        }
+                                                        
+                                                        const diffInHours = value.diff(checkinDate, 'hours');
+                                                        
+                                                        if (diffInHours < 1) {
+                                                            return Promise.reject('Thời gian kết thúc phải sau thời gian bắt đầu ít nhất 1 giờ!');
+                                                        }
+                                                        return Promise.resolve();
+                                                    },
+                                                }),
+                                            ]}
                                         >
                                             <DatePicker
                                                 className="w-full h-12 rounded-xl border-gray-200"
-                                                showTime
+                                                showTime={{ format: 'HH:mm' }}
+                                                format="DD-MM-YYYY HH:mm"
                                                 locale={buddhistLocale}
+                                                disabledDate={(current) => {
+                                                    const checkinDate = form.getFieldValue('checkindate');
+                                                    if (!checkinDate) return false;
+                                                    return current && current < checkinDate.startOf('day');
+                                                }}
+                                                onChange={(date) => {
+                                                    const checkin = form.getFieldValue('checkindate');
+                                                    if (checkin && date) {
+                                                        handleTimeChange([checkin, date], ['', '']);
+                                                    }
+                                                }}
                                             />
                                         </Form.Item>
                                     </div>
@@ -477,10 +544,6 @@ const LeftBookingRoom = () => {
 
                             {/* Price Summary */}
                             <div className="space-y-4 border-t pt-4">
-                                <div className="flex justify-between">
-                                    <span className="text-gray-600">Tổng giá phòng</span>
-                                    <span className="font-medium">{formatCurrency(totalRoomPrice)}</span>
-                                </div>
                                 <div className="flex justify-between">
                                     <span className="text-gray-600">Tổng giá dịch vụ</span>
                                     <span className="font-medium">{formatCurrency(totalPrice - totalRoomPrice)}</span>

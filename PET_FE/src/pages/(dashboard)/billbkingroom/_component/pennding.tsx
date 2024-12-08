@@ -227,10 +227,10 @@ const Pending = () => {
                     <div><HomeOutlined className="mr-2" />{record?.items[0]?.roomId?.roomName}</div>
                     <div>
                         <span className="mr-4">
-                            Nhận: {new Date(record.checkindate).toLocaleDateString("vi-VN")}
-                        </span>
+                            Nhận: {new Date(record.checkindate).toLocaleString("vi-VN")}
+                        </span> <br />
                         <span>
-                            Trả: {new Date(record.checkoutdate).toLocaleDateString("vi-VN")}
+                            Trả: {new Date(record.checkoutdate).toLocaleString("vi-VN")}
                         </span>
                     </div>
                     <div>
@@ -452,13 +452,13 @@ const Pending = () => {
                                 <div>
                                     <p className="text-gray-500 text-sm">Ngày nhận phòng</p>
                                     <p className="font-medium text-[#2c3e50]">
-                                        {new Date(selectedBooking.checkindate).toLocaleDateString("vi-VN")}
+                                        {new Date(selectedBooking.checkindate).toLocaleString("vi-VN")}
                                     </p>
                                 </div>
                                 <div>
                                     <p className="text-gray-500 text-sm">Ngày trả phòng</p>
                                     <p className="font-medium text-[#2c3e50]">
-                                        {new Date(selectedBooking.checkoutdate).toLocaleDateString("vi-VN")}
+                                        {new Date(selectedBooking.checkoutdate).toLocaleString("vi-VN")}
                                     </p>
                                 </div>
                                 <div>
@@ -565,13 +565,13 @@ const Pending = () => {
                                 <div>
                                     <p className="text-gray-500 text-sm">Ngày nhận phòng</p>
                                     <p className="font-medium text-[#2c3e50]">
-                                        {new Date(bookingToConfirm.checkindate).toLocaleDateString("vi-VN")}
+                                        {new Date(bookingToConfirm.checkindate).toLocaleString("vi-VN")}
                                     </p>
                                 </div>
                                 <div>
                                     <p className="text-gray-500 text-sm">Ngày trả phòng</p>
                                     <p className="font-medium text-[#2c3e50]">
-                                        {new Date(bookingToConfirm.checkoutdate).toLocaleDateString("vi-VN")}
+                                        {new Date(bookingToConfirm.checkoutdate).toLocaleString("vi-VN")}
                                     </p>
                                 </div>
                             </div>
@@ -654,8 +654,8 @@ const Pending = () => {
                             <div className="grid grid-cols-2 gap-2 text-sm">
                                 <p>Khách hàng: {bookingToCancel.lastName}</p>
                                 <p>Phòng: {bookingToCancel.items[0]?.roomId?.roomName}</p>
-                                <p>Ngày nhận: {new Date(bookingToCancel.checkindate).toLocaleDateString("vi-VN")}</p>
-                                <p>Ngày trả: {new Date(bookingToCancel.checkoutdate).toLocaleDateString("vi-VN")}</p>
+                                <p>Ngày nhận: {new Date(bookingToCancel.checkindate).toLocaleString("vi-VN")}</p>
+                                <p>Ngày trả: {new Date(bookingToCancel.checkoutdate).toLocaleString("vi-VN")}</p>
                             </div>
                         </div>
                     )}
@@ -725,13 +725,13 @@ const Pending = () => {
                                 <div>
                                     <p className="text-gray-500 text-sm">Ngày nhận phòng</p>
                                     <p className="font-medium">
-                                        {new Date(bookingToComplete.checkindate).toLocaleDateString("vi-VN")}
+                                        {new Date(bookingToComplete.checkindate).toLocaleString("vi-VN")}
                                     </p>
                                 </div>
                                 <div>
                                     <p className="text-gray-500 text-sm">Ngày trả phòng</p>
                                     <p className="font-medium">
-                                        {new Date(bookingToComplete.checkoutdate).toLocaleDateString("vi-VN")}
+                                        {new Date(bookingToComplete.checkoutdate).toLocaleString("vi-VN")}
                                     </p>
                                 </div>
                             </div>
