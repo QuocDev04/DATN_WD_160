@@ -6,6 +6,7 @@ export interface IRoom {
     roomdescription: string,
     roomgallely: string[],
     status:string,
+    category:string
 }
 
 export interface AddIRoom {

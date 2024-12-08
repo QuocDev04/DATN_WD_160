@@ -95,7 +95,7 @@ const ListRoom = () => {
             key: 'category',
             width: 150,
             render: (_: any, product: any) =>
-                product?.category?.map((category: ICategory, index: number) => (
+                product?.category?.map((category: any, index: number) => (
                     <div key={index}>
                         {index + 1}. {category.title}
                     </div>

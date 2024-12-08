@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
     Button,
-    Checkbox,
     Form,
     FormProps,
     GetProp,
@@ -9,14 +8,12 @@ import {
     Input,
     InputNumber,
     message,
-    Radio,
     Select,
     Upload,
     UploadFile,
     UploadProps,
 } from "antd";
 import { Link } from "react-router-dom";
-import { AiFillBackward } from "react-icons/ai";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import instance from "@/configs/axios";

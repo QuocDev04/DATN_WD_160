@@ -8,6 +8,7 @@ import {
     Input,
     InputNumber,
     message,
+    Select,
     Upload,
     UploadFile,
     UploadProps,
@@ -35,8 +36,14 @@ const RoomEditPage = () => {
         isError,
         error,
     } = useQuery({
-        queryKey: ["service", id],
+        queryKey: ["room", id],
         queryFn: () => instance.get(`/room/${id}`),
+    });
+    const {
+        data
+    } = useQuery({
+        queryKey: ["category"],
+        queryFn: () => instance.get("/category"),
     });
     useEffect(() => {
         if (product?.data.roomgallely) {
@@ -52,6 +59,14 @@ const RoomEditPage = () => {
             );
         }
     }, [product]);
+    useEffect(() => {
+        if (product?.data?.category) {
+            const categories = product.data.category;
+            form.setFieldsValue({
+                category: categories.map((cat: any) => cat._id),
+            });
+        }
+    }, [product, form]);
     const queryClient = useQueryClient();
     const { mutate, isPending } = useMutation({
         mutationFn: async (data: AddIService) => {
@@ -152,7 +167,10 @@ const RoomEditPage = () => {
                 name="basic"
                 layout="vertical"
                 onFinish={onFinish}
-                initialValues={product?.data}
+                initialValues={{
+                    ...product?.data,
+                    category: product?.data?.category || undefined,
+                }}
             >
                 <div className="grid grid-cols-[auto,300px]">
                     <div className="py-5">
@@ -220,6 +238,26 @@ const RoomEditPage = () => {
 
                     </div>
                     <div className="ml-5">
+                    <Form.Item 
+                            required={false}
+                            name="category" 
+                            label={<h1 className="text-md text-center">Danh mục <span className="text-red-500">*</span></h1>} 
+                            rules={[{ required: true, message: "Danh mục bắt buộc chọn" }]}>
+                            <Select
+                                style={{ width: "100%", marginLeft: "7px" }}
+                                options={data?.data?.map((category: any) => ({
+                                    label: category.title,
+                                    value: category._id,
+                                })) || []}
+                                placeholder="Chọn danh mục"
+                                disabled={isPending}
+                                onChange={(value) => {
+                                    // Cập nhật giá trị của trường category
+                                    form.setFieldsValue({ category: value });
+                                }}
+                                value={product?.data?.category?._id}
+                            />
+                        </Form.Item>
                         <Form.Item name="roomgallely">
                             <h1 className="text-lg text-center py-2">
                                 Ảnh phòng
