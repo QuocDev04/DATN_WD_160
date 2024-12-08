@@ -75,9 +75,10 @@ const ProductPage = () => {
             )
             .map((name: string) => ({ text: name, value: name }));
     };
-    const createFilterCategory = (products: IProduct[]) => {
+    const createFilterCategory = (products: any[]) => {
         return products
-            .map((product: IProduct) => product.categoryproduct)
+            .map((product: any) => product.categoryproduct?.CategoryProductName)
+            .filter((value: string | undefined) => value !== undefined)
             .filter(
                 (value: string, index: number, self: string[]) =>
                     self.indexOf(value) === index,
@@ -137,17 +138,20 @@ const ProductPage = () => {
             },
         },
         {
-            title:"Danh Mục",
-            dataIndex:"categoryproduct",
-            key:"categoryproduct",
+            title: "Danh Mục",
+            dataIndex: "categoryproduct",
+            key: "categoryproduct",
             width: 150,
             filterSearch: true,
             filters: data ? createFilterCategory(data?.data) : [],
-            onFilter: (value: any, product: IProduct) =>
-                product.categoryproduct.includes(value),
-            sorter: (a: IProduct, b: IProduct) =>
-                a.categoryproduct.localeCompare(b.categoryproduct),
+            onFilter: (value: any, product: any) =>
+                product?.categoryproduct?.CategoryProductName.includes(value),
+            sorter: (a: any, b: any) =>
+                a.categoryproduct.CategoryProductName.localeCompare(b.categoryproduct.CategoryProductName),
             sortDirections: ["ascend", "descend"],
+            render: (categoryproduct: any) => {
+                return categoryproduct?.CategoryProductName || "Không có danh mục";
+            },
         },
         {
             title: "Mô tả",
