@@ -14,7 +14,6 @@ import {
     UploadProps,
 } from "antd";
 import { Link } from "react-router-dom";
-import { AiFillBackward } from "react-icons/ai";
 import { AddIProduct } from "@/common/type/IProduct";
 import { useMutation } from "@tanstack/react-query";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
