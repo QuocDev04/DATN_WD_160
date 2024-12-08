@@ -36,6 +36,11 @@ const ProductPage = () => {
     const endIndex = startIndex + itemsPerPage;
     const currentProducts = data?.data?.slice(startIndex, endIndex);
 
+    // Hàm lọc sản phẩm theo tên
+    const filteredProducts = currentProducts?.filter((product: any) =>
+        product.productName.toLowerCase().includes(searchTerm.toLowerCase())
+    ) || [];
+
     // Hàm xử lý chuyển trang
     const handlePageChange = (pageNumber: number) => {
         setCurrentPage(pageNumber);
@@ -105,7 +110,7 @@ const ProductPage = () => {
             {/* Products Grid */}
             <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                    {currentProducts?.map((product:any) => (
+                    {filteredProducts.map((product:any) => (
                         <div key={product.id} className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow">
                             <div className="relative pb-[100%]">
                                 <img
