@@ -8,21 +8,21 @@ import {
     Input,
     InputNumber,
     message,
+    Select,
     Upload,
     UploadFile,
     UploadProps,
 } from "antd";
 import { Link, useParams } from "react-router-dom";
-import { AiFillBackward } from "react-icons/ai";
+import { AddIProduct } from "@/common/type/IProduct";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import instance from "@/configs/axios";
 import { useEffect, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { AddIService } from "@/common/type/IService";
 type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
-const RoomEditPage = () => {
+const ProductEditPage = () => {
     const { id } = useParams();
     const [value, setValue] = useState("");
     const [previewOpen, setPreviewOpen] = useState(false);
@@ -36,16 +36,21 @@ const RoomEditPage = () => {
         isError,
         error,
     } = useQuery({
-        queryKey: ["service", id],
-        queryFn: () => instance.get(`/room/${id}`),
+        queryKey: ["product", id],
+        queryFn: () => instance.get(`/product/${id}`),
     });
+    const { data } = useQuery({
+        queryKey: ['categoryproduct'],
+        queryFn: () => instance.get('/categoryProduct')
+    })
     useEffect(() => {
-        if (product?.data.roomgallely) {
+        console.log(product?.data);
+        if (product?.data.gallery) {
             setFileList(
-                product?.data?.roomgallely?.map((url: any, index: number) => {
+                product?.data?.gallery?.map((url: any, index: number) => {
                     return {
                         uid: index.toString(),
-                        name: `roomgallely${index}`,
+                        name: `gallery${index}`,
                         status: "done",
                         url: url,
                     };
@@ -53,11 +58,18 @@ const RoomEditPage = () => {
             );
         }
     }, [product]);
+    useEffect(() => {
+        if (product?.data?.categoryproduct) {
+            form.setFieldsValue({
+                categoryproduct: product.data.categoryproduct._id,
+            });
+        }
+    }, [product, form]);
     const queryClient = useQueryClient();
     const { mutate, isPending } = useMutation({
-        mutationFn: async (data: AddIService) => {
+        mutationFn: async (data: AddIProduct) => {
             try {
-                return await instance.put(`/room/${id}`, data);
+                return await instance.put(`/product/${id}`, data);
             } catch (error) {
                 throw new Error((error as any).message);
             }
@@ -65,16 +77,16 @@ const RoomEditPage = () => {
         onSuccess: () => {
             messageApi.open({
                 type: "success",
-                content: "Bạn sửa phòng thành công",
+                content: "Bạn thêm sản phẩm thành công",
             });
             queryClient.invalidateQueries({
-                queryKey: ["room"],
+                queryKey: ["product"],
             });
         },
         onError: () => {
             messageApi.open({
                 type: "error",
-                content: "Bạn sửa phòng thất bại. Vui lòng thử lại sau!",
+                content: "Bạn thêm sản phẩm thất bại. Vui lòng thử lại sau!",
             });
         },
     });
@@ -98,14 +110,14 @@ const RoomEditPage = () => {
         setFileList(newFileList);
     };
 
-    const onFinish: FormProps<AddIService>["onFinish"] = (values) => {
+    const onFinish: FormProps<AddIProduct>["onFinish"] = (values) => {
         const imageUrls = fileList
             .filter((file) => file.status === "done") // Lọc chỉ các ảnh đã tải lên thành công
             .map((file) => file.response?.secure_url); // Lấy URL từ phản hồi
 
         const newValues = {
             ...values,
-            roomgallely: imageUrls,
+            gallery: imageUrls,
         };
         mutate(newValues);
     };
@@ -145,7 +157,8 @@ const RoomEditPage = () => {
     return (
         <>
             <div className="flex items-center justify-between">
-                <h1 className="text-2xl">Sửa phòng</h1>
+                <h1 className="text-2xl">Sửa sản phẩm</h1>
+               
             </div>
             {contextHolder}
             <Form
@@ -154,31 +167,31 @@ const RoomEditPage = () => {
                 layout="vertical"
                 onFinish={onFinish}
                 initialValues={product?.data}
+                className="[&_.ant-form-item-required]:before:!content-[''] [&_.ant-form-item-required]:after:!content-['*'] [&_.ant-form-item-required]:after:ml-1 [&_.ant-form-item-required]:after:text-red-500"
             >
                 <div className="grid grid-cols-[auto,300px]">
                     <div className="py-5">
                         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <Form.Item
-                                required={false}
-                                label={<>Tên Phòng <span className="text-red-500">*</span></>}
-                                name="roomName"
+                                label="Tên sản phẩm"
+                                name="productName"
+                                required
                                 rules={[
                                     {
                                         required: true,
-                                        message: "Tên phòng bắt buộc nhập",
+                                        message: "Tên sản phẩm bắt buộc nhập",
                                     },
                                 ]}
                             >
                                 <Input disabled={isPending} />
                             </Form.Item>
                             <Form.Item
-                                required={false}
-                                label={<>Giá Phòng <span className="text-red-500">*</span></>}
-                                name="roomprice"
+                                label="Giá sản phẩm"
+                                name="price"
                                 rules={[
                                     {
                                         required: true,
-                                        message: "Giá phòng bắt buộc nhập",
+                                        message: "Giá sản phẩm bắt buộc nhập",
                                     },
                                     {
                                         type: "number",
@@ -208,7 +221,7 @@ const RoomEditPage = () => {
                             </Form.Item>
 
                         </div>
-                        <Form.Item label="Mô tả phòng" name="description" className="mb-16">
+                        <Form.Item label="Mô tả sản phẩm" name="description" className="mb-16">
                             <ReactQuill
                                 className="h-[300px]"
                                 theme="snow"
@@ -221,9 +234,37 @@ const RoomEditPage = () => {
 
                     </div>
                     <div className="ml-5">
-                        <Form.Item name="roomgallely">
+                    <Form.Item
+                            label="Danh mục sản phẩm"
+                            name="categoryproduct"
+                            required
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Danh mục sản phẩm bắt buộc chọn",
+                                },
+                            ]}
+                        >
+                            <Select
+                                style={{ width: "100%", marginLeft: "7px" }}
+                                options={data?.data?.map((category: any) => ({
+                                    label: category.CategoryProductName,
+                                    value: category._id,
+                                }))}
+                                placeholder="Chọn danh mục"
+                                disabled={isPending}
+                                onChange={(value) => {
+                                    // Cập nhật giá trị của trường category
+                                    form.setFieldsValue({
+                                        categoryproduct: value,
+                                    });
+                                }}
+                                value={product?.data?.categoryproduct?._id}
+                            />
+                        </Form.Item>
+                        <Form.Item name="gallery">
                             <h1 className="text-lg text-center py-2">
-                                Ảnh phòng
+                                Ảnh sản phẩm
                             </h1>
                             <Upload
                                 action="https://api.cloudinary.com/v1_1/ecommercer2021/image/upload"
@@ -263,8 +304,8 @@ const RoomEditPage = () => {
                                 "Sửa"
                             )}
                         </Button>
-                        <Link to={"/admin/room"}>
-                            <Button className="ml-3" disabled={isPending}>
+                        <Link to={"/admin/product"}>
+                            <Button disabled={isPending} className="ml-3">
                                 Quay lại
                             </Button>
                         </Link>
@@ -275,4 +316,4 @@ const RoomEditPage = () => {
     );
 };
 
-export default RoomEditPage;
+export default ProductEditPage;
