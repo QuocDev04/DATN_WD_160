@@ -14,7 +14,6 @@ import {
     UploadProps,
 } from "antd";
 import { Link, useParams } from "react-router-dom";
-import { AiFillBackward } from "react-icons/ai";
 import { AddIProduct } from "@/common/type/IProduct";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
@@ -40,7 +39,12 @@ const ProductEditPage = () => {
         queryKey: ["product", id],
         queryFn: () => instance.get(`/product/${id}`),
     });
+    const { data } = useQuery({
+        queryKey: ['categoryproduct'],
+        queryFn: () => instance.get('/categoryProduct')
+    })
     useEffect(() => {
+        console.log(product?.data);
         if (product?.data.gallery) {
             setFileList(
                 product?.data?.gallery?.map((url: any, index: number) => {
@@ -54,6 +58,13 @@ const ProductEditPage = () => {
             );
         }
     }, [product]);
+    useEffect(() => {
+        if (product?.data?.categoryproduct) {
+            form.setFieldsValue({
+                categoryproduct: product.data.categoryproduct._id,
+            });
+        }
+    }, [product, form]);
     const queryClient = useQueryClient();
     const { mutate, isPending } = useMutation({
         mutationFn: async (data: AddIProduct) => {
@@ -224,23 +235,33 @@ const ProductEditPage = () => {
                     </div>
                     <div className="ml-5">
                     <Form.Item
-                        label="Danh mục sản phẩm"
-                        name="categoryproduct"
-                        required
-                        rules={[
-                            {
-                                required: true,
-                                message: "Danh mục sản phẩm bắt buộc chọn",
-                            },
-                        ]}
-                    >
-                        <Select disabled={isPending}>
-                            <Select.Option value={'Thức Ăn'}>Thức Ăn</Select.Option>
-                            <Select.Option value={'Phụ Kiện'}>Phụ Kiện</Select.Option>
-                            <Select.Option value={'Đồ Chơi'}>Đồ Chơi</Select.Option>
-                            {/* Thêm các danh mục khác nếu cần */}
-                        </Select>
-                    </Form.Item>
+                            label="Danh mục sản phẩm"
+                            name="categoryproduct"
+                            required
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Danh mục sản phẩm bắt buộc chọn",
+                                },
+                            ]}
+                        >
+                            <Select
+                                style={{ width: "100%", marginLeft: "7px" }}
+                                options={data?.data?.map((category: any) => ({
+                                    label: category.CategoryProductName,
+                                    value: category._id,
+                                }))}
+                                placeholder="Chọn danh mục"
+                                disabled={isPending}
+                                onChange={(value) => {
+                                    // Cập nhật giá trị của trường category
+                                    form.setFieldsValue({
+                                        categoryproduct: value,
+                                    });
+                                }}
+                                value={product?.data?.categoryproduct?._id}
+                            />
+                        </Form.Item>
                         <Form.Item name="gallery">
                             <h1 className="text-lg text-center py-2">
                                 Ảnh sản phẩm

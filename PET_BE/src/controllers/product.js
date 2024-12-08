@@ -2,7 +2,10 @@ import Product from "../models/product";
 import { StatusCodes } from "http-status-codes";
 export const getAllProduct = async (req, res) => {
     try {
-        const getAll = await Product.find()
+        const getAll = await Product.find().populate({
+            path: "categoryproduct",
+            select: "CategoryProductName"
+        });
         res.json(getAll);
     } catch (error) {
         res.status(400).json({
@@ -12,7 +15,7 @@ export const getAllProduct = async (req, res) => {
 } 
 export const getIdProduct = async (req, res) => {
     try {
-        const getId = await Product.findById(req.params.id, req.body)
+        const getId = await Product.findById(req.params.id, req.body).populate("categoryproduct")
         res.json(getId)
     } catch (error) {
         res.status(400).json({

@@ -13,7 +13,6 @@ import {
     UploadProps,
 } from "antd";
 import { Link, useParams } from "react-router-dom";
-import { AiFillBackward } from "react-icons/ai";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import instance from "@/configs/axios";

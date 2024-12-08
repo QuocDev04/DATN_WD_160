@@ -94,7 +94,7 @@ const ListRoom = () => {
             dataIndex: 'category',
             key: 'category',
             width: 150,
-            render: (_: any, product: IRoom) =>
+            render: (_: any, product: any) =>
                 product?.category?.map((category: ICategory, index: number) => (
                     <div key={index}>
                         {index + 1}. {category.title}
@@ -172,7 +172,7 @@ const ListRoom = () => {
     });
 
     const dataSource = data?.data
-        .filter((room: IRoom) => {
+        .filter((room: any) => {
             if (!selectedCategory) return true;
             return room.category.some((cat: any) => cat._id === selectedCategory);
         })

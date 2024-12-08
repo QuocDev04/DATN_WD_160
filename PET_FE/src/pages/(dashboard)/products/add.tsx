@@ -15,7 +15,7 @@ import {
 } from "antd";
 import { Link } from "react-router-dom";
 import { AddIProduct } from "@/common/type/IProduct";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import instance from "@/configs/axios";
 import { useState } from "react";
@@ -29,6 +29,10 @@ const ProductAddPage = () => {
     const [fileList, setFileList] = useState<UploadFile[]>([]);
     const [messageApi, contextHolder] = message.useMessage();
     const [form] = Form.useForm();
+    const { data } = useQuery({
+        queryKey: ['categoryproduct'],
+        queryFn: () => instance.get('/categoryProduct')
+    })
     const { mutate, isPending } = useMutation({
         mutationFn: async (data: AddIProduct) => {
             try {
@@ -190,24 +194,33 @@ const ProductAddPage = () => {
 
                     </div>
                     <div className="ml-5">
-                    <Form.Item
-                        label="Danh mục sản phẩm"
-                        name="categoryproduct"
-                        required
-                        rules={[
-                            {
-                                required: true,
-                                message: "Danh mục sản phẩm bắt buộc chọn",
-                            },
-                        ]}
-                    >
-                        <Select disabled={isPending}>
-                            <Select.Option value={'Thức Ăn'}>Thức Ăn</Select.Option>
-                            <Select.Option value={'Phụ Kiện'}>Phụ Kiện</Select.Option>
-                            <Select.Option value={'Đồ Chơi'}>Đồ Chơi</Select.Option>
-                            {/* Thêm các danh mục khác nếu cần */}
-                        </Select>
-                    </Form.Item>
+                        <Form.Item
+                            label="Danh mục sản phẩm"
+                            name="categoryproduct"
+                            required
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Danh mục sản phẩm bắt buộc chọn",
+                                },
+                            ]}
+                        >
+                            <Select
+                                style={{ width: "100%", marginLeft: "7px" }}
+                                options={data?.data?.map((category: any) => ({
+                                    label: category.CategoryProductName,
+                                    value: category._id,
+                                }))}
+                                placeholder="Chọn danh mục"
+                                disabled={isPending}
+                                onChange={(value) => {
+                                    // Cập nhật giá trị của trường category
+                                    form.setFieldsValue({
+                                        category: value,
+                                    });
+                                }}
+                            />
+                        </Form.Item>
                         <Form.Item name="gallery"
                             rules={[
                                 {
@@ -245,7 +258,7 @@ const ProductAddPage = () => {
                             )}
                         </Form.Item>
                     </div>
-                    
+
                     <Form.Item wrapperCol={{ span: 16 }}>
                         <Button
                             type="primary"
