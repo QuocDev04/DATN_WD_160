@@ -2,6 +2,8 @@ import Bookingroom from "../models/bookingroom";
 import { StatusCodes } from "http-status-codes";
 import BuyNow from "../models/buynow"
 import Service from "../models/services"
+import { sendMail } from "./sendmail";
+
 export const BookingRoom = async (req, res) => {
     const {
         userId,
@@ -18,7 +20,8 @@ export const BookingRoom = async (req, res) => {
         checkindate,
         checkoutdate,
         orderNotes,
-        buyNowOrder
+        buyNowOrder,
+        email
     } = req.body;
 
     try {
@@ -134,7 +137,8 @@ export const BookingRoom = async (req, res) => {
             checkindate,
             checkoutdate,
             orderNotes,
-            service
+            service,
+            email
         });
 
         return res.status(StatusCodes.CREATED).json(OrderRoom);
@@ -193,7 +197,14 @@ export const updateOrder = async (req, res) => {
 export const updateBookingRoomStatus = async (req, res) => {
     try {
         const { _id } = req.params;
-        const { status, cancelReason } = req.body;
+        const { status, cancelReason, email } = req.body;
+
+        // Kiểm tra email
+        if (!email) {
+            return res.status(StatusCodes.BAD_REQUEST).json({ 
+                error: "Yêu cầu phải có địa chỉ email người nhận" 
+            });
+        }
 
         const VALID_STATUS = ["pending", "confirmed", "cancelled", "completed"];
 
@@ -219,8 +230,62 @@ export const updateBookingRoomStatus = async (req, res) => {
         }
         await bookingRoom.save();
 
+        // Send email based on status
+        let emailSubject = "Thông báo đơn đặt phòng";
+        let emailContent = "";
+
+        switch (status) {
+            case "confirmed":
+                emailContent = `
+                    <div style="font-family: Arial, sans-serif; color: #333;">
+                        <h2>Cảm ơn bạn đã đặt phòng thú cưng bên Pet_Hotel!</h2>
+                        <p>Vui lòng mang thú đến để làm thủ tục nhé.</p>
+                    </div>
+                `;
+                break;
+            case "cancelled":
+                emailContent = `
+                    <div style="font-family: Arial, sans-serif; color: #333;">
+                        <h2>Đơn đặt phòng của bạn đã bị hủy.</h2>
+                        <p><strong>Lý do:</strong> ${cancelReason}</p>
+                        <p>Nếu có thắc mắc, vui lòng liên hệ với chúng tôi.</p>
+                    </div>
+                `;
+                break;
+            case "completed":
+                emailContent = `
+                    <div style="font-family: Arial, sans-serif; color: #333;">
+                        <h2>Đơn đặt phòng của bạn đã hoàn thành.</h2>
+                        <p>Cảm ơn bạn đã sử dụng dịch vụ của Pet_Hotel!</p>
+                    </div>
+                `;
+                break;
+            case "pending":
+                emailContent = `
+                    <div style="font-family: Arial, sans-serif; color: #333;">
+                        <h2>Đơn đặt phòng của bạn đang được xử lý.</h2>
+                        <p>Chúng tôi sẽ thông báo cho bạn sớm nhất!</p>
+                    </div>
+                `;
+                break;
+        }
+
+        // Khi gửi email, đảm bảo email được thiết lập đúng
+        if (emailContent) {
+            try {
+                await sendMail({
+                    email: email,
+                    subject: emailSubject,
+                    html: emailContent
+                });
+            } catch (emailError) {
+                console.error("Lỗi khi gửi email:", emailError);
+                // Tiếp tục cập nhật trạng thái ngay cả khi gửi email thất bại
+            }
+        }
+
         return res.status(StatusCodes.OK).json({ 
-            message: "Booking status updated successfully",
+            message: "Cập nhật trạng thái đặt phòng thành công",
             cancelReason: status === "cancelled" ? cancelReason : undefined
         });
     } catch (error) {

@@ -59,6 +59,10 @@ const BookingRoomSchema = new mongoose.Schema(
         totalPrice: {
             type: Number,
         },
+        email: {
+            type: String,
+            required: true,
+        },
         status: {
             type: String,
             enum: ["pending", "confirmed", "cancelled","completed"],
