@@ -13,6 +13,7 @@ const ListRoom = () => {
         queryKey: ['room'],
         queryFn: () => instance.get('/room')
     })
+    console.log(data?.data)
     const openNotification =
         (pauseOnHover: boolean) =>
             (type: "success" | "error", message: string, description: string) => {
@@ -83,11 +84,17 @@ const ListRoom = () => {
             },
         },
         {
+            title:"Trạng Thái Phòng",
+            dataIndex:"status",
+            key:"status",
+            width:150,
+        },
+        {
             title: 'Danh Mục Phòng',
             dataIndex: 'category',
             key: 'category',
             width: 150,
-render: (_: any, product: IRoom) =>
+            render: (_: any, product: IRoom) =>
                 product?.category?.map((category: ICategory, index: number) => (
                     <div key={index}>
                         {index + 1}. {category.title}
@@ -156,7 +163,6 @@ render: (_: any, product: IRoom) =>
         queryFn: async () => {
             try {
                 const response = await instance.get('/category');
-                console.log("Categories Response:", response);
                 return response;
             } catch (error) {
                 console.error("Error fetching categories:", error);
@@ -164,13 +170,11 @@ render: (_: any, product: IRoom) =>
             }
         }
     });
-console.log("Categories Data:", categoriesData);
-    console.log("Category Loading:", categoryLoading);
-    console.log("Category Error:", categoryError);
+
     const dataSource = data?.data
         .filter((room: IRoom) => {
             if (!selectedCategory) return true;
-            return room.category.some((cat:any) => cat._id === selectedCategory);
+            return room.category.some((cat: any) => cat._id === selectedCategory);
         })
         .map((room: IRoom) => ({
             key: room._id,
@@ -189,7 +193,6 @@ console.log("Categories Data:", categoriesData);
                         onChange={(value) => setSelectedCategory(value)}
                     >
                         {categoriesData?.data?.map((category: ICategory) => {
-                            console.log("Mapping category:", category);
                             return (
                                 <Select.Option key={category._id} value={category._id}>
                                     {category.title}

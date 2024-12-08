@@ -83,13 +83,15 @@ const RoomAdd = () => {
 
     const onFinish: FormProps<AddIRoom>["onFinish"] = (values) => {
         const imageUrls = fileList
-            .filter((file) => file.status === "done") // Lọc chỉ các ảnh đã tải lên thành công
-            .map((file) => file.response?.secure_url); // Lấy URL từ phản hồi
+            .filter((file) => file.status === "done")
+            .map((file) => file.response?.secure_url);
 
         const newValues = {
             ...values,
             roomgallely: imageUrls,
         };
+        
+        console.log("Data being sent:", newValues);
         mutate(newValues);
     };
 

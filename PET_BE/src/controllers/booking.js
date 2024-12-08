@@ -2,6 +2,8 @@ import Bookingroom from "../models/bookingroom";
 import { StatusCodes } from "http-status-codes";
 import BuyNow from "../models/buynow"
 import Service from "../models/services"
+import { sendMail } from "./sendmail";
+
 export const BookingRoom = async (req, res) => {
     const {
         userId,
@@ -18,7 +20,8 @@ export const BookingRoom = async (req, res) => {
         checkindate,
         checkoutdate,
         orderNotes,
-        buyNowOrder
+        buyNowOrder,
+        email
     } = req.body;
 
     try {
@@ -37,27 +40,35 @@ export const BookingRoom = async (req, res) => {
             return res.status(StatusCodes.NOT_FOUND).json({ error: "Buy Now Order not found" });
         }
 
+        // Tính số giờ lưu trú
+        const checkIn = new Date(checkindate);
+        const checkOut = new Date(checkoutdate);
+        const timeStayInHours = Math.max(1, Math.round((checkOut - checkIn) / (1000 * 60 * 60)));
+        console.log('Số giờ lưu trú:', timeStayInHours);
+
         // Tính tổng giá phòng
         if (buyNowOrderData && Array.isArray(buyNowOrderData.items)) {
             BookingRoomItems = buyNowOrderData.items.map(item => {
-                if (item.roomId) { // Kiểm tra nếu roomId tồn tại
-                    const roomPriceValue = item.roomId.roomprice; // Lấy giá từ roomId
-                    console.log('Item roomprice:', roomPriceValue, typeof roomPriceValue); // Kiểm tra giá và kiểu dữ liệu
+                if (item.roomId) {
+                    const roomPriceValue = item.roomId.roomprice;
+                    console.log('Giá phòng mỗi giờ:', roomPriceValue);
+                    
                     if (typeof roomPriceValue === "number" && !isNaN(roomPriceValue)) {
-                        roomPrice += roomPriceValue;
-                        console.log('Current roomPrice:', roomPrice); // Theo dõi việc cộng dồn
+                        const currentRoomPrice = roomPriceValue * timeStayInHours;
+                        console.log(`Phép tính: ${roomPriceValue} × ${timeStayInHours} = ${currentRoomPrice}`);
+                        roomPrice += currentRoomPrice;
                     }
                     return {
                         roomId: item.roomId._id,
                         name: item.roomId.roomName,
                         gallery: item.roomId.roomgallely[0],
-                        price: roomPriceValue,
+                        price: roomPriceValue * timeStayInHours,
                     };
                 } else {
                     console.error('roomId is undefined for item:', item);
                     return null;
                 }
-            }).filter(item => item !== null); // Lọc ra các item hợp lệ
+            }).filter(item => item !== null);
         } else {
             console.error('buyNowOrderData.items is not an array or is undefined');
         }
@@ -126,7 +137,8 @@ export const BookingRoom = async (req, res) => {
             checkindate,
             checkoutdate,
             orderNotes,
-            service
+            service,
+            email
         });
 
         return res.status(StatusCodes.CREATED).json(OrderRoom);
@@ -185,7 +197,14 @@ export const updateOrder = async (req, res) => {
 export const updateBookingRoomStatus = async (req, res) => {
     try {
         const { _id } = req.params;
-        const { status, cancelReason } = req.body;
+        const { status, cancelReason, email } = req.body;
+
+        // Kiểm tra email
+        if (!email) {
+            return res.status(StatusCodes.BAD_REQUEST).json({ 
+                error: "Yêu cầu phải có địa chỉ email người nhận" 
+            });
+        }
 
         const VALID_STATUS = ["pending", "confirmed", "cancelled", "completed"];
 
@@ -211,8 +230,62 @@ export const updateBookingRoomStatus = async (req, res) => {
         }
         await bookingRoom.save();
 
+        // Send email based on status
+        let emailSubject = "Thông báo đơn đặt phòng";
+        let emailContent = "";
+
+        switch (status) {
+            case "confirmed":
+                emailContent = `
+                    <div style="font-family: Arial, sans-serif; color: #333;">
+                        <h2>Cảm ơn bạn đã đặt phòng thú cưng bên Pet_Hotel!</h2>
+                        <p>Vui lòng mang thú đến để làm thủ tục nhé.</p>
+                    </div>
+                `;
+                break;
+            case "cancelled":
+                emailContent = `
+                    <div style="font-family: Arial, sans-serif; color: #333;">
+                        <h2>Đơn đặt phòng của bạn đã bị hủy.</h2>
+                        <p><strong>Lý do:</strong> ${cancelReason}</p>
+                        <p>Nếu có thắc mắc, vui lòng liên hệ với chúng tôi.</p>
+                    </div>
+                `;
+                break;
+            case "completed":
+                emailContent = `
+                    <div style="font-family: Arial, sans-serif; color: #333;">
+                        <h2>Đơn đặt phòng của bạn đã hoàn thành.</h2>
+                        <p>Cảm ơn bạn đã sử dụng dịch vụ của Pet_Hotel!</p>
+                    </div>
+                `;
+                break;
+            case "pending":
+                emailContent = `
+                    <div style="font-family: Arial, sans-serif; color: #333;">
+                        <h2>Đơn đặt phòng của bạn đang được xử lý.</h2>
+                        <p>Chúng tôi sẽ thông báo cho bạn sớm nhất!</p>
+                    </div>
+                `;
+                break;
+        }
+
+        // Khi gửi email, đảm bảo email được thiết lập đúng
+        if (emailContent) {
+            try {
+                await sendMail({
+                    email: email,
+                    subject: emailSubject,
+                    html: emailContent
+                });
+            } catch (emailError) {
+                console.error("Lỗi khi gửi email:", emailError);
+                // Tiếp tục cập nhật trạng thái ngay cả khi gửi email thất bại
+            }
+        }
+
         return res.status(StatusCodes.OK).json({ 
-            message: "Booking status updated successfully",
+            message: "Cập nhật trạng thái đặt phòng thành công",
             cancelReason: status === "cancelled" ? cancelReason : undefined
         });
     } catch (error) {

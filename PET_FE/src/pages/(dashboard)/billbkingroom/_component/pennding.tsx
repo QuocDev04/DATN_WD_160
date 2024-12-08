@@ -79,7 +79,7 @@ const Pending = () => {
             
             const response = await instance.patch(`/bookingroom/${params.bookingId}/status`, {
                 status: params.status,
-                cancelReason: finalReason, // Gửi lý do bằng tiếng Việt
+                cancelReason: finalReason, 
                 cancelReasonDetail: params.cancelReasonDetail
             });
             return response.data;
@@ -144,18 +144,34 @@ const Pending = () => {
     // Ensure updateStatus function is defined
     const updateStatus = async ({ id, status }: { id: string, status: string }) => {
         try {
-            const response = await instance.patch(`/bookingroom/${id}/status`, { status });
+            // Lấy email từ booking record
+            const bookingRecord = data?.find((booking: any) => booking._id === id);
+            if (!bookingRecord?.email) {
+                throw new Error("Không tìm thấy email người dùng");
+            }
+
+            const response = await instance.patch(`/bookingroom/${id}/status`, { 
+                status,
+                email: bookingRecord.email // Thêm email vào request
+            });
+
             if (response.status === 200) {
                 let successMessage = "";
                 let successDescription = "";
                 
-                // Tùy chỉnh thông báo dựa trên trạng thái
-                if (status === "confirmed") {
-                    successMessage = "Xác nhận thành công";
-                    successDescription = "Đặt phòng đã được xác nhận thành công";
-                } else if (status === "completed") {
-                    successMessage = "Hoàn thành thành công";
-                    successDescription = "Đặt phòng đã được hoàn thành thành công";
+                switch (status) {
+                    case "confirmed":
+                        successMessage = "Xác nhận thành công";
+                        successDescription = "Đặt phòng đã được xác nhận và email thông báo đã được gửi";
+                        break;
+                    case "completed":
+                        successMessage = "Hoàn thành thành công";
+                        successDescription = "Đặt phòng đã được hoàn thành và email thông báo đã được gửi";
+                        break;
+                    case "cancelled":
+                        successMessage = "Hủy đơn thành công";
+                        successDescription = "Đặt phòng đã được hủy và email thông báo đã được gửi";
+                        break;
                 }
 
                 openNotification(false)(
@@ -163,6 +179,7 @@ const Pending = () => {
                     successMessage,
                     successDescription
                 );
+                
                 queryClient.invalidateQueries({ queryKey: ["bookingroom"] });
                 
                 // Đóng các modal tương ứng
@@ -178,7 +195,9 @@ const Pending = () => {
                 }
             }
         } catch (error: any) {
-            const errorMessage = error?.response?.data?.message || "Có lỗi xảy ra khi cập nhật trạng thái";
+            const errorMessage = error?.response?.data?.message || 
+                               error?.message || 
+                               "Có lỗi xảy ra khi cập nhật trạng thái";
             openNotification(false)(
                 "error",
                 "Cập nhật thất bại",
@@ -214,7 +233,7 @@ const Pending = () => {
             render: (record) => (
                 <Space direction="vertical" size="small">
                     <div><PhoneOutlined className="text-[#27ae60] mr-2" />{record.phone}</div>
-                    <div><MailOutlined className="text-[#2980b9] mr-2" />{record.gmail}</div>
+                    <div><MailOutlined className="text-[#2980b9] mr-2" />{record.email}</div>
                 </Space>
             ),
         },
@@ -227,10 +246,10 @@ const Pending = () => {
                     <div><HomeOutlined className="mr-2" />{record?.items[0]?.roomId?.roomName}</div>
                     <div>
                         <span className="mr-4">
-                            Nhận: {new Date(record.checkindate).toLocaleDateString("vi-VN")}
-                        </span>
+                            Nhận: {new Date(record.checkindate).toLocaleString("vi-VN")}
+                        </span> <br />
                         <span>
-                            Trả: {new Date(record.checkoutdate).toLocaleDateString("vi-VN")}
+                            Trả: {new Date(record.checkoutdate).toLocaleString("vi-VN")}
                         </span>
                     </div>
                     <div>
@@ -452,13 +471,13 @@ const Pending = () => {
                                 <div>
                                     <p className="text-gray-500 text-sm">Ngày nhận phòng</p>
                                     <p className="font-medium text-[#2c3e50]">
-                                        {new Date(selectedBooking.checkindate).toLocaleDateString("vi-VN")}
+                                        {new Date(selectedBooking.checkindate).toLocaleString("vi-VN")}
                                     </p>
                                 </div>
                                 <div>
                                     <p className="text-gray-500 text-sm">Ngày trả phòng</p>
                                     <p className="font-medium text-[#2c3e50]">
-                                        {new Date(selectedBooking.checkoutdate).toLocaleDateString("vi-VN")}
+                                        {new Date(selectedBooking.checkoutdate).toLocaleString("vi-VN")}
                                     </p>
                                 </div>
                                 <div>
@@ -565,13 +584,13 @@ const Pending = () => {
                                 <div>
                                     <p className="text-gray-500 text-sm">Ngày nhận phòng</p>
                                     <p className="font-medium text-[#2c3e50]">
-                                        {new Date(bookingToConfirm.checkindate).toLocaleDateString("vi-VN")}
+                                        {new Date(bookingToConfirm.checkindate).toLocaleString("vi-VN")}
                                     </p>
                                 </div>
                                 <div>
                                     <p className="text-gray-500 text-sm">Ngày trả phòng</p>
                                     <p className="font-medium text-[#2c3e50]">
-                                        {new Date(bookingToConfirm.checkoutdate).toLocaleDateString("vi-VN")}
+                                        {new Date(bookingToConfirm.checkoutdate).toLocaleString("vi-VN")}
                                     </p>
                                 </div>
                             </div>
@@ -654,8 +673,8 @@ const Pending = () => {
                             <div className="grid grid-cols-2 gap-2 text-sm">
                                 <p>Khách hàng: {bookingToCancel.lastName}</p>
                                 <p>Phòng: {bookingToCancel.items[0]?.roomId?.roomName}</p>
-                                <p>Ngày nhận: {new Date(bookingToCancel.checkindate).toLocaleDateString("vi-VN")}</p>
-                                <p>Ngày trả: {new Date(bookingToCancel.checkoutdate).toLocaleDateString("vi-VN")}</p>
+                                <p>Ngày nhận: {new Date(bookingToCancel.checkindate).toLocaleString("vi-VN")}</p>
+                                <p>Ngày trả: {new Date(bookingToCancel.checkoutdate).toLocaleString("vi-VN")}</p>
                             </div>
                         </div>
                     )}
@@ -725,13 +744,13 @@ const Pending = () => {
                                 <div>
                                     <p className="text-gray-500 text-sm">Ngày nhận phòng</p>
                                     <p className="font-medium">
-                                        {new Date(bookingToComplete.checkindate).toLocaleDateString("vi-VN")}
+                                        {new Date(bookingToComplete.checkindate).toLocaleString("vi-VN")}
                                     </p>
                                 </div>
                                 <div>
                                     <p className="text-gray-500 text-sm">Ngày trả phòng</p>
                                     <p className="font-medium">
-                                        {new Date(bookingToComplete.checkoutdate).toLocaleDateString("vi-VN")}
+                                        {new Date(bookingToComplete.checkoutdate).toLocaleString("vi-VN")}
                                     </p>
                                 </div>
                             </div>

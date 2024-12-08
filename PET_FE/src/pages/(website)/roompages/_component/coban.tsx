@@ -6,7 +6,7 @@ import { motion } from "framer-motion"
 import { useState } from "react"
 import { Link } from "react-router-dom"
 
-const PagesComponent = () => {
+const CbComponent = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 8;
 
@@ -17,7 +17,7 @@ const PagesComponent = () => {
 
     // Lọc ra chỉ phòng cao cấp
     const highClassRooms = room?.data?.filter((item: any) => 
-        item.category[0]?.title === "Cao Cấp"
+        item.category[0]?.title === "Cơ Bản"
     ) || [];
 
     // Tính toán phân trang dựa trên highClassRooms
@@ -87,7 +87,7 @@ const PagesComponent = () => {
                                 transition={{ delay: 0.2 }}
                                 className="text-5xl md:text-6xl font-bold mb-6 leading-tight"
                             >
-                                Phòng Cao Cấp
+                                Phòng Cơ Bản
                                 <span className="inline-block ml-3">
                                     <FaHeart className="text-red-500 animate-pulse" />
                                 </span>
@@ -269,4 +269,4 @@ const PagesComponent = () => {
     )
 }
 
-export default PagesComponent
+export default CbComponent

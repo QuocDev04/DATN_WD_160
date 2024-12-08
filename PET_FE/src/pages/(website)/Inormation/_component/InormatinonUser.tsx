@@ -379,7 +379,7 @@ const InformationUser = () => {
                                     <div className="text-sm text-gray-600 space-y-2">
                                         {booking.status === 'confirmed' && (
                                             <div className="text-red-500 font-medium">
-                                                Vui lòng mang thú đến để hoàn tất thủ tục.
+                                              Vui lòng mang thú cưng tới trước thời gian đặt phòng và hoàn thành thủ tục thanh toán
                                             </div>
                                         )}
                                         <div className="flex justify-between items-center">

@@ -30,7 +30,6 @@ const roomSchema = new mongoose.Schema(
         commentId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Comment",
-            required: true,
         },
     },
     {
