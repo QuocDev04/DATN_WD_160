@@ -8,21 +8,20 @@ import {
     Input,
     InputNumber,
     message,
-    Select,
     Upload,
     UploadFile,
     UploadProps,
 } from "antd";
 import { Link, useParams } from "react-router-dom";
-import { AddIProduct } from "@/common/type/IProduct";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import instance from "@/configs/axios";
 import { useEffect, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { AddIService } from "@/common/type/IService";
 type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
-const ProductEditPage = () => {
+const RoomEditPage = () => {
     const { id } = useParams();
     const [value, setValue] = useState("");
     const [previewOpen, setPreviewOpen] = useState(false);
@@ -36,21 +35,16 @@ const ProductEditPage = () => {
         isError,
         error,
     } = useQuery({
-        queryKey: ["product", id],
-        queryFn: () => instance.get(`/product/${id}`),
+        queryKey: ["service", id],
+        queryFn: () => instance.get(`/room/${id}`),
     });
-    const { data } = useQuery({
-        queryKey: ['categoryproduct'],
-        queryFn: () => instance.get('/categoryProduct')
-    })
     useEffect(() => {
-        console.log(product?.data);
-        if (product?.data.gallery) {
+        if (product?.data.roomgallely) {
             setFileList(
-                product?.data?.gallery?.map((url: any, index: number) => {
+                product?.data?.roomgallely?.map((url: any, index: number) => {
                     return {
                         uid: index.toString(),
-                        name: `gallery${index}`,
+                        name: `roomgallely${index}`,
                         status: "done",
                         url: url,
                     };
@@ -58,18 +52,11 @@ const ProductEditPage = () => {
             );
         }
     }, [product]);
-    useEffect(() => {
-        if (product?.data?.categoryproduct) {
-            form.setFieldsValue({
-                categoryproduct: product.data.categoryproduct._id,
-            });
-        }
-    }, [product, form]);
     const queryClient = useQueryClient();
     const { mutate, isPending } = useMutation({
-        mutationFn: async (data: AddIProduct) => {
+        mutationFn: async (data: AddIService) => {
             try {
-                return await instance.put(`/product/${id}`, data);
+                return await instance.put(`/room/${id}`, data);
             } catch (error) {
                 throw new Error((error as any).message);
             }
@@ -77,16 +64,16 @@ const ProductEditPage = () => {
         onSuccess: () => {
             messageApi.open({
                 type: "success",
-                content: "Bạn thêm sản phẩm thành công",
+                content: "Bạn sửa phòng thành công",
             });
             queryClient.invalidateQueries({
-                queryKey: ["product"],
+                queryKey: ["room"],
             });
         },
         onError: () => {
             messageApi.open({
                 type: "error",
-                content: "Bạn thêm sản phẩm thất bại. Vui lòng thử lại sau!",
+                content: "Bạn sửa phòng thất bại. Vui lòng thử lại sau!",
             });
         },
     });
@@ -110,14 +97,14 @@ const ProductEditPage = () => {
         setFileList(newFileList);
     };
 
-    const onFinish: FormProps<AddIProduct>["onFinish"] = (values) => {
+    const onFinish: FormProps<AddIService>["onFinish"] = (values) => {
         const imageUrls = fileList
             .filter((file) => file.status === "done") // Lọc chỉ các ảnh đã tải lên thành công
             .map((file) => file.response?.secure_url); // Lấy URL từ phản hồi
 
         const newValues = {
             ...values,
-            gallery: imageUrls,
+            roomgallely: imageUrls,
         };
         mutate(newValues);
     };
@@ -157,8 +144,7 @@ const ProductEditPage = () => {
     return (
         <>
             <div className="flex items-center justify-between">
-                <h1 className="text-2xl">Sửa sản phẩm</h1>
-               
+                <h1 className="text-2xl">Sửa phòng</h1>
             </div>
             {contextHolder}
             <Form
@@ -167,31 +153,31 @@ const ProductEditPage = () => {
                 layout="vertical"
                 onFinish={onFinish}
                 initialValues={product?.data}
-                className="[&_.ant-form-item-required]:before:!content-[''] [&_.ant-form-item-required]:after:!content-['*'] [&_.ant-form-item-required]:after:ml-1 [&_.ant-form-item-required]:after:text-red-500"
             >
                 <div className="grid grid-cols-[auto,300px]">
                     <div className="py-5">
                         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <Form.Item
-                                label="Tên sản phẩm"
-                                name="productName"
-                                required
+                                required={false}
+                                label={<>Tên Phòng <span className="text-red-500">*</span></>}
+                                name="roomName"
                                 rules={[
                                     {
                                         required: true,
-                                        message: "Tên sản phẩm bắt buộc nhập",
+                                        message: "Tên phòng bắt buộc nhập",
                                     },
                                 ]}
                             >
                                 <Input disabled={isPending} />
                             </Form.Item>
                             <Form.Item
-                                label="Giá sản phẩm"
-                                name="price"
+                                required={false}
+                                label={<>Giá Phòng <span className="text-red-500">*</span></>}
+                                name="roomprice"
                                 rules={[
                                     {
                                         required: true,
-                                        message: "Giá sản phẩm bắt buộc nhập",
+                                        message: "Giá phòng bắt buộc nhập",
                                     },
                                     {
                                         type: "number",
@@ -221,7 +207,7 @@ const ProductEditPage = () => {
                             </Form.Item>
 
                         </div>
-                        <Form.Item label="Mô tả sản phẩm" name="description" className="mb-16">
+                        <Form.Item label="Mô tả phòng" name="description" className="mb-16">
                             <ReactQuill
                                 className="h-[300px]"
                                 theme="snow"
@@ -234,37 +220,9 @@ const ProductEditPage = () => {
 
                     </div>
                     <div className="ml-5">
-                    <Form.Item
-                            label="Danh mục sản phẩm"
-                            name="categoryproduct"
-                            required
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Danh mục sản phẩm bắt buộc chọn",
-                                },
-                            ]}
-                        >
-                            <Select
-                                style={{ width: "100%", marginLeft: "7px" }}
-                                options={data?.data?.map((category: any) => ({
-                                    label: category.CategoryProductName,
-                                    value: category._id,
-                                }))}
-                                placeholder="Chọn danh mục"
-                                disabled={isPending}
-                                onChange={(value) => {
-                                    // Cập nhật giá trị của trường category
-                                    form.setFieldsValue({
-                                        categoryproduct: value,
-                                    });
-                                }}
-                                value={product?.data?.categoryproduct?._id}
-                            />
-                        </Form.Item>
-                        <Form.Item name="gallery">
+                        <Form.Item name="roomgallely">
                             <h1 className="text-lg text-center py-2">
-                                Ảnh sản phẩm
+                                Ảnh phòng
                             </h1>
                             <Upload
                                 action="https://api.cloudinary.com/v1_1/ecommercer2021/image/upload"
@@ -304,8 +262,8 @@ const ProductEditPage = () => {
                                 "Sửa"
                             )}
                         </Button>
-                        <Link to={"/admin/product"}>
-                            <Button disabled={isPending} className="ml-3">
+                        <Link to={"/admin/room"}>
+                            <Button className="ml-3" disabled={isPending}>
                                 Quay lại
                             </Button>
                         </Link>
@@ -316,4 +274,4 @@ const ProductEditPage = () => {
     );
 };
 
-export default ProductEditPage;
+export default RoomEditPage;
