@@ -1,23 +1,29 @@
-
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from 'swiper/modules';
+import { useQuery } from "@tanstack/react-query";
+import instance from "@/configs/axios";
 const CmtPages = () => {
+    const { data } = useQuery({
+        queryKey:['evaluate'],
+        queryFn: () => instance.get('/evaluate')
+    });
+
+    const comments = data?.data || [];
+
     return (
-        <div>
-            <img src="https://theme.hstatic.net/1000238938/1000576591/14/banner_collection.jpg?v=386" alt="" className="w-full"/>
+        <div className="bg-gray-100 py-10">
+            <img src="https://theme.hstatic.net/1000238938/1000576591/14/banner_collection.jpg?v=386" alt="" className="w-full rounded-lg shadow-lg" />
             <div className="lg:w-[948px] mx-auto flex justify-center">
-                <strong className="lg:text-[50px] lg:leading-[70px]lg:tracking-[-4.8px] text-center">
+                <strong className="lg:text-[50px] lg:leading-[70px] lg:tracking-[-4.8px] text-center text-[#333]">
                     NHẬN XÉT CỦA KHÁCH HÀNG
                 </strong>
             </div>
             <div className="w-full">
-                {/* <!-- Best comment --> */}
                 <div className="w-full flex justify-center lg:my-16 my-8">
-                    <div className=" flex justify-end overflow-hidden">
+                    <div className="flex justify-end overflow-hidden">
                         <div className="relative w-full overflow-hidden">
-                            {/* Desktop Side Content */}
                             <div className="hidden lg:block">
-                                <div className="bg-[#cfa84c] text-white rounded-2xl lg:h-full flex flex-col items-center gap-y-[23px] lg:px-10 lg:pt-[42px] lg:pb-[39px]">
+                                <div className="bg-[#cfa84c] text-white rounded-2xl lg:h-full flex flex-col items-center gap-y-[23px] lg:px-10 lg:pt-[42px] lg:pb-[39px] shadow-lg">
                                     <strong className="lg:font-bold font-normal lg:text-[32px] text-[24px] text-center lg:tracking-[-1.75px] lg:leading-[38px]">
                                         ĐƯỢC BÌNH CHỌN LÀ CỬA HÀNG TRỰC TUYẾN TỐT NHẤT
                                     </strong>
@@ -67,44 +73,13 @@ const CmtPages = () => {
                                     modules={[Autoplay]}
                                     className="mySwiper"
                                 >
-                                    {[
-                                        {
-                                            username: "Alice Nguyen",
-                                            rating: 4,
-                                            comment: "The product quality is excellent, and delivery was fast. Will definitely buy again!",
-                                            date: "2 days ago"
-                                        },
-                                        {
-                                            username: "John Tran",
-                                            rating: 5,
-                                            comment: "Absolutely love it! Fits perfectly and is very comfortable.",
-                                            date: "1 week ago"
-                                        },
-                                        {
-                                            username: "Emily Le",
-                                            rating: 3,
-                                            comment: "It's okay, but I expected a bit more for the price. Still satisfied overall.",
-                                            date: "3 days ago"
-                                        },
-                                        {
-                                            username: "Michael Pham",
-                                            rating: 4,
-                                            comment: "Good value for the price. The design is also quite stylish.",
-                                            date: "5 days ago"
-                                        },
-                                        {
-                                            username: "Linda Vo",
-                                            rating: 5,
-                                            comment: "Amazing product! Great quality and fast shipping. Highly recommend!",
-                                            date: "1 day ago"
-                                        }
-                                    ].map((review, index) => (
+                                    {comments.map((review:any, index:number) => (
                                         <SwiperSlide key={index} className="p-4">
-                                            <div className="rounded-xl border p-6 flex flex-col justify-between bg-white shadow-lg h-[250px]">
+                                            <div className="rounded-xl border p-6 flex flex-col justify-between bg-white shadow-lg h-[250px] transition-transform transform hover:scale-105 hover:shadow-2xl">
                                                 {/* User Info */}
-                                                <div className="flex items-center gap-[16px]">
-                                                    <img className="w-[36px] h-[36px] rounded-full"  alt={review.username} />
-                                                    <span className="font-medium">{review.username}</span>
+                                                <div className="flex items-center">
+                                                    <img className="rounded-full w-10 h-10" src={review?.user?.avatar} />
+                                                    <span className="font-medium text-lg text-[#333]">{review?.user?.name}</span>
                                                 </div>
                                                 <hr className="my-4" />
                                                 {/* Comment */}
@@ -128,60 +103,19 @@ const CmtPages = () => {
                                                             </svg>
                                                         ))}
                                                     </div>
-                                                    <p className="text-sm text-gray-700 line-clamp-3">{review.comment}</p>
+                                                    <p className="text-sm text-gray-700 line-clamp-3">{review.description}</p>
                                                 </div>
-                                                <strong className="text-left text-[#9D9EA2] text-sm mt-4">{review.date}</strong>
+                                                <strong className="text-left text-[#9D9EA2] text-sm mt-4">{review.createdAt}</strong>
                                             </div>
                                         </SwiperSlide>
                                     ))}
                                 </Swiper>
                             </div>
-
                         </div>
                     </div>
-
-                </div>
-            </div>
-
-            <div className="hidden">
-                <div className="absolute flex justify-between lg:w-[52%] mb:w-[80%] -translate-y-1/2 lg:left-[37.5%] lg:top-1/2">
-                    <button className="hover:scale-110">
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            className="lucide lucide-chevron-left"
-                        >
-                            <path d="m15 18-6-6 6-6" />
-                        </svg>
-                    </button>
-
-                    <button className="hover:scale-110">
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            className="lucide lucide-chevron-right"
-                        >
-                            <path d="m9 18 6-6-6-6" />
-                        </svg>
-                    </button>
                 </div>
             </div>
         </div>
-
     );
 };
 

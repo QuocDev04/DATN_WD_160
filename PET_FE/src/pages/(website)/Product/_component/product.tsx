@@ -8,15 +8,6 @@ const ProductPage = () => {
     const [sortBy, setSortBy] = useState("default");
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 8; // Số sản phẩm trên mỗi trang
-
-    const categories = [
-        { id: 'all', name: 'Tất cả' },
-        { id: 'food', name: 'Thức ăn' },
-        { id: 'accessories', name: 'Phụ kiện' },
-        { id: 'toys', name: 'Đồ chơi' },
-        { id: 'care', name: 'Chăm sóc' }
-    ];
-
     const sortOptions = [
         { value: 'default', label: 'Mặc định' },
         { value: 'price-asc', label: 'Giá tăng dần' },
@@ -35,6 +26,11 @@ const ProductPage = () => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     const currentProducts = data?.data?.slice(startIndex, endIndex);
+
+    // Hàm lọc sản phẩm theo tên
+    const filteredProducts = currentProducts?.filter((product: any) =>
+        product.productName.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     // Hàm xử lý chuyển trang
     const handlePageChange = (pageNumber: number) => {
@@ -70,22 +66,6 @@ const ProductPage = () => {
                             </span>
                         </div>
 
-                        {/* Category Filter */}
-                        <div className="flex gap-4 overflow-x-auto pb-2">
-                            {categories.map(cat => (
-                                <button
-                                    key={cat.id}
-                                    onClick={() => setSelectedCategory(cat.id)}
-                                    className={`px-4 py-2 rounded-full transition-all ${selectedCategory === cat.id
-                                            ? 'bg-[#cfa84c] text-white'
-                                            : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
-                                        }`}
-                                >
-                                    {cat.name}
-                                </button>
-                            ))}
-                        </div>
-
                         {/* Sort Dropdown */}
                         <select
                             value={sortBy}
@@ -105,7 +85,7 @@ const ProductPage = () => {
             {/* Products Grid */}
             <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                    {currentProducts?.map((product:any) => (
+                    {filteredProducts?.map((product:any) => (
                         <div key={product.id} className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow">
                             <div className="relative pb-[100%]">
                                 <img

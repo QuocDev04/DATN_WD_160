@@ -8,6 +8,7 @@ import {
     Input,
     InputNumber,
     message,
+    Select,
     Upload,
     UploadFile,
     UploadProps,
@@ -190,6 +191,24 @@ const ProductAddPage = () => {
 
                     </div>
                     <div className="ml-5">
+                    <Form.Item
+                        label="Danh mục sản phẩm"
+                        name="categoryproduct"
+                        required
+                        rules={[
+                            {
+                                required: true,
+                                message: "Danh mục sản phẩm bắt buộc chọn",
+                            },
+                        ]}
+                    >
+                        <Select disabled={isPending}>
+                            <Select.Option value={'Thức Ăn'}>Thức Ăn</Select.Option>
+                            <Select.Option value={'Phụ Kiện'}>Phụ Kiện</Select.Option>
+                            <Select.Option value={'Đồ Chơi'}>Đồ Chơi</Select.Option>
+                            {/* Thêm các danh mục khác nếu cần */}
+                        </Select>
+                    </Form.Item>
                         <Form.Item name="gallery"
                             rules={[
                                 {
@@ -227,6 +246,7 @@ const ProductAddPage = () => {
                             )}
                         </Form.Item>
                     </div>
+                    
                     <Form.Item wrapperCol={{ span: 16 }}>
                         <Button
                             type="primary"

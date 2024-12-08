@@ -5,6 +5,7 @@ export interface IProduct {
     price: number,
     description: string,
     gallery: string[];
+    categoryproduct:string
 }
 
 export interface AddIProduct {
@@ -12,4 +13,6 @@ export interface AddIProduct {
     price: number,
     description: string,
     gallery: string[];
+    categoryproduct:string
+
 }   

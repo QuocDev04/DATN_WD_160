@@ -75,6 +75,15 @@ const ProductPage = () => {
             )
             .map((name: string) => ({ text: name, value: name }));
     };
+    const createFilterCategory = (products: IProduct[]) => {
+        return products
+            .map((product: IProduct) => product.categoryproduct)
+            .filter(
+                (value: string, index: number, self: string[]) =>
+                    self.indexOf(value) === index,
+            )
+            .map((name: string) => ({ text: name, value: name }));
+    };
     const columns: TableColumnsType = [
         {
             title: "Tên Sản Phẩm",
@@ -126,6 +135,19 @@ const ProductPage = () => {
                     "Không có ảnh nào"
                 );
             },
+        },
+        {
+            title:"Danh Mục",
+            dataIndex:"categoryproduct",
+            key:"categoryproduct",
+            width: 150,
+            filterSearch: true,
+            filters: data ? createFilterCategory(data?.data) : [],
+            onFilter: (value: any, product: IProduct) =>
+                product.categoryproduct.includes(value),
+            sorter: (a: IProduct, b: IProduct) =>
+                a.categoryproduct.localeCompare(b.categoryproduct),
+            sortDirections: ["ascend", "descend"],
         },
         {
             title: "Mô tả",
