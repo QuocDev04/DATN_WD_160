@@ -100,7 +100,7 @@ export const BookingRoom = async (req, res) => {
                 }
             });
         }
-        // Kiểm tra số phòng đã đặt trong ngày
+        // Kiểm tra số đơn đã đặt trong ngày
         const startOfDay = new Date(checkindate);
         startOfDay.setHours(0, 0, 0, 0);
 
@@ -109,17 +109,16 @@ export const BookingRoom = async (req, res) => {
 
         const bookingsToday = await Bookingroom.find({
             userId,
-            checkindate: { $gte: startOfDay, $lte: endOfDay }
+            createdAt: { $gte: startOfDay, $lte: endOfDay }
         });
 
-        const totalRoomsToday = bookingsToday.reduce((total, booking) => total + booking.items.length, 0);
-        const roomsToAdd = BookingRoomItems.length;
-
-        if (totalRoomsToday + roomsToAdd > 2) {
+        // Kiểm tra số lượng đơn đặt
+        if (bookingsToday.length >= 2) {
             return res.status(StatusCodes.BAD_REQUEST).json({
-                error: "Bạn chỉ có thể đặt tối đa 2 phòng trong một ngày và nếu quý khách muốn đặt thêm phòng vui lòng gọi điện tới số hotline: 0906969696 hoặc có thể mang thú cưng tới và làm thủ tục tại cửa hàng."
+                error: "Bạn chỉ có thể đặt tối đa 2 đơn trong một ngày. Vui lòng thử lại sau."
             });
         }
+
         // Tạo đơn đặt phòng
         const OrderRoom = await Bookingroom.create({
             userId,
