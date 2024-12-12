@@ -94,7 +94,7 @@ const LeftBookingRoom = () => {
     }, [data]);
     const [totalRoomPrice, setTotalRoomPrice] = useState(data?.data?.totalPrice || 0);
     const [totalPrice, setTotalPrice] = useState(totalRoomPrice);
-    const { mutate: createOrder, isPending } = useMutation({
+const { mutate: createOrder, isPending } = useMutation({
         mutationFn: async (orderData: FieldType) => {
             try {
                 return await instance.post(`/bookingroom`, {
@@ -175,7 +175,7 @@ const LeftBookingRoom = () => {
         // Tính số phút giữa 2 mốc thời gian
         const minutes = endDate.diff(startDate, 'minutes');
         // Làm tròn lên số giờ nếu có phần lẻ phút
-        const hours = Math.ceil(minutes / 60);
+const hours = Math.ceil(minutes / 60);
         return Math.max(hours, 1); // Đảm bảo tối thiểu 1 giờ
     };
 
@@ -234,7 +234,7 @@ const LeftBookingRoom = () => {
                                             {
                                                 max: 50,
                                                 message: "Tên không được vượt quá 50 ký tự!"
-                                            },
+},
                                             {
                                                 validator: (_, value) => {
                                                     if (value && value.trim().length === 0) {
@@ -277,7 +277,7 @@ const LeftBookingRoom = () => {
                                                     if (value && value.trim().length === 0) {
                                                         return Promise.reject("Tên không được chỉ chứa khoảng trắng!");
                                                     }
-                                                    if (value && !value.trim().match(/^[A-Za-zÀ-ỹ]/)) {
+if (value && !value.trim().match(/^[A-Za-zÀ-ỹ]/)) {
                                                         return Promise.reject("Tên phải bắt đầu bằng chữ cái!");
                                                     }
                                                     return Promise.resolve();
@@ -323,7 +323,7 @@ const LeftBookingRoom = () => {
                                             min={1}
                                             max={120}
                                         />
-                                    </Form.Item>
+</Form.Item>
                                     <Form.Item
                                         validateTrigger="onBlur"
                                         name="weight"
@@ -365,7 +365,7 @@ const LeftBookingRoom = () => {
                                                     const num = Number(value);
                                                     if (num < 5 || num > 100) {
                                                         return Promise.reject('Chiều cao của thú cưng cần phải từ 5cm và dưới 100cm!');
-                                                    }
+}
                                                     return Promise.resolve();
                                                 }
                                             }
@@ -413,7 +413,7 @@ const LeftBookingRoom = () => {
                                             disabled={isPending}
                                             options={[
                                                 { value: 'Đực', label: 'Đực' },
-                                                { value: 'Cái', label: 'Cái' }
+{ value: 'Cái', label: 'Cái' }
                                             ]}
                                         />
                                     </Form.Item>
@@ -457,7 +457,7 @@ const LeftBookingRoom = () => {
                                                 message: "Email không được vượt quá 50 ký tự!"
                                             }
                                         ]}
-                                        required={false}
+required={false}
                                     >
                                         <Input
                                             className="h-12 rounded-lg border-gray-300 hover:border-blue-400 focus:border-blue-500 transition-colors"
@@ -500,7 +500,7 @@ const LeftBookingRoom = () => {
                                                     return current && current < dayjs().startOf('day');
                                                 }}
                                                 onChange={(date) => {
-                                                    const checkout = form.getFieldValue('checkoutdate');
+const checkout = form.getFieldValue('checkoutdate');
                                                     if (checkout && date) {
                                                         handleTimeChange([date, checkout], ['', '']);
                                                     }
@@ -540,7 +540,7 @@ const LeftBookingRoom = () => {
                                                     return current && current < checkinDate.startOf('day');
                                                 }}
                                                 onChange={(date) => {
-                                                    const checkin = form.getFieldValue('checkindate');
+const checkin = form.getFieldValue('checkindate');
                                                     if (checkin && date) {
                                                         handleTimeChange([checkin, date], ['', '']);
                                                     }
@@ -586,7 +586,7 @@ const LeftBookingRoom = () => {
                                 type="primary"
                                 htmlType="submit"
                                 className="w-full h-12 mt-8 text-lg font-semibold rounded-xl bg-[#8B4513] hover:bg-[#A0522D] border-[#8B4513] hover:border-[#A0522D] transition-all duration-300"
-                                disabled={isPending}
+disabled={isPending}
                                 style={{
                                     backgroundColor: '#8B4513',
                                     borderColor: '#8B4513'
