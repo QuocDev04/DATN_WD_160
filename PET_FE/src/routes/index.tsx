@@ -1,4 +1,7 @@
 
+import ArticleAdd from "@/pages/(dashboard)/article/add";
+import ArticleEdit from "@/pages/(dashboard)/article/edit";
+import ArticleList from "@/pages/(dashboard)/article/list";
 import PagesBillRoom from "@/pages/(dashboard)/billbkingroom/pages";
 import CategoryAdd from "@/pages/(dashboard)/category/add";
 import CategoryEdit from "@/pages/(dashboard)/category/edit";
@@ -63,7 +66,13 @@ const Router = () => {
                     <Route path="category" element={<CategoryList />} />
                     <Route path="categoryadd" element={<CategoryAdd />} />
                     <Route path="category/:id" element={<CategoryEdit />} />
+
                     <Route path="bill" element={<PagesBillRoom />} />
+
+                    <Route path="article" element={<ArticleList />} />
+                    <Route path="articleadd" element={<ArticleAdd />} />
+                    <Route path="article/:id" element={<ArticleEdit />} />
+                    
 
                    
                 </Route>

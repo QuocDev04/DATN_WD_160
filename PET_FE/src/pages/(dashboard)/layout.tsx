@@ -6,7 +6,6 @@ import {
     UserOutlined,
     CustomerServiceOutlined,
     HomeOutlined,
-    AppstoreOutlined,
     FileTextOutlined,
     MenuFoldOutlined,
     MenuUnfoldOutlined,
@@ -40,6 +39,8 @@ const LayoutAdmin: React.FC = () => {
             setActiveMenu("Category")
         } else if (path.includes("/admin/bill")) {
             setActiveMenu("Bill")
+        } else if (path.includes("/admin/article")) {
+            setActiveMenu("Article")
         }
         else {
             setActiveMenu("Dashboard");
@@ -83,7 +84,11 @@ const LayoutAdmin: React.FC = () => {
         {
             key: 'Bill',
             icon: <FileTextOutlined className="text-lg" />,
-            label: <Link to="/admin/bill" className="text-base">Đặt Phòng</Link>,
+            label: <Link to="/admin/bill" className="text-base">Quản Lý Đặt Phòng</Link>,
+        },        {
+            key: 'Article',
+            icon: <FileTextOutlined className="text-lg" />,
+            label: <Link to="/admin/article" className="text-base">Quản Lý Bài Viết</Link>,
         },
     ] as MenuProps['items'];
 
