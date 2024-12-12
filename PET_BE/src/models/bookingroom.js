@@ -84,6 +84,12 @@ const BookingRoomSchema = new mongoose.Schema(
             type: Date,
             default: Date.now,
         },
+        createdAtTime: {
+            type: String,
+            default: function() {
+                return this.createdAt.toLocaleTimeString();
+            },
+        },
     },
     { timestamps: true, versionKey: false }
 );
