@@ -126,11 +126,19 @@ const LeftBookingRoom = () => {
         },
     });
     const onFinish = (values: FieldType) => {
-        if (userBookings?.data?.length >= 2) {
+        const currentDate = dayjs().startOf('day'); // Get the current date
+
+        // Check if the user has already booked 2 rooms for today
+        const todayBookings = userBookings?.data?.filter((booking:any) => {
+            const bookingDate = dayjs(booking.checkindate).startOf('day'); // Extract the check-in date
+            return bookingDate.isSame(currentDate); // Check if the booking date is today
+        });
+
+        if (todayBookings?.length >= 2) {
             openNotification(false)(
                 "error",
                 "Đặt Phòng Thất Bại",
-                "Bạn đã đạt số lượng đặt phòng tối đa. Vui lòng thử lại sau."
+                "Bạn đã đạt số lượng đặt phòng tối đa (2 phòng) trong một ngày. Vui lòng thử lại sau."
             );
             return; // Prevent the booking
         }
@@ -356,7 +364,7 @@ const LeftBookingRoom = () => {
                                                     if (!value) return Promise.resolve();
                                                     const num = Number(value);
                                                     if (num < 5 || num > 100) {
-                                                        return Promise.reject('Chiều cao của thú cưng cần ph���i từ 5cm và dưới 100cm!');
+                                                        return Promise.reject('Chiều cao của thú cưng cần phải từ 5cm và dưới 100cm!');
                                                     }
                                                     return Promise.resolve();
                                                 }

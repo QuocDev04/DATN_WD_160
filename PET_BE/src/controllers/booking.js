@@ -76,7 +76,7 @@ export const BookingRoom = async (req, res) => {
 
         // Tính tổng giá dịch vụ
         if (Array.isArray(service) && service.length > 0) {
-            const serviceData = await Service.find({ '_id': { $in: service } });
+const serviceData = await Service.find({ '_id': { $in: service } });
             serviceData.forEach(serviceItem => {
                 if (typeof serviceItem.priceService === "number" && !isNaN(serviceItem.priceService)) {
                     servicePrice += serviceItem.priceService;
@@ -162,7 +162,7 @@ export const getBookingroom = async (req, res) => {
 export const getOrderById = async (req, res) => {
     try {
         const { userId } = req.params;
-        const order = await Bookingroom.find({ userId}).populate({
+const order = await Bookingroom.find({ userId}).populate({
             path: "items.roomId",
             select: "roomName roomprice roomgallely" // Chỉ lấy các trường cần thiết
         });
@@ -240,7 +240,7 @@ export const updateBookingRoomStatus = async (req, res) => {
                         <h2>Cảm ơn bạn đã đặt phòng thú cưng bên Pet_Hotel!</h2>
                         <p>Vui lòng mang thú đến để làm thủ tục nhé.</p>
                     </div>
-                `;
+`;
                 break;
             case "cancelled":
                 emailContent = `
@@ -291,4 +291,3 @@ export const updateBookingRoomStatus = async (req, res) => {
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: error.message });
     }
 };
-
