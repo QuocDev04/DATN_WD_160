@@ -70,6 +70,23 @@ const ArticleList = () => {
             dataIndex: 'DescriptionArticle',
             key: 'DescriptionArticle',
             width: 150,
+            ellipsis: true,
+            render: (_: any, product: any) => {
+                const limitWords = (text: string, wordLimit: number) => {
+                    const words = text.split(' ');
+                    return words.length > wordLimit
+                        ? words.slice(0, wordLimit).join(' ') + '...'
+                        : text;
+                };
+
+                return (
+                    <div
+                        dangerouslySetInnerHTML={{
+                            __html: limitWords(product?.DescriptionArticle || "", 20),
+                        }}
+                    />
+                );
+            }
         },
         {
             title: 'Hành Động',
