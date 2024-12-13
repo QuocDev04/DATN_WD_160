@@ -13,9 +13,6 @@ const roomSchema = new mongoose.Schema(
             type: Number,
             required: true
         },
-        status: {
-            type: String,
-        },
         category: [
             {
                 type: mongoose.Schema.Types.ObjectId,
