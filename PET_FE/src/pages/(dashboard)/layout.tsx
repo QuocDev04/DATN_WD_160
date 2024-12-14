@@ -42,6 +42,9 @@ const LayoutAdmin: React.FC = () => {
         } else if (path.includes("/admin/article")) {
             setActiveMenu("Article")
         }
+        else if (path.includes("/admin/evaluate")) {
+            setActiveMenu("Evaluate")
+        }
         else {
             setActiveMenu("Dashboard");
         }
@@ -85,10 +88,16 @@ const LayoutAdmin: React.FC = () => {
             key: 'Bill',
             icon: <FileTextOutlined className="text-lg" />,
             label: <Link to="/admin/bill" className="text-base">Quản Lý Đặt Phòng</Link>,
-        },        {
+        },        
+        {
             key: 'Article',
             icon: <FileTextOutlined className="text-lg" />,
             label: <Link to="/admin/article" className="text-base">Quản Lý Bài Viết</Link>,
+        },
+        {
+            key: 'Evaluate',
+            icon: <FileTextOutlined className="text-lg" />,
+            label: <Link to="/admin/evaluate" className="text-base">Quản Lý Bình Luận</Link>,
         },
     ] as MenuProps['items'];
 

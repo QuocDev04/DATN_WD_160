@@ -11,10 +11,12 @@ import {
     Layout, 
     Modal, 
     Select,
-    Input 
+    Input,
+    Menu,
+    Dropdown
 } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import { PhoneOutlined, MailOutlined, CheckOutlined, CloseOutlined, EyeOutlined, UserOutlined, HomeOutlined, DollarOutlined } from '@ant-design/icons';
+import { PhoneOutlined, MailOutlined, CheckOutlined, CloseOutlined, EyeOutlined, UserOutlined, HomeOutlined, DollarOutlined, MoreOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 const { Title } = Typography;
 
@@ -30,6 +32,9 @@ const Pending = () => {
             return response.data;
         },
     });
+
+    // Sắp xếp dữ liệu theo thời gian tạo đơn (giả sử có thuộc tính createdAt)
+    const sortedData = data?.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()) || [];
 
     // Notification handler
     const openNotification = (pauseOnHover: boolean) => 
@@ -49,7 +54,6 @@ const Pending = () => {
         { value: "schedule_conflict", label: "Xung đột lịch trình" },
         { value: "change_plan", label: "Thay đổi kế hoạch" },
         { value: "price_issue", label: "Vấn đề về giá" },
-        { value: "customer_request", label: "Khách hàng yêu cầu hủy" },
         { value: "room_unavailable", label: "Phòng không khả dụng" },
         { value: "health_issue", label: "Vấn đề sức khỏe" },
         { value: "emergency", label: "Tình huống khẩn cấp" },
@@ -221,12 +225,10 @@ const Pending = () => {
             title: 'Họ và tên',
             dataIndex: 'lastName',
             key: 'lastName',
-            width: '15%',
         },
         {
             title: 'Liên hệ',
             key: 'contact',
-            width: '20%',
             filterSearch: true,
             filters: data ? createPhoneFilter(data) : [],
             onFilter: (value: string, record: any) => record.phone === value,
@@ -240,7 +242,6 @@ const Pending = () => {
         {
             title: 'Thông tin phòng',
             key: 'roomInfo',
-            width: '25%',
             render: (record) => (
                 <Space direction="vertical" size="small">
                     <div><HomeOutlined className="mr-2" />{record?.items[0]?.roomId?.roomName}</div>
@@ -308,54 +309,41 @@ const Pending = () => {
         {
             title: 'Thao tác',
             key: 'action',
-            width: '25%',
-            fixed: 'right',
             render: (record) => (
                 <div className="flex gap-2">
-                    <Button
-                        size="small"
-                        onClick={() => showBookingDetails(record)}
-                        style={{ backgroundColor: '#00b894', color: 'white' }}
-                        icon={<EyeOutlined />}
+                    <Dropdown 
+                        overlay={
+                            <Menu>
+                                {record.status === 'pending' && (
+                                    <>
+                                        <Menu.Item onClick={() => handleConfirmBooking(record)}>
+                                            <CheckOutlined /> Xác nhận
+                                        </Menu.Item>
+                                        <Menu.Item onClick={() => {
+                                            setBookingToCancel(record);
+                                            setIsCancelModalVisible(true);
+                                        }}>
+                                            <CloseOutlined /> Hủy
+                                        </Menu.Item>
+                                    </>
+                                )}
+                                {record.status === 'confirmed' && (
+                                    <>
+                                        <Menu.Item onClick={() => handleCompleteBooking(record)}>
+                                            <CheckOutlined /> Thanh Toán
+                                        </Menu.Item>
+                                       
+                                    </>
+                                )}
+                                <Menu.Item onClick={() => showBookingDetails(record)}>
+                                    <EyeOutlined /> Chi tiết
+                                </Menu.Item>
+                            </Menu>
+                        }
+                        trigger={['click']}
                     >
-                        Chi tiết
-                    </Button>
-                    <div className="flex gap-2">
-                        {record.status === 'pending' && (
-                            <>
-                                <Button
-                                    type="primary"
-                                    size="small"
-                                    onClick={() => handleConfirmBooking(record)}
-                                    style={{ backgroundColor: '#0984e3' }}
-                                    icon={<CheckOutlined />}
-                                >
-                                    Xác nhận
-                                </Button>
-                                <Button
-                                    danger
-                                    size="small"
-                                    onClick={() => {
-                                        setBookingToCancel(record);
-                                        setIsCancelModalVisible(true);
-                                    }}
-                                    icon={<CloseOutlined />}
-                                >
-                                    Hủy
-                                </Button>
-                            </>
-                        )}
-                        {record.status === 'confirmed' && (
-                            <Button
-                                size="small"
-                                onClick={() => handleCompleteBooking(record)}
-                                style={{ backgroundColor: '#6c5ce7', color: 'white' }}
-                                icon={<CheckOutlined />}
-                            >
-                                Hoàn thành
-                            </Button>
-                        )}
-                    </div>
+                        <Button size="small" icon={<MoreOutlined />} />
+                    </Dropdown>
                 </div>
             ),
         },
@@ -380,7 +368,7 @@ const Pending = () => {
 
                     <Table
                         columns={columns}
-                        dataSource={data || []}
+                        dataSource={sortedData}
                         rowKey="_id"
                         pagination={{
                             pageSize: 10,
@@ -389,7 +377,7 @@ const Pending = () => {
                             showSizeChanger: true,
                             showQuickJumper: true,
                         }}
-                        scroll={{ x: 1200 }}
+                        scroll={{ x: 600 }}
                         rowClassName={(record) => 
                             `${record.status === 'pending' ? 'bg-[#fef9e7]' : 
                               record.status === 'confirmed' ? 'bg-[#eafaf1]' : 
@@ -493,7 +481,7 @@ const Pending = () => {
                                     <div className="col-span-2">
                                         <p className="text-gray-500 text-sm">Lý do hủy</p>
                                         <p className="font-medium text-red-500">
-                                            {selectedBooking.cancelReason}
+                                            {getCancelReasonLabel(selectedBooking.cancelReason)}
                                         </p>
                                     </div>
                                 )}
@@ -536,7 +524,7 @@ const Pending = () => {
                         className="hover:bg-[#3498db]"
                         disabled={!bookingToConfirm}
                     >
-                        Xác nhận
+                        Xác Nhận
                     </Button>
                 ]}
                 width={600}

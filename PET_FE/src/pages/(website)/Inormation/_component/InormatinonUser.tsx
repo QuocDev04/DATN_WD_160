@@ -4,17 +4,18 @@ import { Button, Image, Input, Modal, notification, Select } from "antd";
 import { useState } from "react";
 import { VideoCameraOutlined } from "@ant-design/icons";
 const CANCEL_REASONS = [
-    { value: "change_schedule", label: "Thay đổi lịch trình" },
-    { value: "found_better_option", label: "Tìm được phương án tốt hơn" },
-    { value: "price_too_high", label: "Giá cả không phù hợp" },
-    { value: "emergency", label: "Có việc khẩn cấp" },
+    { value: "schedule_conflict", label: "Xung đột lịch trình" },
+    { value: "change_plan", label: "Thay đổi kế hoạch" },
+    { value: "price_issue", label: "Vấn đề về giá" },
+    { value: "room_unavailable", label: "Phòng không khả dụng" },
+    { value: "health_issue", label: "Vấn đề sức khỏe" },
+    { value: "emergency", label: "Tình huống khẩn cấp" },
     { value: "other", label: "Lý do khác" }
 ];
 const InformationUser = () => {
     const queryClient = useQueryClient();
     const userId = localStorage.getItem("userId");
     
-    // Sửa lại cách query và truy cập data
     const { data: bookingData } = useQuery({
         queryKey: ["bookingroom", userId],
         queryFn: async () => {
@@ -33,11 +34,9 @@ const InformationUser = () => {
         enabled: !!userId,
     });
 
-    // Thêm console.log để debug
     console.log('Raw userData:', userData);
     console.log('Raw bookingData:', bookingData);
 
-    // Đảm bảo truy cập đúng cấu trúc data
     const userInfo = userData?.data || userData;
     const bookingInfo = bookingData?.data || bookingData;
 
@@ -125,7 +124,6 @@ const InformationUser = () => {
         });
     };
 
-    // Thêm helper function để lấy label từ value của lý do hủy
     const getCancelReasonLabel = (value: string) => {
         const reason = CANCEL_REASONS.find(reason => reason.value === value);
         return reason ? reason.label : value;
@@ -133,10 +131,9 @@ const InformationUser = () => {
 
     const handleCloseVideoModal = () => {
         setIsVideoModalOpen(false);
-        setReloadKey(prev => prev + 1); // Reset iframe khi đóng modal
+        setReloadKey(prev => prev + 1); 
     };
 
-    // Thêm mutation để cập nhật thông tin user
     const { mutate: updateUser } = useMutation({
         mutationFn: async (data: any) => {
             return await instance.put(`/user/${userId}`, data);
@@ -159,7 +156,6 @@ const InformationUser = () => {
         },
     });
 
-    // Thêm hàm xử lý submit form
     const handleSubmit = (values: any) => {
         updateUser({
             name: values.name,
@@ -233,7 +229,6 @@ const InformationUser = () => {
                                     </div>
                                 </button>
 
-                                {/* Tooltip nhỏ gọn */}
                                 <div className="
                                     absolute 
                                     -top-10 
@@ -360,7 +355,7 @@ const InformationUser = () => {
                     <div className="w-1/2 bg-white rounded-2xl shadow-lg p-6">
                         <h2 className="text-2xl font-bold mb-6 text-gray-800">Lịch sử đặt phòng</h2>
                         <div className="space-y-4 max-h-[600px] overflow-y-auto custom-scrollbar">
-                            {bookingInfo?.map((booking: any) => (
+                            {bookingInfo?.sort((a, b) => new Date(b.checkindate).getTime() - new Date(a.checkindate).getTime()).map((booking: any) => (
                                 <div key={booking.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow bg-white">
                                     <div className="flex justify-between items-center mb-2">
                                         <span className="font-semibold text-lg">Phòng: {booking?.items[0]?.roomId?.roomName}</span>
@@ -519,5 +514,4 @@ const InformationUser = () => {
        
     );
 };
-
 export default InformationUser;

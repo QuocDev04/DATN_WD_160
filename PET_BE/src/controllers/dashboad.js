@@ -12,7 +12,6 @@ export const getAll = async (req, res) => {
         const totalPrice = prices.reduce((acc, curr) => acc + curr, 0);
         const totalUsers = await User.countDocuments();
         const totalCmt = await Cmt.countDocuments();
-
         res.json({
             totalcompletedRooms,
             totalCancelledRooms,
