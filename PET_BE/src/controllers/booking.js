@@ -223,7 +223,6 @@ export const updateBookingRoomStatus = async (req, res) => {
 
         if (bookingRoom.status === "confirmed" && currentTime >= cancelTime) {
             bookingRoom.status = "cancelled"; // Đặt trạng thái là "cancelled"
-            bookingRoom.cancelReason = "Đã tự động hủy phòng do quá thời gian nhận phòng 30 phút.";
             await bookingRoom.save();
             return res.status(StatusCodes.OK).json({
                 message: "Phòng đã được tự động hủy do quá thời gian nhận phòng 30 phút."

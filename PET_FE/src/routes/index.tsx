@@ -6,7 +6,6 @@ import PagesBillRoom from "@/pages/(dashboard)/billbkingroom/pages";
 import CategoryAdd from "@/pages/(dashboard)/category/add";
 import CategoryEdit from "@/pages/(dashboard)/category/edit";
 import CategoryList from "@/pages/(dashboard)/category/list";
-import EditCmt from "@/pages/(dashboard)/cmt/edit";
 import ListCmt from "@/pages/(dashboard)/cmt/list";
 import Dashboard from "@/pages/(dashboard)/dashboard/page";
 import LayoutAdmin from "@/pages/(dashboard)/layout";
@@ -76,8 +75,6 @@ const Router = () => {
                     <Route path="article/:id" element={<ArticleEdit />} />
                     
                     <Route path="evaluate" element={<ListCmt />} />
-                    <Route path="evaluate/:id" element={<EditCmt />} />
-                   
                 </Route>
                 <Route path="/" element={<Layout />}>
                     <Route index element={<HomePages />} />
