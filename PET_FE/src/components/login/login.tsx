@@ -127,6 +127,9 @@ const LoginPages = () => {
                                 <Link to={"/register"} className="ml-3">
                                     Đăng ký
                                 </Link>
+                                <Link to={"/register"} className="ml-3">
+                                    Quên mật khẩu
+                                </Link>
                             </Form.Item>
                         </Form>
                     </div>

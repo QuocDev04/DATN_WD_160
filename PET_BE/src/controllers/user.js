@@ -3,6 +3,8 @@ import jwt from "jsonwebtoken";
 import bcryptjs from "bcryptjs";
 import { StatusCodes } from "http-status-codes";
 import { Register } from "../schema/validate";
+import nodemailer from "nodemailer";
+
 export const getAllUser = async (req, res) => {
     try {
         const getAll = await User.find()
@@ -108,5 +110,75 @@ export const signin = async (req, res) => {
 
     } catch (error) {
         console.error(`Error finding user with email ${email}:`, error);
+    }
+};
+
+export const forgotPassword = async (req, res) => {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) {
+        return res.status(StatusCodes.NOT_FOUND).json({
+            messages: ["Email không tồn tại"],
+        });
+    }
+
+    // Tạo token đặt lại mật khẩu
+    const resetToken = generateResetToken(user._id);
+    // Gửi email với token
+    const transporter = nodemailer.createTransport({
+        service: 'gmail', // Hoặc dịch vụ email bạn sử dụng
+        auth: {
+            user:  process.env.Mail_User, // Email của bạn
+            pass:  process.env.Mail_Pass, // Thay bằng mật khẩu email của bạn
+        },
+    });
+
+    const mailOptions = {
+        from: 'huyquoc2xx4@gmail.com',
+        to: email,
+        subject: 'Đặt lại mật khẩu',
+        text: `${resetToken}`,
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+                messages: ["Không thể gửi email"],
+            });
+        }
+        return res.status(StatusCodes.OK).json({
+            messages: ["Email đặt lại mật khẩu đã được gửi"],
+        });
+    });
+};
+
+export const resetPassword = async (req, res) => {
+    const { token, newPassword } = req.body;
+    const userId = verifyResetToken(token);
+    if (!userId) {
+        return res.status(StatusCodes.UNAUTHORIZED).json({
+            messages: ["Token không hợp lệ"],
+        });
+    }
+
+    const hashedPassword = await bcryptjs.hash(newPassword, 10);
+    await User.findByIdAndUpdate(userId, { password: hashedPassword });
+    return res.status(StatusCodes.OK).json({
+        messages: ["Mật khẩu đã được đặt lại thành công"],
+    });
+};
+
+// Hàm tạo token đặt lại mật khẩu
+const generateResetToken = (userId) => {
+    return jwt.sign({ userId }, "your-secret-key", { expiresIn: "15m" });
+};
+
+// Hàm xác minh token đặt lại mật khẩu
+const verifyResetToken = (token) => {
+    try {
+        const decoded = jwt.verify(token, "your-secret-key");
+        return decoded.userId;
+    } catch (error) {
+        return null;
     }
 };

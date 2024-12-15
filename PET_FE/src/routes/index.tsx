@@ -20,6 +20,8 @@ import ServiceEditPage from "@/pages/(dashboard)/service/edit";
 import ListService from "@/pages/(dashboard)/service/list";
 import EditUser from "@/pages/(dashboard)/user/edit";
 import ListUser from "@/pages/(dashboard)/user/list";
+import ForgotPages from "@/pages/(website)/auth/forgot/forgot";
+import ResetPassPages from "@/pages/(website)/auth/forgot/resetPass";
 import LoginPages from "@/pages/(website)/auth/login/login";
 import RegisterPages from "@/pages/(website)/auth/register/register";
 import LeftBookingRoom from "@/pages/(website)/bookingRoom/_component/left/LeftBooking";
@@ -95,6 +97,8 @@ const Router = () => {
                 </Route>
                 <Route path="register" element={<RegisterPages />} />
                 <Route path="login" element={<LoginPages />} />
+                <Route path="forgot" element={<ForgotPages />} />
+                <Route path="resetPass" element={<ResetPassPages/>} />
             </Routes>
         </>
     );
