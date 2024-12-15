@@ -13,6 +13,12 @@ const roomSchema = new mongoose.Schema(
             type: Number,
             required: true
         },
+        status:
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "BookingRoom",
+            required: true,
+        },
         category: [
             {
                 type: mongoose.Schema.Types.ObjectId,
@@ -33,4 +39,12 @@ const roomSchema = new mongoose.Schema(
         timestamps: true, versionKey: false
     }
 )
-export default mongoose.model("Room", roomSchema)
+
+// Kiểm tra xem mô hình đã được định nghĩa chưa
+const Room = mongoose.models.Room || mongoose.model("Room", roomSchema);
+
+roomSchema.methods.getBookingStatus = function() {
+    return this.status; // Trả về trạng thái của booking
+};
+
+export default Room;

@@ -96,9 +96,10 @@ const ContactPage = () => {
                                 form={form}
                                 layout="vertical"
                                 onFinish={onFinish}
+                                requiredMark="optional"
                             >
                                 <Form.Item
-                                    label="Tên của bạn"
+                                    label={<span className="after:content-['*'] after:ml-1 after:text-red-500">Tên của bạn</span>}
                                     name="name"
                                     rules={[{ required: true, message: "Vui lòng nhập tên của bạn!" }]}
                                 >
@@ -108,7 +109,7 @@ const ContactPage = () => {
                                     />
                                 </Form.Item>
                                 <Form.Item
-                                    label="Email"
+                                    label={<span className="after:content-['*'] after:ml-1 after:text-red-500">Email</span>}
                                     name="email"
                                     rules={[
                                         { required: true, message: "Vui lòng nhập email!" },
@@ -121,7 +122,7 @@ const ContactPage = () => {
                                     />
                                 </Form.Item>
                                 <Form.Item
-                                    label="Tin nhắn"
+                                    label={<span className="after:content-['*'] after:ml-1 after:text-red-500">Tin nhắn</span>}
                                     name="message"
                                     rules={[{ required: true, message: "Vui lòng nhập tin nhắn của bạn!" }]}
                                 >

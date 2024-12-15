@@ -1,7 +1,8 @@
 import { IRoom } from "@/common/type/IRoom";
 import instance from "@/configs/axios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Button, notification, Popconfirm, Table, TableColumnsType, Select } from "antd";
+import { Button, notification, Popconfirm, Table, Select, Tag } from "antd";
+import type { ColumnsType } from 'antd/es/table';
 import { AiFillEdit, AiOutlinePlusCircle, AiTwotoneDelete } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import { QuestionCircleOutlined } from "@ant-design/icons";
@@ -51,7 +52,7 @@ const ListRoom = () => {
                 "Bạn Đã Xóa Thất Bại",
             ),
     })
-    const columns: TableColumnsType = [
+    const columns: ColumnsType<any> = [
         {
             title: 'Tên Phòng',
             dataIndex: 'roomName',
@@ -84,10 +85,46 @@ const ListRoom = () => {
             },
         },
         {
-            title:"Trạng Thái Phòng",
-            dataIndex:"status",
-            key:"status",
-            width:150,
+            title: 'Trạng thái',
+            key: 'status',
+            filters: [
+                { text: 'Trống ', value: 'pending' },
+                { text: 'Đã xác nhận', value: 'confirmed' },
+                { text: 'Đã hoàn thành', value: 'completed' },
+                { text: 'Đã hủy', value: 'cancelled' },
+            ],
+            onFilter: (value: string, record: any) => record.status === value,
+            render: (record) => {
+                let color = '';
+                let text = '';
+                
+                switch(record.status) {
+                    case 'confirmed':
+                        color = '#fdcb6e';
+                        text = 'Đã xác nhận';
+                        break;
+                    case 'cancelled':
+                        color = '#ff7675';
+                        text = 'Đã hủy';
+                        break;
+                    case 'completed':
+                        color = '#6c5ce7';
+                        text = 'Đã hoàn thành';
+                        break;
+                    default:
+                        color = '#00b894';
+                        text = 'Trống';
+                }
+                
+                return (
+                    <Tag 
+                        color={color}
+                        className="min-w-[100px] text-center font-semibold text-white"
+                    >
+                        {text}
+                    </Tag>
+                );
+            }
         },
         {
             title: 'Danh Mục Phòng',

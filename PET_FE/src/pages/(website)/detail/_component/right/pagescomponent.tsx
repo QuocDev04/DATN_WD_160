@@ -20,70 +20,75 @@ const PagesRight = () => {
     };
 
     return (
-        <div className="p-6 rounded-lg shadow-md">
-            {/* Title */}
-            <h1 className="text-2xl font-bold mb-2">{service?.data.servicesName}</h1>
-            <p className="text-gray-400 mb-4">Thương hiệu: <span className="text-gray-500">PET HOTEL</span> | Mã sản phẩm: Đang cập nhật</p>
-            {/* Price */}
-            <p className="text-red-500 text-3xl font-bold mb-6">{formatCurrency(service?.data.priceService)}</p>
-
-            {/* Promotions */}
-            <div className="bg-gray-200 p-4 rounded-md mb-6">
-                <h3 className="text-lg font-semibold mb-2">🎁 Quà tặng khuyến mãi</h3>
-                <ul className="space-y-1 text-sm">
-                    <li>1. Nhập mã EGANY thêm 5% đơn hàng</li>
-                    <li>2. Giảm giá 10% khi mua từ 5 sản phẩm</li>
-                    <li>3. Giảm giá 10% khi mua từ 5 sản phẩm</li>
-                    <li>4. Tặng phiếu mua hàng khi mua từ 500k</li>
-                </ul>
+        <div className="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md">
+            {/* Header Section */}
+            <div className="mb-8 text-center">
+                <h1 className="text-3xl font-bold text-gray-800 mb-3">{service?.data.servicesName}</h1>
+                <div className="w-20 h-1 bg-blue-500 mx-auto mb-4"></div>
+                <p className="text-gray-600">Dịch vụ chăm sóc thú cưng chuyên nghiệp tại PET HOTEL</p>
             </div>
 
-            {/* Discount Codes */}
-            <div className="flex space-x-2 mb-6">
-                <span className="text-gray-400 py-1 px-3 rounded">EGA50TH...</span>
-                <span className="text-gray-400 py-1 px-3 rounded">EGA30TH...</span>
-                <span className="text-gray-400 py-1 px-3 rounded">FREESHIP...</span>
+            {/* Price Section */}
+            <div className="bg-gray-50 p-6 rounded-lg mb-8">
+                <div className="flex items-center justify-center gap-2 mb-2">
+                    <span className="text-gray-600">Giá dịch vụ:</span>
+                    <span className="text-2xl font-bold text-red-500">
+                        {formatCurrency(service?.data.priceService)}
+                    </span>
+                </div>
+                <p className="text-center text-gray-500 text-sm">
+                    Giá đã bao gồm đầy đủ dịch vụ và thuế VAT
+                </p>
             </div>
 
-            {/* Options */}
-            <div className="space-y-4">
-                {/* Weight Options */}
-                <div>
-                    <label className="block text-sm font-medium mb-1">Cân nặng</label>
-                    <div className="flex space-x-2">
-                        <button className="bg-red-600 py-1 px-3 rounded focus:outline-none">&lt; 3kg</button>
-                        <button className="py-1 px-3 rounded hover:bg-gray-500">3 - 5kg</button>
-                        <button className="py-1 px-3 rounded hover:bg-gray-500">5 - 10kg</button>
-                        <button className="py-1 px-3 rounded hover:bg-gray-500">10 - 20kg</button>
-                        <button className="py-1 px-3 rounded hover:bg-gray-500">&gt; 20kg</button>
-                    </div>
+            {/* Features Section */}
+            <div className="grid md:grid-cols-2 gap-6 mb-8">
+                <div className="bg-blue-50 p-6 rounded-lg">
+                    <h3 className="text-lg font-semibold mb-4 text-blue-800">Ưu điểm dịch vụ</h3>
+                    <ul className="space-y-3">
+                        <li className="flex items-center gap-2">
+                            <span className="text-blue-500">✓</span>
+                            Nhân viên chuyên nghiệp
+                        </li>
+                        <li className="flex items-center gap-2">
+                            <span className="text-blue-500">✓</span>
+                            Trang thiết bị hiện đại
+                        </li>
+                        <li className="flex items-center gap-2">
+                            <span className="text-blue-500">✓</span>
+                            Chăm sóc 24/7
+                        </li>
+                    </ul>
                 </div>
 
-                {/* Fur Options */}
-                <div>
-                    <label className="block text-sm font-medium mb-1">Lông</label>
-                    <div className="flex space-x-2">
-                        <button className="bg-red-600 py-1 px-3 rounded focus:outline-none">Ngắn</button>
-                        <button className="py-1 px-3 rounded hover:bg-gray-500">Dài</button>
-                    </div>
-                </div>
-
-                {/* Quantity Selection */}
-                <div>
-                    <label className="block text-sm font-medium mb-1">Số lượng</label>
-                    <div className="flex items-center space-x-2">
-                        <button className="py-1 px-3 rounded focus:outline-none">-</button>
-                        <input type="number" defaultValue={1} className="w-16 text-center py-1 rounded focus:outline-none" />
-                        <button className="py-1 px-3 rounded focus:outline-none">+</button>
-                    </div>
+                <div className="bg-green-50 p-6 rounded-lg">
+                    <h3 className="text-lg font-semibold mb-4 text-green-800">Cam kết</h3>
+                    <ul className="space-y-3">
+<li className="flex items-center gap-2">
+                            <span className="text-green-500">✓</span>
+                            An toàn tuyệt đối
+                        </li>
+                        <li className="flex items-center gap-2">
+                            <span className="text-green-500">✓</span>
+                            Giá cả hợp lý
+                        </li>
+                        <li className="flex items-center gap-2">
+                            <span className="text-green-500">✓</span>
+                            Bảo hành dịch vụ
+                        </li>
+                    </ul>
                 </div>
             </div>
 
-            {/* Add to Cart Button */}
-            <button className="w-full mt-6 py-3 bg-blue-600 text-white text-lg font-semibold rounded-lg shadow-lg hover:bg-blue-700 transition-all duration-300 ease-in-out">
-                
-            </button>
-            <div>
+            {/* Description Section */}
+            <div className="prose max-w-none">
+                <h2 className="text-xl font-semibold mb-4">Mô tả dịch vụ</h2>
+                <div dangerouslySetInnerHTML={{ __html: service?.data.descriptionService || '' }} 
+                     className="text-gray-600 leading-relaxed"
+                />
+            </div>
+
+            <div className="mt-8">
                 <MenuPages/>
             </div>
         </div>

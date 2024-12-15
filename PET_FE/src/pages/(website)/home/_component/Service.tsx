@@ -18,10 +18,10 @@ const ServicePage = () => {
             {/* Header */}
             <header className="mb-8 text-center">
                 <h2 className="text-2xl font-bold text-red-600 sm:text-4xl pb-4">
-                    Dịch Vụ Chăm Sóc Thú Cưng
+                    Tạp chí thú cưng 
                 </h2>
                 <p className="text-gray-700 text-xl">
-                    Chúng tôi cung cấp các dịch vụ chăm sóc thú cưng với chất lượng cao nhất, đáp ứng mọi nhu cầu của thú cưng của bạn.
+                    Những thông tin hữu ích về chăm sóc thú cưng và những tin tức mới nhất về thú cưng.
                 </p>
             </header>
 
@@ -30,20 +30,20 @@ const ServicePage = () => {
                 <div className="sm:basis-1/3">
                     <img
                         alt="Pet Care"
-                        src="https://images.unsplash.com/photo-1609557927087-f9cf8e88de18?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80"
+                        src="https://img.pikbest.com/wp/202345/cat-dog-pet-and-pets-in-real-pictures-wallpapers_9596134.jpg!w700wp"
                         className="h-full w-full object-cover transition duration-500"
                     />
                 </div>
                 <div className="flex-1 p-6">
                     <h3 className="text-xl font-bold uppercase text-gray-800 mb-2">
-                        Với các đội ngũ chuyên gia chăm sóc thú cưng
+                        Với những thông tin hữu ích về chăm sóc thú cưng
                     </h3>
                     <p className="text-xl text-gray-600 mb-4">
                         Khám phá các bí quyết chăm sóc thú cưng từ A đến Z, bao gồm cách lựa chọn thức ăn dinh dưỡng phù hợp, thiết lập môi trường sống an toàn, và những lưu ý quan trọng trong việc chăm sóc sức khỏe. Hãy đồng hành cùng chúng tôi để hiểu rõ hơn về nhu cầu của từng loại thú cưng, giúp chúng luôn khỏe mạnh và hạnh phúc.
                     </p>
                     <div className="text-right">
                         <Link
-                            to="#"
+                            to={'/petmagazine'} 
                             className="bg-yellow-400 px-4 py-2 text-xs font-semibold uppercase text-gray-900 rounded-md transition hover:bg-yellow-500"
                         >
                             Xem Chi Tiết

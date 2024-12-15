@@ -67,7 +67,7 @@ const CmtPages = () => {
                 <Swiper
                     slidesPerView={1}
                     spaceBetween={30}
-breakpoints={{
+                    breakpoints={{
                         640: { slidesPerView: 2 },
                         1024: { slidesPerView: 3 }
                     }}
@@ -119,7 +119,7 @@ breakpoints={{
                                 </div>
 
                                 <p className="text-gray-700 leading-relaxed">
-"{review.description}"
+                                    "{review.description}"
                                 </p>
                             </div>
                         </SwiperSlide>

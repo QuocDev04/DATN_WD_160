@@ -40,9 +40,8 @@ const AboutUs = () => {
                 { icon: <FaCalendarCheck />, text: "Lịch khám linh hoạt" }
             ],
             social: [
-                { icon: <FaFacebookF />, link: "#" },
-                { icon: <FaEnvelope />, link: "#" },
-                { icon: <FaPhoneAlt />, link: "#" }
+                { icon: <FaFacebookF />, link: "https://www.facebook.com/people/H%E1%BB%87-th%E1%BB%91ng-Kh%C3%A1ch-S%E1%BA%A1n-Th%C3%BA-C%C6%B0ng-Pet-Hotel/61569308776714/" },
+                { icon: <FaEnvelope />, link: "#" }
             ]
         },
         {
@@ -56,13 +55,13 @@ const AboutUs = () => {
                 { icon: <FaPaw />, text: "Chăm sóc đặc biệt" }
             ],
             social: [
-                { icon: <FaFacebookF />, link: "#" },
-                { icon: <FaEnvelope />, link: "#" },
-                { icon: <FaPhoneAlt />, link: "#" }
+                { icon: <FaFacebookF />, link: "https://www.facebook.com/people/H%E1%BB%87-th%E1%BB%91ng-Kh%C3%A1ch-S%E1%BA%A1n-Th%C3%BA-C%C6%B0ng-Pet-Hotel/61569308776714/" },
+                { icon: <FaEnvelope />, link: "#" }
+
             ]
         },
         {
-            image: "https://images.unsplash.com/photo-1518288774672-b94e808873ff",
+            image: "https://images.unsplash.com/photo-1612531386530-97286d97c2d2?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
             name: "Nhân viên Hữu Phúc",
             role: "Chuyên viên cắt tỉa lông",
             description: "Nhiều năm kinh nghiệm trong chăm sóc và làm đẹp",
@@ -72,9 +71,8 @@ const AboutUs = () => {
                 { icon: <FaMedal />, text: "Kinh nghiệm cao" }
             ],
             social: [
-                { icon: <FaFacebookF />, link: "#" },
-                { icon: <FaEnvelope />, link: "#" },
-                { icon: <FaPhoneAlt />, link: "#" }
+                { icon: <FaFacebookF />, link: "https://www.facebook.com/people/H%E1%BB%87-th%E1%BB%91ng-Kh%C3%A1ch-S%E1%BA%A1n-Th%C3%BA-C%C6%B0ng-Pet-Hotel/61569308776714/" },
+                { icon: <FaEnvelope />, link: "#" }
             ]
         }
     ];
@@ -194,6 +192,10 @@ const AboutUs = () => {
                                             {member.role}
                                         </p>
 
+                                        <p className="text-gray-600 mb-4">
+                                            {member.description}
+                                        </p>
+
                                         {/* Specialties with Icons */}
                                         <div className="space-y-3 mb-6">
                                             {member.specialties.map((specialty, idx) => (
@@ -204,14 +206,14 @@ const AboutUs = () => {
                                             ))}
                                         </div>
 
-                                        <motion.button
+                                        {/* <motion.button
                                             whileHover={{ scale: 1.05 }}
                                             whileTap={{ scale: 0.95 }}
                                             className="w-full px-4 py-2 bg-[#8b4d02] text-white rounded-lg hover:bg-[#6b3a01] transition-colors duration-300 flex items-center justify-center gap-2"
                                         >
                                             <FaCalendarCheck />
                                             Đặt lịch hẹn
-                                        </motion.button>
+                                        </motion.button> */}
                                     </Card>
                                 </motion.div>
                             </Col>
@@ -250,8 +252,8 @@ const AboutUs = () => {
                         initial={{ opacity: 0, scale: 0.8 }}
                         whileInView={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.5 }}
-                        src="https://i.pinimg.com/736x/8a/c5/13/8ac513601011ba9210381fdaa4be2c8c.jpg"
-                        alt="Happy Pets"
+                        src="https://images.unsplash.com/photo-1576201836106-db1758fd1c97?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                        alt="Veterinary Care"
                         className="w-full max-w-2xl mx-auto rounded-xl shadow-2xl"
                     />
                 </motion.section>

@@ -1,4 +1,4 @@
-import { FaFacebook, FaInstagram, FaTiktok, FaYoutube, FaMapMarkerAlt, FaPhone, FaEnvelope, FaClock, FaPaw } from "react-icons/fa";
+import { FaFacebook, FaMapMarkerAlt, FaPhone, FaEnvelope, FaClock, FaPaw } from "react-icons/fa";
 
 const FooterPages = () => {
     return (
@@ -8,17 +8,19 @@ const FooterPages = () => {
                 <div className="flex flex-col items-center mb-8">
                     <img src="../public/logo.png" alt="Pet Hotel Logo" className="w-32 mb-2" />
                     <div className="flex gap-4 mt-2">
-                        <a href="#" className="text-[#8B4513] hover:text-blue-600 transform hover:scale-110 transition-all">
+                        <a 
+                            href="https://www.facebook.com/people/H%E1%BB%87-th%E1%BB%91ng-Kh%C3%A1ch-S%E1%BA%A1n-Th%C3%BA-C%C6%B0ng-Pet-Hotel/61569308776714/" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="text-[#8B4513] hover:text-blue-600 transform hover:scale-110 transition-all"
+                        >
                             <FaFacebook size={24} />
                         </a>
-                        <a href="#" className="text-[#8B4513] hover:text-pink-600 transform hover:scale-110 transition-all">
-                            <FaInstagram size={24} />
-                        </a>
-                        <a href="#" className="text-[#8B4513] hover:text-black transform hover:scale-110 transition-all">
-                            <FaTiktok size={24} />
-                        </a>
-                        <a href="#" className="text-[#8B4513] hover:text-red-600 transform hover:scale-110 transition-all">
-                            <FaYoutube size={24} />
+                        <a 
+                            href="mailto:contact@pethotel.com"
+                            className="text-[#8B4513] hover:text-red-600 transform hover:scale-110 transition-all"
+                        >
+                            <FaEnvelope size={24} />
                         </a>
                     </div>
                 </div>

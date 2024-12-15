@@ -82,7 +82,7 @@ const HeaderPages = () => {
                             {/* Social Icons */}
                             <div className="flex items-center gap-3">
                                 <a
-                                    href="https://facebook.com"
+                                    href="https://www.facebook.com/people/H%E1%BB%87-th%E1%BB%91ng-Kh%C3%A1ch-S%E1%BA%A1n-Th%C3%BA-C%C6%B0ng-Pet-Hotel/61569308776714/"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="text-[#8B4513] hover:text-[#6B3E26] transition-all duration-300"
