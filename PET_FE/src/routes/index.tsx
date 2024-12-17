@@ -1,7 +1,7 @@
-
 import ArticleAdd from "@/pages/(dashboard)/article/add";
 import ArticleEdit from "@/pages/(dashboard)/article/edit";
 import ArticleList from "@/pages/(dashboard)/article/list";
+import LoginAdminPages from "@/pages/(dashboard)/auth/login/loginadmin";
 import PagesBillRoom from "@/pages/(dashboard)/billbkingroom/pages";
 import CategoryAdd from "@/pages/(dashboard)/category/add";
 import CategoryEdit from "@/pages/(dashboard)/category/edit";
@@ -39,17 +39,17 @@ import CbComponent from "@/pages/(website)/roompages/_component/coban";
 import PagesComponent from "@/pages/(website)/roompages/_component/pagesComponet";
 import ThinhHanh from "@/pages/(website)/roompages/_component/thinhhanh";
 import ShopIntroduction from "@/pages/(website)/Shopintroduction/pages";
-import Layout from "@/pages/layout";
-import { Route, Routes } from "react-router-dom";
+import Layout from "@/pages/(website)/layout";
+import { Route, Routes, Navigate } from "react-router-dom";
 
 const Router = () => {
     return (
         <>
             <Routes>
-                <Route path="/register" element={<RegisterPages />} />
-                <Route path="/signin" element={<LoginPages />} />
+                <Route path="/adminlogin" element={<LoginAdminPages />} />
                 <Route path="admin" element={<LayoutAdmin />}>
-                    <Route index path="/admin" element={<Dashboard />} />
+                    <Route  path="/admin" element={<Navigate to="/adminlogin" />} />
+                    <Route index path="dashboard" element={<Dashboard />} />
                     {/* User */}
                     <Route path="user" element={<ListUser />} />
                     <Route path="user/:id" element={<EditUser />} />
@@ -75,7 +75,7 @@ const Router = () => {
                     <Route path="article" element={<ArticleList />} />
                     <Route path="articleadd" element={<ArticleAdd />} />
                     <Route path="article/:id" element={<ArticleEdit />} />
-                    
+
                     <Route path="evaluate" element={<ListCmt />} />
                 </Route>
                 <Route path="/" element={<Layout />}>
@@ -93,12 +93,12 @@ const Router = () => {
                     <Route path="/magazine/:id" element={<MagazineDetail />} />
                     <Route path="product" element={<Pages />} />
                     <Route path="product/:id" element={<ProductDetail />} />
-                    <Route path="profile" element={<Inormation/>}/>
+                    <Route path="profile" element={<Inormation />} />
                 </Route>
                 <Route path="register" element={<RegisterPages />} />
                 <Route path="login" element={<LoginPages />} />
                 <Route path="forgot" element={<ForgotPages />} />
-                <Route path="resetPass" element={<ResetPassPages/>} />
+                <Route path="resetPass" element={<ResetPassPages />} />
             </Routes>
         </>
     );

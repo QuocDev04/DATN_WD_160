@@ -126,7 +126,6 @@ const LoginPages = () => {
                                     className="h-12 rounded-lg"
                                 />
                             </Form.Item>
-
                             <Form.Item<FieldType>
                                 required={false}
                                 label={<div className="flex items-center justify-between">

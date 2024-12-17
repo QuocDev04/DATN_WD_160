@@ -13,11 +13,10 @@ const roomSchema = new mongoose.Schema(
             type: Number,
             required: true
         },
-        status:
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "BookingRoom",
-            required: true,
+        status: {
+            type: String,
+            enum: ["pending", "drum", "confirmed", "cancelled", "completed","full"],
+            default: "drum",
         },
         category: [
             {
@@ -40,11 +39,4 @@ const roomSchema = new mongoose.Schema(
     }
 )
 
-// Kiểm tra xem mô hình đã được định nghĩa chưa
-const Room = mongoose.models.Room || mongoose.model("Room", roomSchema);
-
-roomSchema.methods.getBookingStatus = function() {
-    return this.status; // Trả về trạng thái của booking
-};
-
-export default Room;
+export default mongoose.model("Room",roomSchema)

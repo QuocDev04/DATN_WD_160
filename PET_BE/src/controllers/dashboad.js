@@ -12,6 +12,31 @@ export const getAll = async (req, res) => {
         const totalPrice = prices.reduce((acc, curr) => acc + curr, 0);
         const totalUsers = await User.countDocuments();
         const totalCmt = await Cmt.countDocuments();
+
+        // Tính doanh thu theo ngày
+        const dailyRevenue = await BookingRoom.aggregate([
+            { $match: { status: 'completed' } },
+            { $group: { _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } }, total: { $sum: "$totalPrice" } } }
+        ]);
+
+        // Tính doanh thu theo tuần
+        const weeklyRevenue = await BookingRoom.aggregate([
+            { $match: { status: 'completed' } },
+            { $group: { _id: { $week: "$createdAt" }, total: { $sum: "$totalPrice" } } }
+        ]);
+
+        // Tính doanh thu theo tháng
+        const monthlyRevenue = await BookingRoom.aggregate([
+            { $match: { status: 'completed' } },
+            { $group: { _id: { $month: "$createdAt" }, total: { $sum: "$totalPrice" } } }
+        ]);
+
+        // Tính doanh thu theo năm
+        const yearlyRevenue = await BookingRoom.aggregate([
+            { $match: { status: 'completed' } },
+            { $group: { _id: { $year: "$createdAt" }, total: { $sum: "$totalPrice" } } }
+        ]);
+
         res.json({
             totalcompletedRooms,
             totalCancelledRooms,
@@ -21,6 +46,10 @@ export const getAll = async (req, res) => {
             totalCmt,
             prices,
             totalPrice,
+            dailyRevenue, // Doanh thu theo ngày
+            weeklyRevenue, // Doanh thu theo tuần
+            monthlyRevenue, // Doanh thu theo tháng
+            yearlyRevenue, // Doanh thu theo năm
         });
     } catch (error) {
         console.error(error);

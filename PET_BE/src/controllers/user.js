@@ -134,7 +134,7 @@ export const forgotPassword = async (req, res) => {
     });
 
     const mailOptions = {
-        from: 'huyquoc2xx4@gmail.com',
+        from: process.env.Mail_User,
         to: email,
         subject: 'Đặt lại mật khẩu',
         text: `${resetToken}`,

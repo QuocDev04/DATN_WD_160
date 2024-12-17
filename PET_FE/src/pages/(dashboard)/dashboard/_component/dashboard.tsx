@@ -5,8 +5,8 @@ import {
     UserOutlined,
     HomeOutlined,
     DollarCircleOutlined,
-    CommentOutlined
 } from '@ant-design/icons'
+import { Column } from '@ant-design/charts';
 
 const DashboardPage = () => {
     // Fetch statistics data
@@ -42,9 +42,45 @@ const DashboardPage = () => {
             color: 'purple'
         }
     ]
+
+    const data = [
+        {
+            type: 'Tổng số người dùng',
+            value: stats?.data?.totalUsers || 0,
+        },
+        {
+            type: 'Số phòng đã đặt thành công',
+            value: stats?.data?.totalcompletedRooms || 0,
+        },
+        {
+            type: 'Tổng số đặt phòng',
+            value: stats?.data?.totalBookings || 0,
+        },
+        {
+            type: 'Số phòng đang chờ xác nhận',
+            value: stats?.data?.pendingRooms || 0,
+        },
+        {
+            type: 'Số phòng đã hoàn thành',
+            value: stats?.data?.completedRooms || 0,
+        },
+        {
+            type: 'Tổng số phản hồi',
+            value: stats?.data?.totalFeedback || 0,
+        },
+    ];
+
+    const config = {
+        data,
+        xField: 'type',
+        yField: 'value',
+        title: 'Biểu đồ thống kê',
+    };
+
     return (
         <div className="p-6">
             <h1 className="text-2xl font-bold mb-6">Thống kê tổng quan</h1>
+            
             <Row gutter={[16, 16]}>
                 {statistics.map((stat, index) => (
                     <Col xs={24} sm={12} lg={6} key={index}>
@@ -76,6 +112,7 @@ const DashboardPage = () => {
                     </Col>
                 ))}
             </Row>
+            <Column {...config} />
         </div>
     )
 }

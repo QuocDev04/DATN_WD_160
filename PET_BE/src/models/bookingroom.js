@@ -6,7 +6,7 @@ const RoomItemSchema = new mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: "Room",
             required: true,
-        }
+        },
     },
     { _id: false },
 )
@@ -63,17 +63,7 @@ const BookingRoomSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        status: {
-            type: String,
-            enum: ["pending", "confirmed", "cancelled","completed"],
-            default: "pending",
-        },
-        cancelReason: {
-            type: String,
-            required: function() {
-                return this.status === "cancelled";
-            }
-        },
+
         checkindate: {
             type: Date,
         },
@@ -89,6 +79,10 @@ const BookingRoomSchema = new mongoose.Schema(
             default: function() {
                 return this.createdAt.toLocaleTimeString();
             },
+        },
+        status: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Room",
         },
     },
     { timestamps: true, versionKey: false }

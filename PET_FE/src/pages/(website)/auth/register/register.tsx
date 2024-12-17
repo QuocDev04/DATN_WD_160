@@ -93,7 +93,7 @@ const RegisterPages = () => {
                                 validateTrigger="onBlur"
                                 rules={[
                                     { required: true },
-                                    { type: "string", min: 6, max: 30 },
+                                    { type: "string", min: 3, max: 30 },
                                 ]}
                             >
                                 <Input

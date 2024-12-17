@@ -86,45 +86,25 @@ const ListRoom = () => {
         },
         {
             title: 'Trạng thái',
+            dataIndex: 'status',
             key: 'status',
-            filters: [
-                { text: 'Trống ', value: 'pending' },
-                { text: 'Đã xác nhận', value: 'confirmed' },
-                { text: 'Đã hoàn thành', value: 'completed' },
-                { text: 'Đã hủy', value: 'cancelled' },
-            ],
-            onFilter: (value: string, record: any) => record.status === value,
-            render: (record) => {
-                let color = '';
-                let text = '';
-                
-                switch(record.status) {
-                    case 'confirmed':
-                        color = '#fdcb6e';
-                        text = 'Đã xác nhận';
-                        break;
-                    case 'cancelled':
-                        color = '#ff7675';
-                        text = 'Đã hủy';
-                        break;
-                    case 'completed':
-                        color = '#6c5ce7';
-                        text = 'Đã hoàn thành';
-                        break;
-                    default:
-                        color = '#00b894';
-                        text = 'Trống';
-                }
-                
+            render: (status: string) => {
+                const statusLabels: { [key: string]: string } = {
+                    pending: 'Đang chờ',
+                    drum: 'Phòng trống',
+                    full: 'Phòng đầy',
+                };
+                const statusColors: { [key: string]: string } = {
+                    pending: 'orange',
+                    drum: 'blue',
+                    full: 'gold',
+                };
                 return (
-                    <Tag 
-                        color={color}
-                        className="min-w-[100px] text-center font-semibold text-white"
-                    >
-                        {text}
+                    <Tag color={statusColors[status] || 'default'}>
+                        {statusLabels[status] || status}
                     </Tag>
                 );
-            }
+            },
         },
         {
             title: 'Danh Mục Phòng',

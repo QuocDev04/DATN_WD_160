@@ -1,7 +1,7 @@
 
 import { Outlet } from "react-router-dom";
-import HeaderPages from "./(website)/_component/header";
-import FooterPages from "./(website)/_component/footer";
+import HeaderPages from "./_component/header";
+import FooterPages from "./_component/footer";
 
 const Layout = () => {
     return (

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
-import { 
-    DashboardOutlined, 
-    ShoppingOutlined, 
+import {
+    DashboardOutlined,
+    ShoppingOutlined,
     UserOutlined,
     CustomerServiceOutlined,
     HomeOutlined,
@@ -54,7 +54,7 @@ const LayoutAdmin: React.FC = () => {
         {
             key: 'Dashboard',
             icon: <DashboardOutlined className="text-lg" />,
-            label: <Link to="/admin" className="text-base">Quản Lý Thống Kê</Link>,
+            label: <Link to="/admin/dashboard" className="text-base">Quản Lý Thống Kê</Link>,
         },
         {
             type: 'divider',
@@ -88,7 +88,7 @@ const LayoutAdmin: React.FC = () => {
             key: 'Bill',
             icon: <FileTextOutlined className="text-lg" />,
             label: <Link to="/admin/bill" className="text-base">Quản Lý Đặt Phòng</Link>,
-        },        
+        },
         {
             key: 'Article',
             icon: <FileTextOutlined className="text-lg" />,
@@ -102,7 +102,7 @@ const LayoutAdmin: React.FC = () => {
     ] as MenuProps['items'];
 
     const userMenu = (
-<Menu className="w-48 p-2">
+        <Menu className="w-48 p-2">
             <div className="px-4 py-3">
                 <p className="text-sm text-gray-600">Đăng nhập với</p>
                 <p className="text-sm font-medium text-gray-900">admin@example.com</p>
@@ -123,11 +123,11 @@ const LayoutAdmin: React.FC = () => {
 
     return (
         <Layout className="min-h-screen">
-            <Sider 
-                trigger={null} 
-                collapsible 
+            <Sider
+                trigger={null}
+                collapsible
                 collapsed={collapsed}
-                className="shadow-lg fixed left-0 h-screen" 
+                className="shadow-lg fixed left-0 h-screen"
                 style={{
                     background: token.colorBgContainer,
                     borderRight: `1px solid ${token.colorBorderSecondary}`,
@@ -137,7 +137,7 @@ const LayoutAdmin: React.FC = () => {
                 width={280}
             >
                 <div className="h-16 flex items-center justify-center border-b border-gray-100">
-                    <Link to="/admin" className="flex items-center gap-3">
+                    <Link to="/admin/dashboard" className="flex items-center gap-3">
                         <img src="/logo.png" alt="Logo" className="h-10 w-10" />
                         {!collapsed && (
                             <span className="text-xl font-bold bg-gradient-to-r from-[#8B4513] to-[#D2691E] bg-clip-text text-transparent">
@@ -153,7 +153,7 @@ const LayoutAdmin: React.FC = () => {
                         selectedKeys={[activeMenu]}
                         items={menuItems}
                         className="border-r-0 py-4"
-                        style={{ 
+                        style={{
                             height: 'calc(100vh - 4rem - 72px)', // Trừ đi chiều cao của header và profile
                             position: 'fixed',
                             width: collapsed ? '80px' : '280px',
@@ -168,9 +168,9 @@ const LayoutAdmin: React.FC = () => {
                         }}
                     >
                         <div className="flex items-center gap-3">
-                            <Avatar 
+                            <Avatar
                                 size={40}
-icon={<UserOutlined />}
+                                icon={<UserOutlined />}
                                 className="bg-gradient-to-r from-[#8B4513] to-[#D2691E] text-white flex items-center justify-center"
                             />
                             {!collapsed && (
@@ -183,11 +183,11 @@ icon={<UserOutlined />}
                     </div>
                 </div>
             </Sider>
-            
+
             <Layout style={{ marginLeft: collapsed ? '80px' : '280px' }}>
-                <Header 
-                    className="p-0 bg-white border-b border-gray-100 fixed top-0 right-0 z-10" 
-                    style={{ 
+                <Header
+                    className="p-0 bg-white border-b border-gray-100 fixed top-0 right-0 z-10"
+                    style={{
                         width: `calc(100% - ${collapsed ? 80 : 280}px)`,
                     }}
                 >
@@ -206,19 +206,19 @@ icon={<UserOutlined />}
                                 bordered={false}
                             />
                         </div>
-                        
+
                         <div className="flex items-center gap-4">
                             <Badge count={3}>
-                                <Button 
-                                    type="text" 
-                                    icon={<BellOutlined />} 
+                                <Button
+                                    type="text"
+                                    icon={<BellOutlined />}
                                     className="flex items-center justify-center w-10 h-10 hover:bg-gray-50 rounded-full text-xl text-gray-600"
                                 />
                             </Badge>
-                            
+
                             <Dropdown overlay={userMenu} trigger={['click']} placement="bottomRight">
-                                <Button 
-                                    type="text" 
+                                <Button
+                                    type="text"
                                     className="flex items-center gap-2 hover:bg-gray-50 h-10 px-3 rounded-full"
                                 >
                                     <UserOutlined className="text-xl text-gray-600" />
@@ -227,11 +227,11 @@ icon={<UserOutlined />}
                             </Dropdown>
                         </div>
                     </div>
-</Header>
+                </Header>
 
-                <Content 
+                <Content
                     className="m-6"
-                    style={{ 
+                    style={{
                         marginTop: '80px', // Tăng margin-top để tránh bị header che
                         minHeight: 'calc(100vh - 112px)', // 112px = 64px (header) + 2 * 24px (margin)
                         padding: '24px',
