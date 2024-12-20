@@ -6,7 +6,7 @@ import { sendMail } from "./sendmail";
 import Room from "../models/room";
 
 export const BookingRoom = async (req, res) => {
-    const { userId, paymentMethod,service,petName,lastName,age,weight, phone, species,gender,height,checkindate,checkoutdate, orderNotes,buyNowOrder, email} = req.body;
+    const { userId, paymentMethod, service, petName, lastName, age, weight, phone, species, gender, height, checkindate, checkoutdate, orderNotes, buyNowOrder, email } = req.body;
 
     try {
         let BookingRoomItems = [];
@@ -135,7 +135,6 @@ export const BookingRoom = async (req, res) => {
             orderNotes,
             service,
             email,
-            // status: "pending" // Không cần thiết nếu đã cập nhật trạng thái ở trên
         });
 
         return res.status(StatusCodes.CREATED).json(OrderRoom);
@@ -194,14 +193,21 @@ export const updateOrder = async (req, res) => {
 export const updateBookingRoomStatus = async (req, res) => {
     try {
         const { _id } = req.params;
-        const { status, email } = req.body;
+        const { status, email, cancellationReason } = req.body;
 
         // Kiểm tra trạng thái
         if (!["pending", "confirmed", "cancelled", "completed"].includes(status)) {
             return res.status(StatusCodes.BAD_REQUEST).json({ error: "Invalid status" });
         }
 
-        const bookingRoom = await Bookingroom.findById(_id).populate('items.roomId'); // Populate roomId to access its status
+        // Kiểm tra lý do hủy khi status là cancelled
+        if (status === "cancelled" && !cancellationReason) {
+            return res.status(StatusCodes.BAD_REQUEST).json({ 
+                error: "Cancellation reason is required when cancelling a booking" 
+            });
+        }
+
+        const bookingRoom = await Bookingroom.findById(_id).populate('items.roomId');
         if (!bookingRoom) {
             return res.status(StatusCodes.NOT_FOUND).json({ error: "Booking not found" });
         }
@@ -215,16 +221,85 @@ export const updateBookingRoomStatus = async (req, res) => {
             });
         }
 
-        // Cập nhật trạng thái đặt phòng
-        bookingRoom.status = room._id; // Gán ObjectId của phòng vào status
-        await bookingRoom.save(); // Lưu thay đổi
+        // Cập nhật trạng thái đặt phòng và lý do hủy nếu có
+        bookingRoom.status = room._id;
+        if (status === "cancelled") {
+            bookingRoom.cancellationReason = cancellationReason;
+        }
+        await bookingRoom.save();
 
-        // Cập nhật trạng thái của phòng
-        room.status = status; // Cập nhật trạng thái của phòng
-        await room.save(); // Lưu thay đổi trạng thái phòng
+        // Cập nhật trạng thái của tất cả các phòng trong đơn hàng
+        for (const item of bookingRoom.items) {
+            const room = item.roomId;
+            if (room) {
+                // Nếu trạng thái là "cancelled", chuyển phòng về "drum"
+                // Ngược lại, sử dụng trạng thái được gửi từ request
+                room.status = status === "cancelled" ? "drum" : status;
+                await room.save();
+            }
+        }
+        if (status === "confirmed" || status === "completed") {
+            // Kiểm tra email tồn tại
+            if (!email) {
+                return res.status(StatusCodes.BAD_REQUEST).json({ 
+                    error: "Email is required for sending notifications" 
+                });
+            }
+            // Lấy danh sách phòng và trạng thái
+            const roomStatuses = bookingRoom.items.map(item => ({
+                roomName: item.roomId.roomName,
+                status: item.roomId.status
+            }));
 
+            const roomStatusText = roomStatuses
+                .map(room => `- Phòng ${room.roomName}: ${room.status}`)
+                .join('\n');
+
+            const emailSubject = status === "confirmed"
+                ? "Xác nhận đặt phòng thành công"
+                : "Hoàn thành dịch vụ - Cảm ơn quý khách";
+
+            const emailContent = status === "confirmed"
+                ? `Xin chào ${bookingRoom.lastName},\n\n` +
+                  `Đơn đặt phòng của bạn đã được xác nhận thành công.\n` +
+                  `Thông tin chi tiết:\n` +
+                  `- Tên thú cưng: ${bookingRoom.petName}\n` +
+                  `- Thời gian check-in: ${new Date(bookingRoom.checkindate).toLocaleString('vi-VN')}\n` +
+                  `- Thời gian check-out: ${new Date(bookingRoom.checkoutdate).toLocaleString('vi-VN')}\n\n` +
+                  `Trạng thái phòng:\n${roomStatusText}\n\n` +
+                  `Vui lòng mang thú cưng đến đúng ngày và giờ đã hẹn để chúng tôi có thể phục vụ bạn tốt nhất.\n\n` +
+                  `Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi!`
+                : `Xin chào ${bookingRoom.lastName},\n\n` +
+                  `Chúng tôi xin thông báo dịch vụ của bạn đã hoàn thành.\n\n` +
+                  `Thông tin chi tiết:\n` +
+                  `- Tên thú cưng: ${bookingRoom.petName}\n` +
+                  `- Thời gian lưu trú: từ ${new Date(bookingRoom.checkindate).toLocaleString('vi-VN')} đến ${new Date(bookingRoom.checkoutdate).toLocaleString('vi-VN')}\n` +
+                  `- Tổng chi phí: ${bookingRoom.totalPrice.toLocaleString('vi-VN')} VNĐ\n\n` +
+                  `Trạng thái phòng:\n${roomStatusText}\n\n` +
+                  `Chúng tôi rất vui khi được phục vụ bạn và thú cưng của bạn.\n` +
+                  `Nếu bạn hài lòng với dịch vụ của chúng tôi, hãy giới thiệu chúng tôi cho bạn bè của bạn.\n\n` +
+                  `Trân trọng,\n` +
+                  `Đội ngũ Pet Hotel`;
+            try {
+                await sendMail({
+                    email: email,
+                    subject: emailSubject,
+                    html: emailContent.replace(/\n/g, '<br>')  // Convert newlines to HTML breaks
+                });
+                console.log('Email sent successfully to:', email);
+            } catch (emailError) {
+                console.error("Error sending email:", emailError);
+                // Thêm thông báo lỗi vào response nhưng vẫn tiếp tục xử lý
+                return res.status(StatusCodes.OK).json({
+                    message: "Cập nhật trạng thái thành công nhưng không gửi được email",
+                    error: emailError.message,
+                    bookingRoom
+                });
+            }
+        }
         return res.status(StatusCodes.OK).json({
             message: "Cập nhật trạng thái đặt phòng thành công",
+            bookingRoom
         });
     } catch (error) {
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: error.message });

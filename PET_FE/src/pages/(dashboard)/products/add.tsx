@@ -194,33 +194,7 @@ const ProductAddPage = () => {
 
                     </div>
                     <div className="ml-5">
-                        <Form.Item
-                            label="Danh mục sản phẩm"
-                            name="categoryproduct"
-                            required
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Danh mục sản phẩm bắt buộc chọn",
-                                },
-                            ]}
-                        >
-                            <Select
-                                style={{ width: "100%", marginLeft: "7px" }}
-                                options={data?.data?.map((category: any) => ({
-                                    label: category.CategoryProductName,
-                                    value: category._id,
-                                }))}
-                                placeholder="Chọn danh mục"
-                                disabled={isPending}
-                                onChange={(value) => {
-                                    // Cập nhật giá trị của trường category
-                                    form.setFieldsValue({
-                                        category: value,
-                                    });
-                                }}
-                            />
-                        </Form.Item>
+                        
                         <Form.Item name="gallery"
                             rules={[
                                 {

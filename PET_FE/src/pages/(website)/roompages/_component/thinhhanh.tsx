@@ -1,6 +1,6 @@
 import instance from "@/configs/axios"
 import { useQuery } from "@tanstack/react-query"
-import { FaHeart, FaRuler, FaTemperatureHigh, FaPaw } from 'react-icons/fa'
+import { FaHeart, FaRuler, FaTemperatureHigh, FaPaw, FaUser, FaHome, FaDog, FaHouseDamage, FaCat } from 'react-icons/fa'
 import { MdPets, MdCleaningServices } from 'react-icons/md'
 import { motion } from "framer-motion"
 import { useState } from "react"
@@ -58,6 +58,42 @@ const ThinhHanh = () => {
         }
 
         return rangeWithDots;
+    };
+
+    // Add the getStatusStyle function
+    const getStatusStyle = (status: string) => {
+        switch (status) {
+            case 'pending':
+                return {
+                    icon: <FaPaw className="text-white w-4 h-4" />,
+                    bgColor: 'bg-yellow-500',
+                    tooltip: 'Đang chờ'
+                };
+            case 'drum':
+                return {
+                    icon: <FaHome className="text-white w-4 h-4" />,
+                    bgColor: 'bg-blue-500',
+                    tooltip: 'Đang Trống'
+                };
+            case 'confirmed':
+                return {
+                    icon: <FaDog className="text-white w-4 h-4" />,
+                    bgColor: 'bg-green-500',
+                    tooltip: 'Đã xác nhận'
+                };
+            case 'completed':
+                return {
+                    icon: <FaCat className="text-white w-4 h-4" />,
+                    bgColor: 'bg-purple-500',
+                    tooltip: 'Đã đầy'
+                };
+            default:
+                return {
+                    icon: <MdPets className="text-white w-4 h-4" />,
+                    bgColor: 'bg-gray-500',
+                    tooltip: 'Không xác định'
+                };
+        }
     };
 
     return (
@@ -140,7 +176,12 @@ const ThinhHanh = () => {
                                         alt={item.roomName}
                                         className="w-full h-full object-cover"
                                     />
-
+                                    <div className={`absolute top-2 right-2 p-2 rounded-full ${getStatusStyle(item.status).bgColor} group`}>
+                                        {getStatusStyle(item.status).icon}
+                                        <div className="absolute hidden group-hover:block right-0 mt-2 bg-black text-white text-sm py-1 px-2 rounded whitespace-nowrap">
+                                            {getStatusStyle(item.status).tooltip}
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div className="p-6">

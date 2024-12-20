@@ -63,7 +63,6 @@ const BookingRoomSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-
         checkindate: {
             type: Date,
         },
@@ -83,6 +82,9 @@ const BookingRoomSchema = new mongoose.Schema(
         status: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Room",
+        },
+        cancellationReason: {
+            type: String,
         },
     },
     { timestamps: true, versionKey: false }

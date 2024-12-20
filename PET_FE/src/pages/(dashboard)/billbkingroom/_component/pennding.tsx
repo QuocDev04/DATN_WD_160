@@ -1,15 +1,15 @@
 import instance from "@/configs/axios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { 
-    notification, 
-    Table, 
-    Button, 
-    Space, 
-    Tag, 
-    Card, 
-    Typography, 
-    Layout, 
-    Modal, 
+import {
+    notification,
+    Table,
+    Button,
+    Space,
+    Tag,
+    Card,
+    Typography,
+    Layout,
+    Modal,
     Select,
     Input,
     Menu,
@@ -33,12 +33,12 @@ const Pending = () => {
         },
     });
     console.log(data);
-    
+
     // Sắp xếp dữ liệu theo thời gian tạo đơn (giả sử có thuộc tính createdAt)
     const sortedData = data?.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()) || [];
 
     // Notification handler
-    const openNotification = (pauseOnHover: boolean) => 
+    const openNotification = (pauseOnHover: boolean) =>
         (type: "success" | "error", message: string, description: string) => {
             api.open({
                 message,
@@ -72,19 +72,19 @@ const Pending = () => {
 
     // Cập nhật mutation
     const { mutate: patch } = useMutation({
-        mutationFn: async (params: { 
-            bookingId: string, 
-            status: string, 
-            cancelReason: string, 
-            cancelReasonDetail?: string 
+        mutationFn: async (params: {
+            bookingId: string,
+            status: string,
+            cancellationReason: string,
+            cancelReasonDetail?: string
         }) => {
-            const finalReason = params.cancelReason === 'other' 
-                ? params.cancelReasonDetail 
-                : getCancelReasonLabel(params.cancelReason);
-            
+            const finalReason = params.cancellationReason === 'other'
+                ? params.cancelReasonDetail
+                : getCancelReasonLabel(params.cancellationReason);
+
             const response = await instance.patch(`/bookingroom/${params.bookingId}/status`, {
                 status: params.status,
-                cancelReason: finalReason, 
+                cancellationReason: finalReason,
                 cancelReasonDetail: params.cancelReasonDetail
             });
             return response.data;
@@ -97,7 +97,7 @@ const Pending = () => {
             );
             queryClient.invalidateQueries({ queryKey: ["bookingroom"] });
             setIsCancelModalVisible(false);
-            setCancelReason("");
+            setCancellationReason("");
             setCancelReasonDetail("");
         },
         onError: (error: any) => {
@@ -143,7 +143,7 @@ const Pending = () => {
     // Thêm states này vào đầu component Pending
     const [isCancelModalVisible, setIsCancelModalVisible] = useState(false);
     const [bookingToCancel, setBookingToCancel] = useState<any>(null);
-    const [cancelReason, setCancelReason] = useState('');
+    const [cancellationReason, setCancellationReason] = useState('');
     const [cancelReasonDetail, setCancelReasonDetail] = useState('');
 
     // Ensure updateStatus function is defined
@@ -155,18 +155,16 @@ const Pending = () => {
                 throw new Error("Không tìm thấy email người dùng");
             }
 
-            // Lấy status từ Room
-            const roomStatus = bookingRecord.status; // Giả sử status đã được lấy từ schema
-
-            const response = await instance.patch(`/bookingroom/${id}/status`, { 
-                status: roomStatus, // Sử dụng status từ Room
-                email: bookingRecord.email // Thêm email vào request
+            // Gửi request với status được truyền vào, KHÔNG sử dụng roomStatus
+            const response = await instance.patch(`/bookingroom/${id}/status`, {
+                status: status, // Sử dụng status được truyền vào thay vì roomStatus
+                email: bookingRecord.email
             });
 
             if (response.status === 200) {
                 let successMessage = "";
                 let successDescription = "";
-                
+
                 switch (status) {
                     case "confirmed":
                         successMessage = "Xác nhận thành công";
@@ -187,9 +185,9 @@ const Pending = () => {
                     successMessage,
                     successDescription
                 );
-                
+
                 queryClient.invalidateQueries({ queryKey: ["bookingroom"] });
-                
+
                 // Đóng các modal tương ứng
                 if (status === "confirmed") {
                     setIsConfirmModalVisible(false);
@@ -203,9 +201,9 @@ const Pending = () => {
                 }
             }
         } catch (error: any) {
-            const errorMessage = error?.response?.data?.message || 
-                               error?.message || 
-                               "Có lỗi xảy ra khi cập nhật trạng thái";
+            const errorMessage = error?.response?.data?.message ||
+                error?.message ||
+                "Có lỗi xảy ra khi cập nhật trạng thái";
             openNotification(false)(
                 "error",
                 "Cập nhật thất bại",
@@ -259,49 +257,47 @@ const Pending = () => {
                     </div>
                     <div>
                         <DollarOutlined className="mr-2" />
-                        {record.totalPrice.toLocaleString('vi-VN', { 
-                            style: 'currency', 
-                            currency: 'VND' 
+                        {record.totalPrice.toLocaleString('vi-VN', {
+                            style: 'currency',
+                            currency: 'VND'
                         })}
                     </div>
                 </Space>
             ),
         },
         {
-            title: 'Trạng thái',
+            title: 'Xác nhận phòng',
             key: 'status',
             width: '15%',
             filters: [
                 { text: 'Chờ xác nhận', value: 'pending' },
                 { text: 'Đã xác nhận', value: 'confirmed' },
-                { text: 'Đã hoàn thành', value: 'completed' },
                 { text: 'Đã hủy', value: 'cancelled' },
             ],
             onFilter: (value: string, record: any) => record?.items[0]?.roomId?.status === value,
-            render: (record) => {
+            render: (_, record) => {
+                const status = record?.items[0]?.roomId?.status;
+
+                if (status === 'completed') {
+                    return null;
+                }
                 let color = '';
                 let text = '';
-                
-                switch(record?.items[0]?.roomId?.status) {
+                switch (status) {
                     case 'confirmed':
-                        color = '#00b894';
+                        color = '#2ecc71';
                         text = 'Đã xác nhận';
                         break;
-                    case 'cancelled':
-                        color = '#ff7675';
-                        text = 'Đã hủy';
-                        break;
-                    case 'completed':
-                        color = '#6c5ce7';
-                        text = 'Đã hoàn thành';
+                    case 'pending':
+                        color = '#f1c40f';
+                        text = 'Chờ phê duyệt';
                         break;
                     default:
-                        color = '#fdcb6e';
-                        text = 'Chờ xác nhận';
+                        color = '#e74c3c';
+                        text = 'Đã hủy';
                 }
-                
                 return (
-                    <Tag 
+                    <Tag
                         color={color}
                         className="min-w-[100px] text-center font-semibold text-white"
                     >
@@ -311,11 +307,63 @@ const Pending = () => {
             }
         },
         {
+            title: 'Trạng thái phòng',
+            key: 'roomStatus',
+            width: '15%',
+            filters: [
+                { text: 'Còn hạn', value: 'active' },
+                { text: 'Hết hạn', value: 'expired' },
+            ],
+            onFilter: (value: string, record: any) => {
+                const currentDate = new Date();
+                const checkoutDate = new Date(record.checkoutdate);
+                const isExpired = currentDate > checkoutDate;
+                return value === (isExpired ? 'expired' : 'active');
+            },
+            render: (_, record) => {
+                const currentDate = new Date();
+                const checkoutDate = new Date(record.checkoutdate);
+                const isExpired = currentDate > checkoutDate;
+
+                return (
+                    <Tag
+                        color={isExpired ? '#ff7675' : '#00b894'}
+                        className="min-w-[100px] text-center font-semibold text-white"
+                    >
+                        {isExpired ? 'Hết hạn' : 'Còn hạn'}
+                    </Tag>
+                );
+            }
+        },
+        {
+            title: 'Phòng đã thanh toán',
+            key: 'status',
+            width: '15%',
+            filters: [
+                { text: 'Đã thanh toán', value: 'completed' },
+            ],
+            onFilter: (value: string, record: any) => record?.items[0]?.roomId?.status === value,
+            render: (_, record) => {
+                const status = record?.items[0]?.roomId?.status;
+                if (status === 'completed') {
+                    return (
+                        <Tag
+                            color="#6c5ce7"
+                            className="min-w-[100px] text-center font-semibold text-white"
+                        >
+                            Đã thanh toán
+                        </Tag>
+                    );
+                }
+                return null;
+            }
+        },
+        {
             title: 'Thao tác',
             key: 'action',
             render: (record) => (
                 <div className="flex gap-2">
-                    <Dropdown 
+                    <Dropdown
                         overlay={
                             <Menu>
                                 {record?.items[0]?.roomId?.status === 'pending' && (
@@ -336,7 +384,12 @@ const Pending = () => {
                                         <Menu.Item onClick={() => handleCompleteBooking(record)}>
                                             <CheckOutlined /> Thanh Toán
                                         </Menu.Item>
-                                       
+                                        <Menu.Item onClick={() => {
+                                            setBookingToCancel(record);
+                                            setIsCancelModalVisible(true);
+                                        }}>
+                                            <CloseOutlined /> Hủy
+                                        </Menu.Item>
                                     </>
                                 )}
                                 <Menu.Item onClick={() => showBookingDetails(record)}>
@@ -359,7 +412,7 @@ const Pending = () => {
         <Layout className="min-h-screen bg-[#ecf0f1]">
             {contextHolder}
             <div className="p-8">
-                <Card 
+                <Card
                     className="shadow-md rounded-lg overflow-hidden"
                     bordered={false}
                 >
@@ -367,7 +420,7 @@ const Pending = () => {
                         <Title level={2} className="text-center text-[#2c3e50] font-bold">
                             Danh Sách Đặt Phòng
                         </Title>
-                        <div className="w-24 h-1 bg-[#3498db] mx-auto rounded-full"/>
+                        <div className="w-24 h-1 bg-[#3498db] mx-auto rounded-full" />
                     </div>
 
                     <Table
@@ -382,10 +435,10 @@ const Pending = () => {
                             showQuickJumper: true,
                         }}
                         scroll={{ x: 600 }}
-                        rowClassName={(record) => 
-                            `${record.status === 'pending' ? 'bg-[#fef9e7]' : 
-                              record.status === 'confirmed' ? 'bg-[#eafaf1]' : 
-                              'bg-[#fdecea]'} hover:bg-[#f0f0f0] transition-all`
+                        rowClassName={(record) =>
+                            `${record.status === 'pending' ? 'bg-[#fef9e7]' :
+                                record.status === 'confirmed' ? 'bg-[#eafaf1]' :
+                                    'bg-[#fdecea]'} hover:bg-[#f0f0f0] transition-all`
                         }
                     />
                 </Card>
@@ -395,14 +448,14 @@ const Pending = () => {
                 title={
                     <div className="flex items-center space-x-2 border-b pb-3">
                         <EyeOutlined className="text-[#0984e3]" />
-                        <span className="text-xl font-bold text-[#2c3e50]">Chi tiết đặt phòng</span>
+                        <span className="text-xl font-bold text-[#2c3e50]">Chi ti���t đặt phòng</span>
                     </div>
                 }
                 open={isModalVisible}
                 onCancel={() => setIsModalVisible(false)}
                 footer={[
-                    <Button 
-                        key="close" 
+                    <Button
+                        key="close"
                         onClick={() => setIsModalVisible(false)}
                     >
                         Đóng
@@ -437,17 +490,17 @@ const Pending = () => {
                                 </div>
                                 <div>
                                     <p className="text-gray-500 text-sm">Trạng thái</p>
-                                    <Tag 
+                                    <Tag
                                         color={
                                             selectedBooking.status === 'confirmed' ? '#00b894' :
-                                            selectedBooking.status === 'cancelled' ? '#ff7675' : 
-                                            selectedBooking.status === 'completed' ? '#6c5ce7' :
-                                            '#fdcb6e'
+                                                selectedBooking.status === 'cancelled' ? '#ff7675' :
+                                                    selectedBooking.status === 'completed' ? '#6c5ce7' :
+                                                        '#fdcb6e'
                                         }
                                         className="min-w-[100px] text-center font-semibold text-white"
                                     >
                                         {(() => {
-                                            switch(selectedBooking.status) {
+                                            switch (selectedBooking.status) {
                                                 case 'confirmed':
                                                     return 'Đã xác nhận';
                                                 case 'cancelled':
@@ -475,17 +528,17 @@ const Pending = () => {
                                 <div>
                                     <p className="text-gray-500 text-sm">Tổng tiền</p>
                                     <p className="font-medium text-[#00b894]">
-                                        {selectedBooking.totalPrice.toLocaleString('vi-VN', { 
-                                            style: 'currency', 
-                                            currency: 'VND' 
+                                        {selectedBooking.totalPrice.toLocaleString('vi-VN', {
+                                            style: 'currency',
+                                            currency: 'VND'
                                         })}
                                     </p>
                                 </div>
-                                {selectedBooking.status === "cancelled" && selectedBooking.cancelReason && (
+                                {selectedBooking.status === "cancelled" && selectedBooking.cancellationReason && (
                                     <div className="col-span-2">
                                         <p className="text-gray-500 text-sm">Lý do hủy</p>
                                         <p className="font-medium text-red-500">
-                                            {getCancelReasonLabel(selectedBooking.cancelReason)}
+                                            {getCancelReasonLabel(selectedBooking.cancellationReason)}
                                         </p>
                                     </div>
                                 )}
@@ -505,8 +558,8 @@ const Pending = () => {
                 open={isConfirmModalVisible}
                 onCancel={() => setIsConfirmModalVisible(false)}
                 footer={[
-                    <Button 
-                        key="cancel" 
+                    <Button
+                        key="cancel"
                         onClick={() => setIsConfirmModalVisible(false)}
                         className="hover:bg-gray-100"
                     >
@@ -517,9 +570,9 @@ const Pending = () => {
                         type="primary"
                         onClick={() => {
                             if (bookingToConfirm) {
-                                updateStatus({ 
-                                    id: bookingToConfirm._id, 
-                                    status: "confirmed" 
+                                updateStatus({
+                                    id: bookingToConfirm._id,
+                                    status: "confirmed"
                                 });
                                 setIsConfirmModalVisible(false);
                             }
@@ -567,9 +620,9 @@ const Pending = () => {
                                 <div>
                                     <p className="text-gray-500 text-sm">Tổng tiền</p>
                                     <p className="font-medium text-[#00b894]">
-                                        {bookingToConfirm.totalPrice.toLocaleString('vi-VN', { 
-                                            style: 'currency', 
-                                            currency: 'VND' 
+                                        {bookingToConfirm.totalPrice.toLocaleString('vi-VN', {
+                                            style: 'currency',
+                                            currency: 'VND'
                                         })}
                                     </p>
                                 </div>
@@ -599,20 +652,20 @@ const Pending = () => {
                         patch({
                             bookingId: bookingToCancel._id,
                             status: "cancelled",
-                            cancelReason: cancelReason,
-                            cancelReasonDetail: cancelReason === "other" ? cancelReasonDetail.trim() : undefined
+                            cancellationReason: cancellationReason,
+                            cancelReasonDetail: cancellationReason === "other" ? cancelReasonDetail.trim() : undefined
                         });
                     }
                 }}
                 onCancel={() => {
                     setIsCancelModalVisible(false);
-                    setCancelReason("");
+                    setCancellationReason("");
                     setCancelReasonDetail("");
                 }}
                 okText="Xác nhận"
                 cancelText="Đóng"
                 okButtonProps={{
-                    disabled: !cancelReason || (cancelReason === "other" && !cancelReasonDetail.trim()),
+                    disabled: !cancellationReason || (cancellationReason === "other" && !cancelReasonDetail.trim()),
                     danger: true
                 }}
             >
@@ -625,15 +678,15 @@ const Pending = () => {
                             Vui lòng chọn lý do hủy đặt phòng.
                         </p>
                     </div>
-                    
+
                     <div className="space-y-2">
                         <label className="text-sm text-gray-600 font-medium">
                             Lý do hủy <span className="text-red-500">*</span>
                         </label>
                         <Select
-                            value={cancelReason}
+                            value={cancellationReason}
                             onChange={(value) => {
-                                setCancelReason(value);
+                                setCancellationReason(value);
                                 if (value !== 'other') {
                                     setOtherReason('');
                                 }
@@ -642,8 +695,8 @@ const Pending = () => {
                             className="w-full"
                             options={CANCEL_REASONS}
                         />
-                        
-                        {cancelReason === 'other' && (
+
+                        {cancellationReason === 'other' && (
                             <div className="mt-3">
                                 <label className="text-sm text-gray-600 font-medium">
                                     Lý do khác <span className="text-red-500">*</span>
@@ -683,8 +736,8 @@ const Pending = () => {
                 open={isCompleteModalVisible}
                 onCancel={() => setIsCompleteModalVisible(false)}
                 footer={[
-                    <Button 
-                        key="cancel" 
+                    <Button
+                        key="cancel"
                         onClick={() => setIsCompleteModalVisible(false)}
                     >
                         Hủy
@@ -694,9 +747,9 @@ const Pending = () => {
                         type="primary"
                         onClick={() => {
                             if (bookingToComplete) {
-                                updateStatus({ 
-                                    id: bookingToComplete._id, 
-                                    status: "completed" 
+                                updateStatus({
+                                    id: bookingToComplete._id,
+                                    status: "completed"
                                 });
                                 setIsCompleteModalVisible(false);
                             }
@@ -717,7 +770,7 @@ const Pending = () => {
                                 Hành động này không thể hoàn tác sau khi xác nhận.
                             </p>
                         </div>
-                        
+
                         <div className="bg-[#f8fafc] p-4 rounded-lg">
                             <h3 className="text-lg font-semibold mb-4 text-[#2c3e50]">
                                 Thông tin đặt phòng

@@ -1,8 +1,7 @@
 import instance from "@/configs/axios";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Button, Image, Input, Modal, notification, Select } from "antd";
+import { Button, Input, Modal, notification, Select, Tabs } from "antd";
 import { useState } from "react";
-import { VideoCameraOutlined } from "@ant-design/icons";
 const CANCEL_REASONS = [
     { value: "schedule_conflict", label: "Xung đột lịch trình" },
     { value: "change_plan", label: "Thay đổi kế hoạch" },
@@ -59,13 +58,22 @@ const InformationUser = () => {
     const [cancelReasonDetail, setCancelReasonDetail] = useState<string>("");
     const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
     const [reloadKey, setReloadKey] = useState(0);
+    const [isRoomDetailModalOpen, setIsRoomDetailModalOpen] = useState(false);
+    const [selectedBooking, setSelectedBooking] = useState<any>(null);
+    const [activeTab, setActiveTab] = useState('1');
+
+    const videoUrls = {
+        '1': 'https://www.youtube.com/embed/5530I_pYjbo?autoplay=1&mute=1',
+        '2': 'https://www.youtube.com/embed/ANOTHER_VIDEO_ID?autoplay=1&mute=1',
+        '3': 'https://www.youtube.com/embed/THIRD_VIDEO_ID?autoplay=1&mute=1'
+    };
 
     const { mutate: patch } = useMutation({
-        mutationFn: async (params: { bookingId: string, status: string, cancelReason: string, cancelReasonDetail?: string }) => {
+        mutationFn: async (params: { bookingId: string, status: string, cancellationReason: string, cancellationReasonDetail?: string }) => {
             const response = await instance.patch(`/bookingroom/${params.bookingId}/status`, {
                 status: params.status,
-                cancelReason: params.cancelReason,
-                cancelReasonDetail: params.cancelReasonDetail
+                cancellationReason: params.cancellationReason,
+                cancellationReasonDetail: params.cancellationReasonDetail
             });
             return response.data;
         },
@@ -119,8 +127,8 @@ const InformationUser = () => {
         patch({
             bookingId: selectedBookingId,
             status: "cancelled",
-            cancelReason: cancelReason,
-            cancelReasonDetail: cancelReason === "other" ? cancelReasonDetail : undefined
+            cancellationReason: cancelReason,
+            cancellationReasonDetail: cancelReason === "other" ? cancelReasonDetail : undefined
         });
     };
 
@@ -164,42 +172,23 @@ const InformationUser = () => {
         });
     };
 
+    const handleRoomClick = (booking: any) => {
+        setSelectedBooking(booking);
+        setIsRoomDetailModalOpen(true);
+    };
+
     return (
         <>
             {contextHolder}
             <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
                 <div className="container mx-auto py-8 space-y-8">
                     {/* Top Profile Card */}
-                    <div className="max-w-2xl mx-auto bg-white rounded-2xl shadow-lg overflow-hidden">
-                        <div className="flex items-center p-6">
+                    <div className="  items-center p-6 flex justify-center">
+                        {bookingInfo?.some((booking: any) => booking.items[0]?.roomId?.status === "completed") && (
                             <div className="relative group">
-                                <Image
-                                    src={userInfo?.avatar || '/default-avatar.png'}
-                                    alt="Avatar"
-                                    width={80}
-                                    height={80}
-                                    className="w-20 h-20 rounded-full border-2 border-gray-200 object-cover shadow-sm transition-transform group-hover:scale-105"
-                                />
-                                <label htmlFor="avatar-upload"
-                                    className="absolute bottom-0 right-0 bg-white p-1.5 rounded-full shadow-md cursor-pointer hover:bg-gray-50 transition-all">
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                    </svg>
-                                </label>
-                            </div>
-                            <div className="ml-6">
-                                <h2 className="text-2xl font-bold text-gray-800">{bookingInfo?.name}</h2>
-                                <div className="flex items-center mt-2 text-gray-600">
-                                    <span className="material-icons-outlined text-sm mr-2">Email: </span>
-                                    <p>{userInfo?.email}</p>
-                                </div>
-                            </div>
-                            {bookingInfo?.some((booking: any) => booking.items[0]?.roomId?.status === "completed") && (
-                                <div className="relative ml-auto group">
-                                    <button
-                                        onClick={() => setIsVideoModalOpen(true)}
-                                        className="
+                                <button
+                                    onClick={() => setIsVideoModalOpen(true)}
+                                    className="
                                         relative
                                         px-4
                                         py-2
@@ -218,46 +207,20 @@ const InformationUser = () => {
                                         bg-gradient-to-r
                                         group
                                     "
-                                    >
-                                        <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer-small"></span>
-
-                                        <div className="relative flex items-center gap-2">
-                                            <button className="button">
-                                                <span className="label">Theo dõi thú cưng</span>
-                                                <span className="gradient-container">
-                                                    <span className="gradient"></span>
-                                                </span>
-                                            </button>
-                                        </div>
-                                    </button>
-
-                                    <div className="
-                                    absolute 
-                                    -top-10 
-                                    left-1/2 
-                                    -translate-x-1/2 
-                                    bg-gray-800 
-                                    text-white 
-                                    px-3 
-                                    py-1 
-                                    rounded 
-                                    text-xs
-                                    whitespace-nowrap
-                                    opacity-0 
-                                    group-hover:opacity-100 
-                                    transition-opacity 
-                                    duration-200
-                                    pointer-events-none
-                                    z-10
-                                ">
-                                        Xem trực tiếp
-                                        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 border-4 border-transparent border-t-gray-800"></div>
+                                >
+                                    <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer-small"></span>
+                                    <div className="relative flex items-center gap-2">
+                                        <button className="button">
+                                            <span className="label">Theo dõi thú cưng</span>
+                                            <span className="gradient-container">
+                                                <span className="gradient"></span>
+                                            </span>
+                                        </button>
                                     </div>
-                                </div>
-                            )}
-                        </div>
+                                </button>
+                            </div>
+                        )}
                     </div>
-
                     {/* Main Content */}
                     <div className="flex gap-8">
                         {/* Left Side - User Information */}
@@ -358,7 +321,10 @@ const InformationUser = () => {
                             <h2 className="text-2xl font-bold mb-6 text-gray-800">Lịch sử đặt phòng</h2>
                             <div className="space-y-4 max-h-[600px] overflow-y-auto custom-scrollbar">
                                 {bookingInfo?.sort((a, b) => new Date(b.checkindate).getTime() - new Date(a.checkindate).getTime()).map((booking: any) => (
-                                    <div key={booking.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow bg-white">
+                                    <div key={booking.id} 
+                                        className="border rounded-lg p-4 hover:shadow-md transition-shadow bg-white cursor-pointer"
+                                        onClick={() => handleRoomClick(booking)}
+                                    >
                                         <div className="flex justify-between items-center mb-2">
                                             <span className="font-semibold text-lg">Phòng: {booking?.items[0]?.roomId?.roomName}</span>
                                             <span className={`px-3 py-1 rounded-full text-sm ${booking.items[0]?.roomId?.status === 'completed' ? 'bg-blue-100 text-blue-800' :
@@ -398,12 +364,22 @@ const InformationUser = () => {
                                                     })}
                                                 </span>
                                             </div>
-                                            {booking.items[0]?.roomId?.status === "cancelled" && booking.cancelReason && (
-                                                <div className="flex justify-between items-center mt-2 text-gray-500">
-                                                    <span>Lý do hủy:</span>
-                                                    <span className="font-medium text-red-500">
-                                                        {getCancelReasonLabel(booking.cancelReason)}
-                                                    </span>
+                                            { booking.cancellationReason && (
+                                                <div className="space-y-1">
+                                                    <div className="flex justify-between items-center mt-2 text-gray-500">
+                                                        <span>Lý do hủy:</span>
+                                                        <span className="font-medium text-red-500">
+                                                            {getCancelReasonLabel(booking.cancellationReason)}
+                                                        </span>
+                                                    </div>
+                                                    {booking.cancellationReasonDetail && (
+                                                        <div className="flex justify-between items-center text-gray-500">
+                                                            <span>Chi tiết:</span>
+                                                            <span className="font-medium text-red-500">
+                                                                {booking.cancellationReasonDetail}
+                                                            </span>
+                                                        </div>
+                                                    )}
                                                 </div>
                                             )}
                                             {(booking.items[0]?.roomId?.status === "pending" || booking.items[0]?.roomId?.status === "confirmed") && (
@@ -429,27 +405,79 @@ const InformationUser = () => {
                 {/* Keep the existing Modal */}
                 {bookingInfo?.some((booking: any) => booking.items[0]?.roomId?.status === "completed") && (
                     <Modal
-                        title="Video"
+                        title="Theo dõi thú cưng"
                         open={isVideoModalOpen}
                         onCancel={handleCloseVideoModal}
                         width={800}
                         footer={null}
                         destroyOnClose={true}
                     >
-                        <div className="aspect-video">
-                            {isVideoModalOpen && (
-                                <iframe
-                                    key={reloadKey}
-                                    width="100%"
-                                    height="100%"
-                                    src="https://www.youtube.com/embed/5530I_pYjbo?autoplay=1&mute=1"
-                                    title="Cute Dogs And Cats Videos"
-                                    frameBorder="0"
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                    allowFullScreen
-                                ></iframe>
-                            )}
-                        </div>
+                        <Tabs
+                            activeKey={activeTab}
+                            onChange={setActiveTab}
+                            items={[
+                                {
+                                    key: '1',
+                                    label: 'Phòng Cơ Bản',
+                                    children: (
+                                        <div className="aspect-video">
+                                            {isVideoModalOpen && (
+                                                <iframe
+                                                    key={`${reloadKey}-${activeTab}`}
+                                                    width="100%"
+                                                    height="450"
+                                                    src={videoUrls[activeTab as keyof typeof videoUrls]}
+                                                    title="Pet Camera View"
+                                                    frameBorder="0"
+                                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                    allowFullScreen
+                                                />
+                                            )}
+                                        </div>
+                                    ),
+                                },
+                                {
+                                    key: '2',
+                                    label: 'Phòng Thịnh Hành',
+                                    children: (
+                                        <div className="aspect-video">
+                                            {isVideoModalOpen && (
+                                                <iframe
+                                                    key={`${reloadKey}-${activeTab}`}
+                                                    width="100%"
+                                                    height="450"
+                                                    src={videoUrls[activeTab as keyof typeof videoUrls]}
+                                                    title="Pet Camera View"
+                                                    frameBorder="0"
+                                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                    allowFullScreen
+                                                />
+                                            )}
+                                        </div>
+                                    ),
+                                },
+                                {
+                                    key: '3',
+                                    label: 'Phòng Cao Cấp',
+                                    children: (
+                                        <div className="aspect-video">
+                                            {isVideoModalOpen && (
+                                                <iframe
+                                                    key={`${reloadKey}-${activeTab}`}
+                                                    width="100%"
+                                                    height="450"
+                                                    src={videoUrls[activeTab as keyof typeof videoUrls]}
+                                                    title="Pet Camera View"
+                                                    frameBorder="0"
+                                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                    allowFullScreen
+                                                />
+                                            )}
+                                        </div>
+                                    ),
+                                },
+                            ]}
+                        />
                     </Modal>
                 )}
                 <Modal

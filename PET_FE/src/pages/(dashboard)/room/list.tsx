@@ -92,7 +92,8 @@ const ListRoom = () => {
                 const statusLabels: { [key: string]: string } = {
                     pending: 'Đang chờ',
                     drum: 'Phòng trống',
-                    full: 'Phòng đầy',
+                    confirmed: 'Đã xác nhận',
+                    completed: 'Phòng đầy',
                 };
                 const statusColors: { [key: string]: string } = {
                     pending: 'orange',

@@ -1,6 +1,6 @@
 import instance from "@/configs/axios"
 import { useQuery } from "@tanstack/react-query"
-import { FaHeart, FaRuler, FaTemperatureHigh, FaPaw } from 'react-icons/fa'
+import { FaHeart, FaRuler, FaTemperatureHigh, FaPaw, FaHome, FaDog, FaHouseDamage, FaCat } from 'react-icons/fa'
 import { MdPets, MdCleaningServices } from 'react-icons/md'
 import { motion } from "framer-motion"
 import { useState } from "react"
@@ -58,6 +58,41 @@ const CbComponent = () => {
         }
 
         return rangeWithDots;
+    };
+
+    const getStatusStyle = (status: string) => {
+        switch (status) {
+            case 'pending':
+                return {
+                    icon: <FaPaw className="text-white w-4 h-4" />,
+                    bgColor: 'bg-yellow-500',
+                    tooltip: 'Đang chờ'
+                };
+            case 'drum':
+                return {
+                    icon: <FaHome className="text-white w-4 h-4" />,
+                    bgColor: 'bg-blue-500',
+                    tooltip: 'Đang Trống'
+                };
+            case 'confirmed':
+                return {
+                    icon: <FaDog className="text-white w-4 h-4" />,
+                    bgColor: 'bg-green-500',
+                    tooltip: 'Đã xác nhận'
+                };
+            case 'completed':
+                return {
+                    icon: <FaCat className="text-white w-4 h-4" />,
+                    bgColor: 'bg-purple-500',
+                    tooltip: 'Đã đầy'
+                };
+            default:
+                return {
+                    icon: <MdPets className="text-white w-4 h-4" />,
+                    bgColor: 'bg-gray-500',
+                    tooltip: 'Không xác định'
+                };
+        }
     };
 
     return (
@@ -140,7 +175,12 @@ const CbComponent = () => {
                                         alt={item.roomName}
                                         className="w-full h-full object-cover"
                                     />
-
+                                    <div className="absolute top-4 right-4">
+                                        <div className={`${getStatusStyle(item.status).bgColor} p-2 rounded-full cursor-help`} 
+                                             title={getStatusStyle(item.status).tooltip}>
+                                            {getStatusStyle(item.status).icon}
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div className="p-6">

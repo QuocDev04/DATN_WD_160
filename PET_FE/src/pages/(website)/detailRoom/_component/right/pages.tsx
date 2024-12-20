@@ -36,9 +36,15 @@ const RightPagesComponent = () => {
     const handleBooking = () => {
         if (!userId) {
             message.warning('Vui lòng đăng nhập để đặt phòng!');
-            navigate('/login'); // Chuyển hướng đến trang đăng nhập
+            navigate('/login');
             return;
         }
+
+        if (room?.data.status && ['pending', 'confirmed', 'completed'].includes(room.data.status)) {
+            message.warning('Phòng này hiện không khả dụng!');
+            return;
+        }
+
         id && bookingRoom(id);
     };
 
@@ -72,9 +78,18 @@ const RightPagesComponent = () => {
                     </div>
                     <button
                         onClick={handleBooking}
-                        className="px-8 py-3 bg-[#8B4513] text-white font-semibold rounded-xl hover:bg-[#8B4513] transform transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[#8B4513] focus:ring-offset-2"
+                        disabled={room?.data.status && ['pending', 'confirmed', 'completed'].includes(room.data.status)}
+                        className={`px-8 py-3 text-white font-semibold rounded-xl transform transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+                            room?.data.status && ['pending', 'confirmed', 'completed'].includes(room.data.status)
+                                ? 'bg-gray-400 cursor-not-allowed'
+                                : 'bg-[#8B4513] hover:bg-[#8B4513] hover:scale-105 focus:ring-[#8B4513]'
+                        }`}
                     >
-                        {userId ? 'Đặt Phòng Ngay' : 'Đặt Phòng'}
+                        {room?.data.status && ['pending', 'confirmed', 'completed'].includes(room.data.status)
+                            ? 'Phòng hiện tại không thể sử dụng'
+                            : userId
+                            ? 'Đặt Phòng Ngay'
+                            : 'Đặt Phòng'}
                     </button>
                 </div>
 
