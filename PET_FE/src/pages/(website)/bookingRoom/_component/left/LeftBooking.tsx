@@ -94,7 +94,7 @@ const LeftBookingRoom = () => {
     }, [data]);
     const [totalRoomPrice, setTotalRoomPrice] = useState(data?.data?.totalPrice || 0);
     const [totalPrice, setTotalPrice] = useState(totalRoomPrice);
-const { mutate: createOrder, isPending } = useMutation({
+    const { mutate: createOrder, isPending } = useMutation({
         mutationFn: async (orderData: FieldType) => {
             try {
                 return await instance.post(`/bookingroom`, {
@@ -129,7 +129,7 @@ const { mutate: createOrder, isPending } = useMutation({
         const currentDate = dayjs().startOf('day'); // Get the current date
 
         // Check if the user has already booked 2 rooms for today
-        const todayBookings = userBookings?.data?.filter((booking:any) => {
+        const todayBookings = userBookings?.data?.filter((booking: any) => {
             const bookingDate = dayjs(booking.checkindate).startOf('day'); // Extract the check-in date
             return bookingDate.isSame(currentDate); // Check if the booking date is today
         });
@@ -175,7 +175,7 @@ const { mutate: createOrder, isPending } = useMutation({
         // Tính số phút giữa 2 mốc thời gian
         const minutes = endDate.diff(startDate, 'minutes');
         // Làm tròn lên số giờ nếu có phần lẻ phút
-const hours = Math.ceil(minutes / 60);
+        const hours = Math.ceil(minutes / 60);
         return Math.max(hours, 1); // Đảm bảo tối thiểu 1 giờ
     };
 
@@ -234,7 +234,7 @@ const hours = Math.ceil(minutes / 60);
                                             {
                                                 max: 50,
                                                 message: "Tên không được vượt quá 50 ký tự!"
-},
+                                            },
                                             {
                                                 validator: (_, value) => {
                                                     if (value && value.trim().length === 0) {
@@ -277,7 +277,7 @@ const hours = Math.ceil(minutes / 60);
                                                     if (value && value.trim().length === 0) {
                                                         return Promise.reject("Tên không được chỉ chứa khoảng trắng!");
                                                     }
-if (value && !value.trim().match(/^[A-Za-zÀ-ỹ]/)) {
+                                                    if (value && !value.trim().match(/^[A-Za-zÀ-ỹ]/)) {
                                                         return Promise.reject("Tên phải bắt đầu bằng chữ cái!");
                                                     }
                                                     return Promise.resolve();
@@ -323,7 +323,7 @@ if (value && !value.trim().match(/^[A-Za-zÀ-ỹ]/)) {
                                             min={1}
                                             max={120}
                                         />
-</Form.Item>
+                                    </Form.Item>
                                     <Form.Item
                                         validateTrigger="onBlur"
                                         name="weight"
@@ -365,7 +365,7 @@ if (value && !value.trim().match(/^[A-Za-zÀ-ỹ]/)) {
                                                     const num = Number(value);
                                                     if (num < 5 || num > 100) {
                                                         return Promise.reject('Chiều cao của thú cưng cần phải từ 5cm và dưới 100cm!');
-}
+                                                    }
                                                     return Promise.resolve();
                                                 }
                                             }
@@ -413,7 +413,7 @@ if (value && !value.trim().match(/^[A-Za-zÀ-ỹ]/)) {
                                             disabled={isPending}
                                             options={[
                                                 { value: 'Đực', label: 'Đực' },
-{ value: 'Cái', label: 'Cái' }
+                                                { value: 'Cái', label: 'Cái' }
                                             ]}
                                         />
                                     </Form.Item>
@@ -457,7 +457,7 @@ if (value && !value.trim().match(/^[A-Za-zÀ-ỹ]/)) {
                                                 message: "Email không được vượt quá 50 ký tự!"
                                             }
                                         ]}
-required={false}
+                                        required={false}
                                     >
                                         <Input
                                             className="h-12 rounded-lg border-gray-300 hover:border-blue-400 focus:border-blue-500 transition-colors"
@@ -484,69 +484,71 @@ required={false}
                                 </div>
 
                                 <div className="grid md:grid-cols-2 gap-6">
-                                        <Form.Item
-                                            name="checkindate"
-                                            label={<span className="font-medium">Thời Gian Bắt Đầu <span className="text-red-500">*</span></span>}
-                                            rules={[
-                                                { required: true, message: "Vui lòng chọn thời gian bắt đầu!" }
-                                            ]}
-                                        >
-                                            <DatePicker
-                                                className="w-full h-12 rounded-lg border-gray-300 hover:border-blue-400 focus:border-blue-500 transition-colors"
-                                                showTime={{ format: 'HH:mm' }}
-                                                format="DD-MM-YYYY HH:mm"
-                                                locale={buddhistLocale}
-                                                disabledDate={(current) => {
-                                                    return current && current < dayjs().startOf('day');
-                                                }}
-                                                onChange={(date) => {
-const checkout = form.getFieldValue('checkoutdate');
-                                                    if (checkout && date) {
-                                                        handleTimeChange([date, checkout], ['', '']);
-                                                    }
-                                                }}
-                                            />
-                                        </Form.Item>
-                                        <Form.Item
-                                            name="checkoutdate"
-                                            label={<span className="font-medium">Thời Gian Kết Thúc <span className="text-red-500">*</span></span>}
-                                            rules={[
-                                                { required: true, message: "Vui lòng chọn thời gian kết thúc!" },
-                                                ({ getFieldValue }) => ({
-                                                    validator(_, value) {
-                                                        const checkinDate = getFieldValue('checkindate');
-                                                        if (!checkinDate || !value) {
-                                                            return Promise.resolve();
-                                                        }
-
-                                                        const diffInHours = value.diff(checkinDate, 'hours');
-
-                                                        if (diffInHours < 1) {
-                                                            return Promise.reject('Thời gian kết thúc phải sau thời gian bắt đầu ít nhất 1 giờ!');
-                                                        }
+                                    <Form.Item
+                                        name="checkindate"
+                                        required={false}
+                                        label={<span className="font-medium">Thời Gian Bắt Đầu <span className="text-red-500">*</span></span>}
+                                        rules={[
+                                            { required: true, message: "Vui lòng chọn thời gian bắt đầu!" }
+                                        ]}
+                                    >
+                                        <DatePicker
+                                            className="w-full h-12 rounded-lg border-gray-300 hover:border-blue-400 focus:border-blue-500 transition-colors"
+                                            showTime={{ format: 'HH:mm' }}
+                                            format="DD-MM-YYYY HH:mm"
+                                            locale={buddhistLocale}
+                                            disabledDate={(current) => {
+                                                return current && current < dayjs().startOf('day');
+                                            }}
+                                            onChange={(date) => {
+                                                const checkout = form.getFieldValue('checkoutdate');
+                                                if (checkout && date) {
+                                                    handleTimeChange([date, checkout], ['', '']);
+                                                }
+                                            }}
+                                        />
+                                    </Form.Item>
+                                    <Form.Item
+                                        name="checkoutdate"
+                                        required={false}
+                                        label={<span className="font-medium">Thời Gian Kết Thúc <span className="text-red-500">*</span></span>}
+                                        rules={[
+                                            { required: true, message: "Vui lòng chọn thời gian kết thúc!" },
+                                            ({ getFieldValue }) => ({
+                                                validator(_, value) {
+                                                    const checkinDate = getFieldValue('checkindate');
+                                                    if (!checkinDate || !value) {
                                                         return Promise.resolve();
-                                                    },
-                                                }),
-                                            ]}
-                                        >
-                                            <DatePicker
-                                                className="w-full h-12 rounded-lg border-gray-300 hover:border-blue-400 focus:border-blue-500 transition-colors"
-                                                showTime={{ format: 'HH:mm' }}
-                                                format="DD-MM-YYYY HH:mm"
-                                                locale={buddhistLocale}
-                                                disabledDate={(current) => {
-                                                    const checkinDate = form.getFieldValue('checkindate');
-                                                    if (!checkinDate) return false;
-                                                    return current && current < checkinDate.startOf('day');
-                                                }}
-                                                onChange={(date) => {
-const checkin = form.getFieldValue('checkindate');
-                                                    if (checkin && date) {
-                                                        handleTimeChange([checkin, date], ['', '']);
                                                     }
-                                                }}
-                                            />
-                                        </Form.Item>
+
+                                                    const diffInHours = value.diff(checkinDate, 'hours');
+
+                                                    if (diffInHours < 1) {
+                                                        return Promise.reject('Thời gian kết thúc phải sau thời gian bắt đầu ít nhất 1 giờ!');
+                                                    }
+                                                    return Promise.resolve();
+                                                },
+                                            }),
+                                        ]}
+                                    >
+                                        <DatePicker
+                                            className="w-full h-12 rounded-lg border-gray-300 hover:border-blue-400 focus:border-blue-500 transition-colors"
+                                            showTime={{ format: 'HH:mm' }}
+                                            format="DD-MM-YYYY HH:mm"
+                                            locale={buddhistLocale}
+                                            disabledDate={(current) => {
+                                                const checkinDate = form.getFieldValue('checkindate');
+                                                if (!checkinDate) return false;
+                                                return current && current < checkinDate.startOf('day');
+                                            }}
+                                            onChange={(date) => {
+                                                const checkin = form.getFieldValue('checkindate');
+                                                if (checkin && date) {
+                                                    handleTimeChange([checkin, date], ['', '']);
+                                                }
+                                            }}
+                                        />
+                                    </Form.Item>
                                 </div>
                             </div>
                         </div>
@@ -586,7 +588,7 @@ const checkin = form.getFieldValue('checkindate');
                                 type="primary"
                                 htmlType="submit"
                                 className="w-full h-12 mt-8 text-lg font-semibold rounded-xl bg-[#8B4513] hover:bg-[#A0522D] border-[#8B4513] hover:border-[#A0522D] transition-all duration-300"
-disabled={isPending}
+                                disabled={isPending}
                                 style={{
                                     backgroundColor: '#8B4513',
                                     borderColor: '#8B4513'
